@@ -1,0 +1,126 @@
+<script lang="ts">
+import Header from "../Header.svelte";
+import About from "../About.svelte";
+import Github from "virtual:icons/mdi/github";
+import Linkedin from "virtual:icons/mdi/linkedin";
+</script>
+
+<svelte:head>
+    <title>Jarrett Dominic</title>
+</svelte:head>
+
+<Header />
+
+<h1>Jarrett Dominic</h1>
+<main>
+    <img id="background" src="/images/svg/wave.svg" alt="Background">
+    <div class="landing-wrapper">
+        <div class="landing-content">
+            <h2>Hi, I am Jarrett Dominic.</h2>
+            <p>I'm a Front-End Developer based in Tampa, Florida.</p>
+        </div>
+        <div class="button-wrapper">
+            <a href="https://github.com/FlooffyKitsune" target="_blank"><Github style="font-size: 2.5rem; margin-top: 0.5rem;" /></a>
+            <a href="https://www.linkedin.com/in/jarrett-dominic/" target="_blank"><Linkedin style="font-size: 2.5rem; margin-top: 1rem;" /></a>
+        </div>
+    </div>
+    <div class="gradient"></div>
+</main>
+
+<About />
+
+<style lang="scss">
+    @import url('https://fonts.googleapis.com/css2?family=Ubuntu&family=Unna&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Inknut+Antiqua:wght@500;700&display=swap');
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    h1 {
+        position: absolute;
+        top: -9999px;
+    }
+
+    main {
+        width: 100%;
+        height: 50rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        color: #fff;
+        font-family: 'Ubuntu', sans-serif;
+        margin-bottom: -2rem;
+
+        #background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: calc(50rem + 96px);
+            object-fit: cover;
+            object-position: center;
+            z-index: -1;
+            opacity: 0.2;
+        }
+
+        .gradient {
+            width: 100%;
+            height: 6rem; /* Adjust the height of the gradient effect */
+            background: linear-gradient(to bottom, rgba(255, 0, 191, 0), #1f1f1f);
+            position: absolute;
+            top: 50rem;
+        }
+    }
+
+    .landing-wrapper {
+        display: flex;
+        flex-direction: row-reverse;
+        width: 100%;
+
+        .landing-content {
+            width: 63%;
+            padding: 0 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            border-left: #fff 1px solid;
+
+            h2 {
+                font-family: 'Inknut Antiqua', serif;
+                font-size: 3rem;
+                font-weight: 700;
+                background: linear-gradient(to right top, #e4b7e5, #c498cd, #a47bb6, #845fa0, #63458a);
+                -webkit-text-fill-color: transparent;
+                -webkit-background-clip: text;
+            }
+
+            p {
+                font-size: 1.5rem;
+                padding-bottom: 2rem;
+            }
+        }
+
+        .button-wrapper {
+            width: 37%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: end;
+            padding-right: 1rem;
+
+            a {
+                color: #fff;
+                transition: all 0.2s ease-in-out;
+
+                &:hover {
+                    color: #e4b7e5;
+                }
+            }
+        }
+    }
+</style>
