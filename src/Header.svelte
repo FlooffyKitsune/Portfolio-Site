@@ -6,10 +6,10 @@
     <img src="/images/svg/logo.svg?v=1" alt="Logo">
     <nav>
         <ul>
-            <li><a href="#aboutSection">About</a></li>
-            <li><a href="#skillsSection">Skills</a></li>
-            <li><a href="#projectsSection">Projects</a></li>
-            <li><a href="#contactSection">Contact</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#skills">Skills</a></li>
+            <li><a href="#projects">Projects</a></li>
+            <li><a href="#contact">Contact</a></li>
         </ul>
     </nav>
 </header>
