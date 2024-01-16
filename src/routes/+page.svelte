@@ -1,6 +1,8 @@
 <script lang="ts">
 import Header from "../Header.svelte";
 import About from "../About.svelte";
+import Skills from "../Skills.svelte";
+import Projects from "../Projects.svelte";
 import Github from "virtual:icons/mdi/github";
 import Linkedin from "virtual:icons/mdi/linkedin";
 </script>
@@ -28,6 +30,8 @@ import Linkedin from "virtual:icons/mdi/linkedin";
 </main>
 
 <About />
+<Skills />
+<Projects />
 
 <style lang="scss">
     @import url('https://fonts.googleapis.com/css2?family=Ubuntu&family=Unna&display=swap');
@@ -73,6 +77,8 @@ import Linkedin from "virtual:icons/mdi/linkedin";
             background: linear-gradient(to bottom, rgba(255, 0, 191, 0), #1f1f1f);
             position: absolute;
             top: 50rem;
+            border-bottom: #1f1f1f 2rem solid;
+
         }
     }
 
