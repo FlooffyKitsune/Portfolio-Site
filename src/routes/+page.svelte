@@ -33,6 +33,10 @@ import Linkedin from "virtual:icons/mdi/linkedin";
 <Skills />
 <Projects />
 
+<footer>
+    <p>© 2024 Jarrett Dominic</p>
+</footer>
+
 <style lang="scss">
     @import url('https://fonts.googleapis.com/css2?family=Ubuntu&family=Unna&display=swap');
     @import url('https://fonts.googleapis.com/css2?family=Inknut+Antiqua:wght@500;700&display=swap');
@@ -125,6 +129,68 @@ import Linkedin from "virtual:icons/mdi/linkedin";
 
                 &:hover {
                     color: #e4b7e5;
+                }
+            }
+        }
+    }
+
+    footer {
+        width: 100%;
+        height: 6rem;
+        background: #1f1f1f;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: #fff;
+        font-family: 'Ubuntu', sans-serif;
+        font-size: 1.2rem;
+    }
+
+    @media screen and (max-width: 768px) {
+        main {
+            height: 100%;
+            margin: 5rem 0;
+
+            #background {
+                height: 100vh;
+            }
+
+            .gradient {
+                display: none;
+            }
+        }
+
+        .landing-wrapper {
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+
+            .landing-content {
+                width: 100%;
+                border-left: none;
+                border-bottom: #fff 1px solid;
+                padding: 0 2rem;
+                text-align: center;
+
+                h2 {
+                    font-size: 2rem;
+                }
+
+                p {
+                    font-size: 1.2rem;
+                }
+            }
+
+            .button-wrapper {
+                width: 100%;
+                padding: 0;
+                margin-top: 1rem;
+                flex-direction: row;
+                justify-content: center;
+                align-items: center;
+
+                a {
+                    margin: 0 1rem;
                 }
             }
         }

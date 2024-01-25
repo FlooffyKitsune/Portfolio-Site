@@ -9,7 +9,6 @@
             <li><a href="#about">About</a></li>
             <li><a href="#skills">Skills</a></li>
             <li><a href="#projects">Projects</a></li>
-            <li><a href="#contact">Contact</a></li>
         </ul>
     </nav>
 </header>
@@ -67,6 +66,23 @@
                         }
                     }
                 }
+            }
+        }
+    }
+
+    @media screen and (max-width: 768px) {
+        header {
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem 0;
+
+            img {
+                margin: 0;
+            }
+
+            nav {
+                display: none;
             }
         }
     }

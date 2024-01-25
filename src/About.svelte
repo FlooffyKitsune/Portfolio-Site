@@ -116,4 +116,36 @@
                 }
             }
     }
+
+    @media screen and (max-width: 768px) {
+        #about {
+            .about-wrapper {
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                height: 100%;
+                padding: 5rem 0 1rem 0;
+
+                img {
+                    margin: 0;
+                }
+
+                .about-content {
+                    width: 100%;
+                    height: 100%;
+                    padding: 0;
+                    margin-top: 2rem;
+                    text-align: center;
+
+                    p {
+                        padding: 1rem 1.5rem;
+                    }
+                }
+            }
+
+            .resume-button {
+                margin: 0 auto;
+            }
+        }
+    }
 </style>

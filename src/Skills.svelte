@@ -141,4 +141,23 @@
             }
         }
     }
+
+    @media screen and (max-width: 768px) {
+        #skills {
+            padding: 0;
+            
+            h2 {
+                text-align: center;
+            }
+
+            .skills-wrapper {
+                display: inline;
+                
+                .skills-card {
+                    width: 100%;
+                    margin: 1.5rem 0 0;
+                }
+            }
+        }
+    }
 </style>
