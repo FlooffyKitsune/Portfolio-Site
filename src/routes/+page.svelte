@@ -19,7 +19,7 @@ import Linkedin from "virtual:icons/mdi/linkedin";
     <div class="landing-wrapper">
         <div class="landing-content">
             <h2>Hi, I am Jarrett Dominic.</h2>
-            <p>I'm a Front-End Developer based in Tampa, Florida.</p>
+            <p>I'm a Full-Stack Developer based in Tampa, Florida.</p>
         </div>
         <div class="button-wrapper">
             <a href="https://github.com/FlooffyKitsune" target="_blank"><Github style="font-size: 2.5rem; margin-top: 0.5rem;" /></a>
