@@ -1,10 +1,17 @@
 <script lang="ts">
-import Header from "../Header.svelte";
-import About from "../About.svelte";
-import Skills from "../Skills.svelte";
-import Projects from "../Projects.svelte";
-import Github from "virtual:icons/mdi/github";
-import Linkedin from "virtual:icons/mdi/linkedin";
+    import { onMount } from "svelte";
+    import {logo, logoStyle } from "../utils/logo";
+
+    import Header from "../Header.svelte";
+    import About from "../About.svelte";
+    import Skills from "../Skills.svelte";
+    import Projects from "../Projects.svelte";
+    import Github from "virtual:icons/mdi/github";
+    import Linkedin from "virtual:icons/mdi/linkedin";
+
+    onMount(() => {
+        console.log(logo, logoStyle);
+    });
 </script>
 
 <svelte:head>
@@ -19,7 +26,7 @@ import Linkedin from "virtual:icons/mdi/linkedin";
     <div class="landing-wrapper">
         <div class="landing-content">
             <h2>Hi, I am Jarrett Dominic.</h2>
-            <p>I'm a Front-End Developer based in Tampa, Florida.</p>
+            <p>I'm a Full-Stack Developer based in Tampa, Florida.</p>
         </div>
         <div class="button-wrapper">
             <a href="https://github.com/FlooffyKitsune" target="_blank"><Github style="font-size: 2.5rem; margin-top: 0.5rem;" /></a>
