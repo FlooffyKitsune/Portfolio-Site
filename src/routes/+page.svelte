@@ -2,10 +2,10 @@
     import { onMount } from "svelte";
     import {logo, logoStyle } from "../utils/logo";
 
-    import Header from "../Header.svelte";
-    import About from "../About.svelte";
-    import Skills from "../Skills.svelte";
-    import Projects from "../Projects.svelte";
+    import Header from "$lib/components/Header.svelte";
+    import About from "$lib/components/About.svelte";
+    import Skills from "$lib/components/Skills.svelte";
+    import Projects from "$lib/components/Projects.svelte";
     import Github from "virtual:icons/mdi/github";
     import Linkedin from "virtual:icons/mdi/linkedin";
 
