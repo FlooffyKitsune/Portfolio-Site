@@ -11,7 +11,7 @@ const { title, items } = Astro.props;
 ---
 
 <div class="skills-card">
-	<h3>{title}</h3>
+	<h2>{title}</h2>
 	<ul>
 		{
 			items.map((item) => {
@@ -42,7 +42,7 @@ const { title, items } = Astro.props;
 		background-color: $color-surface;
 		color: $color-text;
 
-		h3 {
+		h2 {
 			font-family: $font-heading;
 			font-size: 2rem;
 			padding: 1rem;

@@ -16,28 +16,35 @@ const { title, description, image, stack, links } = Astro.props;
 	<img src={image} alt={`${title} preview`} />
 	<div class="work-content">
 		<div class="work-header">
-			<h3>{title}</h3>
+			<h2>{title}</h2>
 			<div class="work-stack">
-				{stack.map((key) => {
-					const Icon = icons[key];
-					return (
-						<span>
-							<Icon />
-						</span>
-					);
-				})}
+				{
+					stack.map((key) => {
+						const Icon = icons[key];
+						return (
+							<span>
+								<Icon />
+							</span>
+						);
+					})
+				}
 			</div>
 		</div>
 		<p>{description}</p>
 		<div class="work-links">
-			{links.map((link) => {
-				const Icon = icons[link.iconKey];
-				return (
-					<a href={link.href} target="_blank" rel="noopener noreferrer">
-						<Icon /><span>{link.label}</span>
-					</a>
-				);
-			})}
+			{
+				links.map((link) => {
+					const Icon = icons[link.iconKey];
+					return (
+						<a href={link.href} target="_blank" rel="noopener noreferrer">
+							<>
+								<Icon />
+								<span>{link.label}</span>
+							</>
+						</a>
+					);
+				})
+			}
 		</div>
 	</div>
 </div>
@@ -72,7 +79,7 @@ const { title, description, image, stack, links } = Astro.props;
 				justify-content: space-between;
 				padding: 1rem 2rem 0.25rem 1rem;
 
-				h3 {
+				h2 {
 					font-family: $font-heading;
 					color: $color-text;
 					font-size: 2.5rem;
@@ -146,7 +153,7 @@ const { title, description, image, stack, links } = Astro.props;
 					align-items: center;
 					padding: 0;
 
-					h3 {
+					h2 {
 						padding: 1rem 1.5rem;
 					}
 
