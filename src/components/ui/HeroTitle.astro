@@ -1,0 +1,59 @@
+---
+interface Props {
+	eyebrow?: string;
+	title: string;
+	supporting?: string;
+	size?: 'display' | 'h1';
+}
+
+const { eyebrow, title, supporting, size = 'display' } = Astro.props;
+---
+
+<div class="hero-title" data-reveal>
+	{eyebrow && <p class="eyebrow">{eyebrow}</p>}
+	<h1 class:list={[size]}>{title}</h1>
+	{supporting && <p class="supporting">{supporting}</p>}
+</div>
+
+<style lang="scss">
+	@import '../../styles/tokens';
+
+	.hero-title {
+		display: flex;
+		flex-direction: column;
+		gap: $space-2;
+
+		.eyebrow {
+			font-family: $font-mono;
+			font-size: $font-size-caption;
+			letter-spacing: 0.08em;
+			text-transform: uppercase;
+			color: $color-text-muted;
+			margin: 0;
+		}
+
+		h1 {
+			font-family: $font-sans;
+			font-weight: 600;
+			line-height: 1.05;
+			color: $color-text;
+			margin: 0;
+
+			&.display {
+				font-size: $font-size-display;
+			}
+
+			&.h1 {
+				font-size: $font-size-h1;
+			}
+		}
+
+		.supporting {
+			font-family: $font-sans;
+			font-size: $font-size-body-lg;
+			color: $color-text-muted;
+			max-width: $prose-max-width;
+			margin: 0;
+		}
+	}
+</style>
