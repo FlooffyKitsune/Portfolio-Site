@@ -6,5 +6,8 @@ yarn.lock
 # SDD workspace scratch directory
 .superpowers
 
+# Nested git worktrees live under here (not part of this checkout's content)
+.claude/worktrees
+
 # Historical planning/spec docs — already reviewed/approved, not reformatted by this tooling
 docs
