@@ -1,14 +1,49 @@
 <script lang="ts">
+	import { onDestroy } from 'svelte';
 	import { T, useTask } from '@threlte/core';
 	import { useGltf, interactivity } from '@threlte/extras';
+	import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
 	import type { Group, Object3D } from 'three';
 	import { hotspots } from '../../data/hotspots';
 	import { findHotspotId } from '../../lib/three/hotspot-lookup';
-	import { cameraPosition, cameraFov, autoRotateSpeed } from '../../lib/three/scene-config';
+	import {
+		cameraPosition,
+		cameraFov,
+		autoRotateSpeed,
+		dracoDecoderPath
+	} from '../../lib/three/scene-config';
+
+	interface Props {
+		/** Fired once the glTF has finished downloading/parsing and is in the scene. */
+		onready?: () => void;
+		/** Fired if the glTF fails to download or parse. */
+		onerror?: (error: unknown) => void;
+	}
+
+	let { onready, onerror }: Props = $props();
 
 	interactivity();
 
-	const gltf = useGltf('/models/hero.glb');
+	// See `dracoDecoderPath` for why this is registered even though the current
+	// model is uncompressed.
+	const dracoLoader = new DRACOLoader();
+	dracoLoader.setDecoderPath(dracoDecoderPath);
+
+	const gltf = useGltf('/models/hero.glb', { dracoLoader });
+
+	// `useGltf` returns an AsyncWritable: a Svelte store that is *also* the
+	// underlying promise, so the caller can be told when the (large) model is
+	// actually usable instead of merely "mounted".
+	gltf.then(() => onready?.()).catch((error: unknown) => onerror?.(error));
+
+	onDestroy(() => {
+		dracoLoader.dispose();
+		// The scene is commonly unmounted while the pointer is still over a
+		// hotspot (clicking one navigates away), which would otherwise leave
+		// `cursor: pointer` stuck on <body> for the rest of the session.
+		document.body.style.cursor = 'default';
+	});
+
 	let group = $state.raw<Group>();
 
 	useTask((delta) => {
