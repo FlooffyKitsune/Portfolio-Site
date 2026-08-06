@@ -74,7 +74,10 @@ const LinkedinIcon = icons['mdi/linkedin'];
 		#hero-root {
 			position: absolute;
 			inset: 0;
-			z-index: -1;
+			/* Must stay non-negative: a negative z-index here places the canvas
+			   behind the stacking context root's own box for hit-testing purposes,
+			   which makes it unable to receive any pointer/click events at all. */
+			z-index: 0;
 		}
 
 		.gradient {
@@ -84,6 +87,7 @@ const LinkedinIcon = icons['mdi/linkedin'];
 			position: absolute;
 			top: 50rem;
 			border-bottom: $color-bg 2rem solid;
+			z-index: 2;
 		}
 	}
 
@@ -91,6 +95,8 @@ const LinkedinIcon = icons['mdi/linkedin'];
 		display: flex;
 		flex-direction: row-reverse;
 		width: 100%;
+		position: relative;
+		z-index: 1;
 
 		.landing-content {
 			width: 63%;
