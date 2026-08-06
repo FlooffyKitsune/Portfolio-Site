@@ -97,6 +97,12 @@ const LinkedinIcon = icons['mdi/linkedin'];
 		width: 100%;
 		position: relative;
 		z-index: 1;
+		/* This wrapper is full-width and sits above #hero-root purely so the text
+		   renders on top of the canvas. Without this it would also intercept every
+		   click across a full-width band through the vertical centre of the page —
+		   exactly where the 3D model and its hotspots are. Pointer events pass
+		   through the layout boxes; the actual content opts back in below. */
+		pointer-events: none;
 
 		.landing-content {
 			width: 63%;
@@ -114,11 +120,16 @@ const LinkedinIcon = icons['mdi/linkedin'];
 				background: $gradient-purple;
 				-webkit-text-fill-color: transparent;
 				-webkit-background-clip: text;
+				/* Keep the copy selectable. These are flex items in a
+				   `align-items: flex-start` column, so their boxes hug the text
+				   rather than spanning the full column width. */
+				pointer-events: auto;
 			}
 
 			p {
 				font-size: 1.5rem;
 				padding-bottom: 2rem;
+				pointer-events: auto;
 			}
 
 			.hotspot-links {
@@ -130,6 +141,7 @@ const LinkedinIcon = icons['mdi/linkedin'];
 				}
 
 				a {
+					pointer-events: auto;
 					display: inline-block;
 					padding: 0.5rem 1.25rem;
 					border-radius: 20px;
@@ -155,6 +167,7 @@ const LinkedinIcon = icons['mdi/linkedin'];
 			padding-right: 1rem;
 
 			a {
+				pointer-events: auto;
 				color: $color-text;
 				font-size: 2.5rem;
 				transition: all 0.2s ease-in-out;
@@ -222,22 +235,94 @@ const LinkedinIcon = icons['mdi/linkedin'];
 </style>
 
 <script>
+	import { unmount } from 'svelte';
 	import { shouldUseSimplifiedHero } from '../lib/three/capability-detection';
 
-	const root = document.getElementById('hero-root');
-	const useSimplified = shouldUseSimplifiedHero({
-		viewportWidth: window.innerWidth,
-		prefersReducedMotion: window.matchMedia('(prefers-reduced-motion: reduce)').matches,
-		hardwareConcurrency: navigator.hardwareConcurrency
-	});
+	// The site uses <ClientRouter />, so this module is evaluated exactly once for
+	// the whole session: Astro marks inline scripts as executed and will not
+	// re-run them after a client-side swap. All per-navigation work therefore has
+	// to hang off the transition lifecycle events, and the mounted app has to
+	// live in module scope so both listeners can see it.
+	let app: Record<string, unknown> | null = null;
+	let mounting = false;
+	// Bumped on every teardown so a late-arriving dynamic import or onready/onerror
+	// callback belonging to a superseded page can't touch the current DOM.
+	let generation = 0;
 
-	if (!useSimplified && root) {
-		import('../components/islands/mount-hero-3d').then(({ mountHero3D }) => {
-			mountHero3D(root);
-			document.getElementById('background')?.setAttribute('hidden', '');
-			document.querySelectorAll('[data-hero-links]').forEach((el) => {
-				el.setAttribute('hidden', '');
-			});
+	function setFallbackHidden(hidden: boolean) {
+		const background = document.getElementById('background');
+		if (hidden) background?.setAttribute('hidden', '');
+		else background?.removeAttribute('hidden');
+
+		document.querySelectorAll('[data-hero-links]').forEach((el) => {
+			if (hidden) el.setAttribute('hidden', '');
+			else el.removeAttribute('hidden');
 		});
 	}
+
+	function teardownHero() {
+		generation += 1;
+		mounting = false;
+		if (!app) return;
+		const mounted = app;
+		app = null;
+		// Without this the WebGL context and the `useTask` render loop keep running
+		// detached, on every page, for the rest of the session.
+		void unmount(mounted);
+	}
+
+	function setupHero() {
+		const root = document.getElementById('hero-root');
+		// Fires on every page, not just the homepage.
+		if (!root) return;
+		// Astro's first-load/transition sequencing can deliver page-load more than
+		// once; never stack two WebGL contexts on the same root.
+		if (app || mounting) return;
+
+		const useSimplified = shouldUseSimplifiedHero({
+			viewportWidth: window.innerWidth,
+			prefersReducedMotion: window.matchMedia('(prefers-reduced-motion: reduce)').matches,
+			hardwareConcurrency: navigator.hardwareConcurrency
+		});
+		if (useSimplified) return;
+
+		const mountGeneration = generation;
+		mounting = true;
+
+		import('../components/islands/mount-hero-3d')
+			.then(({ mountHero3D }) => {
+				if (mountGeneration !== generation) return;
+				app = mountHero3D(root, {
+					// Hiding the static fallback is deliberately deferred until the
+					// scene reports ready. mountHero3D() returns synchronously, but the
+					// ~100MB hero.glb is still downloading and parsing inside
+					// HeroScene; hiding the wave background and the link list at mount
+					// time would leave a completely blank hero for the whole download.
+					onready: () => {
+						if (mountGeneration !== generation) return;
+						setFallbackHidden(true);
+					},
+					onerror: (error: unknown) => {
+						if (mountGeneration !== generation) return;
+						console.error('[hero] 3D scene failed to load; keeping static hero', error);
+						teardownHero();
+						setFallbackHidden(false);
+					}
+				});
+			})
+			.catch((error: unknown) => {
+				if (mountGeneration !== generation) return;
+				console.error('[hero] failed to load 3D hero module; keeping static hero', error);
+				setFallbackHidden(false);
+			})
+			.finally(() => {
+				if (mountGeneration === generation) mounting = false;
+			});
+	}
+
+	// astro:page-load fires after the initial load *and* after every client-side
+	// navigation; astro:before-swap fires just before the outgoing DOM (including
+	// the canvas) is discarded.
+	document.addEventListener('astro:page-load', setupHero);
+	document.addEventListener('astro:before-swap', teardownHero);
 </script>
