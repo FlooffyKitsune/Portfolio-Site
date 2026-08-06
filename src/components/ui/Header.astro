@@ -1,0 +1,108 @@
+---
+const navItems = [
+	{ href: '/about', label: 'About' },
+	{ href: '/skills', label: 'Skills' },
+	{ href: '/projects', label: 'Projects' },
+	{ href: '/portfolio', label: 'Portfolio' },
+	{ href: '/contact', label: 'Contact' }
+];
+---
+
+<header>
+	<a href="/"><img src="/images/svg/logo.svg?v=1" alt="Logo" /></a>
+	<nav>
+		<ul>
+			{navItems.map((item) => (
+				<li><a href={item.href}>{item.label}</a></li>
+			))}
+		</ul>
+	</nav>
+</header>
+
+<style lang="scss">
+	@import '../../styles/tokens';
+
+	header {
+		display: flex;
+		flex-direction: row;
+		background-color: #23272a;
+		box-shadow: #00000059 0 5px 15px;
+		width: 100%;
+		align-items: center;
+
+		a {
+			display: flex;
+		}
+
+		img {
+			width: 5rem;
+			padding-top: 1rem;
+			margin-left: 2.5rem;
+		}
+
+		nav {
+			min-height: 10vh;
+			margin: auto;
+			width: 90%;
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+
+			ul {
+				width: 100%;
+				list-style: none;
+				display: flex;
+				justify-content: flex-end;
+				align-items: center;
+
+				li {
+					padding: 0 1rem;
+					font-size: 1.2rem;
+					font-weight: 500;
+					font-family: $font-heading;
+					letter-spacing: 0.1rem;
+					text-transform: uppercase;
+
+					a {
+						text-decoration: none;
+						color: $color-accent-purple;
+						transition: color 0.3s ease;
+
+						&:hover {
+							color: $color-accent-purple-dark;
+						}
+					}
+				}
+			}
+		}
+	}
+
+	@media screen and (max-width: $breakpoint-mobile) {
+		header {
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			padding: 1rem 0;
+
+			img {
+				margin: 0;
+			}
+
+			nav {
+				min-height: auto;
+				width: 100%;
+				margin-top: 0.5rem;
+
+				ul {
+					flex-wrap: wrap;
+					justify-content: center;
+
+					li {
+						padding: 0.5rem;
+						font-size: 1rem;
+					}
+				}
+			}
+		}
+	}
+</style>

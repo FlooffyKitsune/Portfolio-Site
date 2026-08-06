@@ -12,6 +12,7 @@
 		"format": "prettier --write ."
 	},
 	"devDependencies": {
+		"@astrojs/check": "^0.9.10",
 		"@astrojs/svelte": "^9.0.0",
 		"@iconify/json": "^2.2.164",
 		"astro": "^7.0.0",
@@ -21,7 +22,7 @@
 		"sass": "^1.69.7",
 		"svelte": "^5.0.0",
 		"svelte-check": "^4.0.0",
-		"typescript": "^5.0.0",
+		"typescript": "^5.9.3",
 		"unplugin-icons": "^0.18.1"
 	}
 }
