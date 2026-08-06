@@ -1,20 +1,81 @@
-// Design tokens — single source of truth for color, type, spacing.
-// Dark theme only for now; migrate to CSS custom properties if light mode is added later.
+// Design tokens — single source of truth for color, type, spacing, motion.
+// Dark theme only. Near-black base + single violet accent (2026 modernization pass).
+//
+// Legacy names below ($font-heading, $font-heading-serif, $font-body, $gradient-purple)
+// are aliased to their modern replacements so pages not yet migrated to the new
+// components keep compiling and inherit the new palette/type automatically. New work
+// should reference the canonical names ($font-sans, $font-mono, $gradient-accent, etc.)
+// directly.
+//
+// $color-accent-purple, $color-accent-purple-dark, $color-header-bg, and $color-shadow
+// are Header.astro's own legacy tokens, left untouched here — Header.astro (and these
+// four) are updated/retired in a later task in this same plan, not this one.
+//
+// $gradient-warm keeps its original value, unaliased — it's a true legacy holdout used
+// by every page's current section-heading underline, slated for removal page-by-page
+// as each page gets its own future redesign pass (out of scope here).
 
-$color-bg: #1f1f1f;
-$color-surface: #2c2f33;
-$color-text: #fff;
-$color-accent-purple: #b288c0;
-$color-accent-purple-dark: #63458a;
-$color-header-bg: #23272a;
-$color-shadow: #00000059;
-$color-hover-accent: #e4b7e5;
+// --- Color ---
+$color-bg: #0a0a0c;
+$color-surface: #16171b;
+$color-text: #f2f2f4;
+$color-text-muted: #8b8d98;
 
-$gradient-purple: linear-gradient(to right top, #e4b7e5, #c498cd, #a47bb6, #845fa0, #63458a);
-$gradient-warm: linear-gradient(to right top, #ff6f91, #ff807d, #ff966d, #ffae61, #ffc75f);
+$color-accent: #8b5cf6;
+$color-hover-accent: #a78bfa;
 
-$font-heading: 'Ubuntu', sans-serif;
-$font-heading-serif: 'Inknut Antiqua', serif;
-$font-body: 'Unna', serif;
+$color-accent-purple: #b288c0; // legacy — Header.astro only, see file header
+$color-accent-purple-dark: #63458a; // legacy — Header.astro only
+$color-header-bg: #23272a; // legacy — Header.astro only
+$color-shadow: #00000059; // legacy — Header.astro only
 
+$gradient-accent: linear-gradient(to right top, #a78bfa, #8b5cf6, #7c3aed);
+$gradient-purple: $gradient-accent; // legacy alias
+
+$gradient-warm: linear-gradient(to right top, #ff6f91, #ff807d, #ff966d, #ffae61, #ffc75f); // legacy, unaliased
+
+// --- Typography ---
+$font-sans: 'Geist Variable', sans-serif;
+$font-mono: 'Geist Mono Variable', monospace;
+
+$font-heading: $font-sans; // legacy alias
+$font-heading-serif: $font-sans; // legacy alias
+$font-body: $font-sans; // legacy alias
+
+$font-size-display: clamp(2.5rem, 6vw, 6rem);
+$font-size-h1: clamp(2rem, 4vw, 3.5rem);
+$font-size-h2: clamp(1.5rem, 2.5vw, 2.25rem);
+$font-size-body-lg: clamp(1.125rem, 1.5vw, 1.375rem);
+$font-size-body: 1rem;
+$font-size-caption: 0.875rem;
+
+$prose-max-width: 65ch;
+
+// --- Spacing (8px base) ---
+$space-1: 0.5rem;
+$space-2: 1rem;
+$space-3: 1.5rem;
+$space-4: 2rem;
+$space-5: 2.5rem;
+$space-6: 3rem;
+$space-7: 3.5rem;
+$space-8: 4rem;
+
+// --- Radius ---
+$radius-sm: 6px;
+$radius-md: 12px;
+
+// --- Shadow / glass ---
+$shadow-soft: 0 20px 60px -20px rgba(0, 0, 0, 0.5);
+$glass-blur: 16px;
+$glass-fill: rgba(242, 242, 244, 0.06);
+$glass-border: rgba(242, 242, 244, 0.1);
+
+// --- Motion ---
+$ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+$ease-out-quick: cubic-bezier(0.33, 1, 0.68, 1);
+$duration-reveal: 0.8s;
+$duration-hover: 0.2s;
+
+// --- Breakpoints ---
 $breakpoint-mobile: 768px;
