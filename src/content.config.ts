@@ -13,7 +13,8 @@ const workEntry = z.object({
 			label: z.string(),
 			iconKey: z.string()
 		})
-	)
+	),
+	order: z.number()
 });
 
 const projects = defineCollection({

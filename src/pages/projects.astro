@@ -3,12 +3,12 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import WorkCard from '../components/ui/WorkCard.astro';
 import { getCollection } from 'astro:content';
 
-const entries = await getCollection('projects');
+const entries = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order);
 ---
 
 <BaseLayout title="Projects — Jarrett Dominic">
 	<section id="projects">
-		<h2>Projects</h2>
+		<h1>Projects</h1>
 		<div class="work-wrapper">
 			{
 				entries.map((entry) => (
@@ -32,7 +32,7 @@ const entries = await getCollection('projects');
 		width: 100%;
 		padding: 8rem 13% 5rem;
 
-		h2 {
+		h1 {
 			font-family: $font-heading;
 			font-size: 2.5rem;
 			margin-bottom: 1rem;
@@ -58,7 +58,7 @@ const entries = await getCollection('projects');
 		#projects {
 			padding: 6rem 0 0;
 
-			h2 {
+			h1 {
 				text-align: center;
 			}
 		}
