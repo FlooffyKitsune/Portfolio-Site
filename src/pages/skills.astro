@@ -1,0 +1,59 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SkillGroup from '../components/ui/SkillGroup.astro';
+import { skillGroups } from '../data/skills';
+---
+
+<BaseLayout title="Skills — Jarrett Dominic">
+	<section id="skills">
+		<h2>Skills</h2>
+		<div class="skills-wrapper">
+			{skillGroups.map((group) => <SkillGroup title={group.title} items={group.items} />)}
+		</div>
+	</section>
+</BaseLayout>
+
+<style lang="scss">
+	@import '../styles/tokens';
+
+	#skills {
+		width: 100%;
+		padding: 8rem 13% 5rem;
+
+		h2 {
+			font-family: $font-heading;
+			font-size: 2.5rem;
+			margin-bottom: 1rem;
+			background-image: $gradient-warm;
+			-webkit-text-fill-color: transparent;
+			-webkit-background-clip: text;
+
+			&::after {
+				content: '';
+				display: block;
+				height: 2px;
+				background: $gradient-warm no-repeat;
+			}
+		}
+
+		.skills-wrapper {
+			display: flex;
+			flex-direction: row;
+			flex-wrap: wrap;
+		}
+	}
+
+	@media screen and (max-width: $breakpoint-mobile) {
+		#skills {
+			padding: 6rem 0 0;
+
+			h2 {
+				text-align: center;
+			}
+
+			.skills-wrapper {
+				display: inline;
+			}
+		}
+	}
+</style>
