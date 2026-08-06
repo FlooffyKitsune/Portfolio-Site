@@ -1,5 +1,6 @@
 ---
 title: 'Portfolio'
+order: 1
 description: "A constantly evolving showcase of projects I've worked on. My portfolio is a more professional representation of my work and skills. The site is built on Svelte with SASS and Typescript and is hosted through Vercel. All graphical assets are made by me utilizing Photoshop, Illustrator and Blender."
 image: '/images/projects/portfolio.png'
 stack:
