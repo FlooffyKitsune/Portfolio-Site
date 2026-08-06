@@ -6,5 +6,8 @@ export default defineConfig({
 	integrations: [svelte()],
 	vite: {
 		plugins: [Icons({ compiler: 'svelte' })]
+	},
+	legacy: {
+		collectionsBackwardsCompat: true
 	}
 });
