@@ -1,0 +1,97 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { icons } from '../components/ui/icons';
+
+const EmailIcon = icons['mdi/email'];
+const GithubIcon = icons['mdi/github'];
+const LinkedinIcon = icons['mdi/linkedin'];
+---
+
+<BaseLayout title="Contact — Jarrett Dominic">
+	<section id="contact">
+		<h2>Contact</h2>
+		<p>Have a project in mind or just want to say hi? Reach out.</p>
+		<a class="email-link" href="mailto:jarrettdominic@proton.me">
+			<EmailIcon /><span>jarrettdominic@proton.me</span>
+		</a>
+		<div class="social-links">
+			<a href="https://github.com/FlooffyKitsune" target="_blank" rel="noopener noreferrer">
+				<GithubIcon />
+			</a>
+			<a
+				href="https://www.linkedin.com/in/jarrett-dominic/"
+				target="_blank"
+				rel="noopener noreferrer"
+			>
+				<LinkedinIcon />
+			</a>
+		</div>
+	</section>
+</BaseLayout>
+
+<style lang="scss">
+	@import '../styles/tokens';
+
+	#contact {
+		width: 100%;
+		min-height: 30rem;
+		padding: 8rem 13% 10rem;
+		background-color: $color-bg;
+		color: $color-text;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		text-align: center;
+
+		h2 {
+			font-family: $font-heading;
+			font-size: 2.5rem;
+			margin-bottom: 1rem;
+			background-image: $gradient-warm;
+			-webkit-text-fill-color: transparent;
+			-webkit-background-clip: text;
+		}
+
+		p {
+			font-family: $font-body;
+			font-size: 1.25rem;
+			margin-bottom: 2rem;
+		}
+
+		.email-link {
+			display: flex;
+			align-items: center;
+			gap: 0.75rem;
+			font-size: 1.5rem;
+			color: $color-text;
+			text-decoration: none;
+			margin-bottom: 2rem;
+			transition: color 0.2s ease-in-out;
+
+			&:hover {
+				color: $color-hover-accent;
+			}
+		}
+
+		.social-links {
+			display: flex;
+			gap: 1.5rem;
+
+			a {
+				color: $color-text;
+				font-size: 2.5rem;
+				transition: color 0.2s ease-in-out;
+
+				&:hover {
+					color: $color-hover-accent;
+				}
+			}
+		}
+	}
+
+	@media screen and (max-width: $breakpoint-mobile) {
+		#contact {
+			padding: 6rem 1.5rem 4rem;
+		}
+	}
+</style>
