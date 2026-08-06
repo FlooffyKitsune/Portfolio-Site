@@ -2,29 +2,26 @@
 	"name": "portfolio",
 	"version": "0.0.1",
 	"private": true,
+	"type": "module",
 	"scripts": {
-		"dev": "vite dev",
-		"build": "vite build",
-		"preview": "vite preview",
-		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
-		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
+		"dev": "astro dev",
+		"build": "astro build",
+		"preview": "astro preview",
+		"check": "astro check",
 		"lint": "prettier --check .",
 		"format": "prettier --write ."
 	},
 	"devDependencies": {
+		"@astrojs/svelte": "^9.0.0",
 		"@iconify/json": "^2.2.164",
-		"@sveltejs/adapter-auto": "^3.0.0",
-		"@sveltejs/kit": "^2.0.0",
-		"@sveltejs/vite-plugin-svelte": "^3.0.0",
+		"astro": "^7.0.0",
 		"prettier": "^3.1.1",
+		"prettier-plugin-astro": "^0.14.0",
 		"prettier-plugin-svelte": "^3.1.2",
 		"sass": "^1.69.7",
-		"svelte": "^4.2.7",
-		"svelte-check": "^3.6.0",
-		"tslib": "^2.4.1",
+		"svelte": "^5.0.0",
+		"svelte-check": "^4.0.0",
 		"typescript": "^5.0.0",
-		"unplugin-icons": "^0.18.1",
-		"vite": "^5.0.3"
-	},
-	"type": "module"
+		"unplugin-icons": "^0.18.1"
+	}
 }
