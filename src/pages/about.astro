@@ -1,0 +1,162 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { icons } from '../components/ui/icons';
+
+const DocumentIcon = icons['basil/document-solid'];
+---
+
+<BaseLayout title="About — Jarrett Dominic">
+	<section id="about">
+		<div class="about-wrapper">
+			<img src="/images/jarrett.png" alt="Jarrett Dominic" />
+			<div class="about-content">
+				<h2>About Me</h2>
+				<p>
+					I'm a versatile developer with a primary focus on front-end development. In addition
+					to my expertise in crafting user-friendly interfaces, I bring valuable experience in
+					backend development and graphic design to the table. My coding journey is fueled by a
+					genuine passion for creating digital experiences that seamlessly blend aesthetics and
+					functionality. From developing interactive web applications to designing captivating
+					user interfaces, I thrive on turning ideas into reality.
+				</p>
+				<p>
+					Beyond the screen, I enjoy working on DIY projects and building things from scratch, as
+					well as working with virtual reality. When not immersed in the digital world, you can
+					find me pursuing outdoor adventures whether it be mountain biking or rock climbing.
+				</p>
+			</div>
+		</div>
+		<div class="resume-button">
+			<a href="/pdf/JarrettDominicResume.pdf" target="_blank" rel="noopener noreferrer">
+				<span>Download CV</span><DocumentIcon />
+			</a>
+		</div>
+	</section>
+</BaseLayout>
+
+<style lang="scss">
+	@import '../styles/tokens';
+
+	#about {
+		width: 100%;
+		padding: 8rem 0 10rem;
+		background-color: $color-bg;
+
+		.about-wrapper {
+			width: 100%;
+			height: 27rem;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+
+			img {
+				width: 20rem;
+				height: 20rem;
+				border-radius: 50px;
+			}
+
+			.about-content {
+				width: 50%;
+				height: 20rem;
+				display: flex;
+				flex-direction: column;
+				justify-content: center;
+				align-items: flex-start;
+				padding: 0 2rem;
+				color: $color-text;
+
+				h2 {
+					font-family: $font-heading;
+					font-size: 2.5rem;
+					margin-bottom: 1rem;
+					background-image: $gradient-warm;
+					-webkit-text-fill-color: transparent;
+					-webkit-background-clip: text;
+
+					&::after {
+						content: '';
+						display: block;
+						height: 2px;
+						background: $gradient-warm no-repeat;
+					}
+				}
+
+				p {
+					font-family: $font-body;
+					font-size: 1.2rem;
+					text-align: left;
+					margin-bottom: 1rem;
+				}
+			}
+		}
+
+		.resume-button {
+			width: 15rem;
+			height: 3.5rem;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			background-image: linear-gradient(to right, #fff, #fff);
+			margin: -3rem auto 0;
+			border-radius: 15px;
+
+			a {
+				text-decoration: none;
+				color: $color-bg;
+				font-family: $font-heading;
+				font-size: 1.2rem;
+				font-weight: 700;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				padding: 0 2rem;
+				height: 100%;
+				width: 100%;
+
+				span {
+					padding-right: 1rem;
+				}
+			}
+
+			&:hover {
+				background-image: $gradient-warm;
+
+				a {
+					color: $color-text;
+				}
+			}
+		}
+	}
+
+	@media screen and (max-width: $breakpoint-mobile) {
+		#about {
+			.about-wrapper {
+				flex-direction: column;
+				justify-content: center;
+				align-items: center;
+				height: 100%;
+				padding: 2rem 0 1rem;
+
+				img {
+					margin: 0;
+				}
+
+				.about-content {
+					width: 100%;
+					height: 100%;
+					padding: 0;
+					margin-top: 2rem;
+					text-align: center;
+
+					p {
+						padding: 1rem 1.5rem;
+					}
+				}
+			}
+
+			.resume-button {
+				margin: 2rem auto 0;
+			}
+		}
+	}
+</style>
