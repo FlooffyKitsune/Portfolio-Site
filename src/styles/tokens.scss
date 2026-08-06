@@ -23,7 +23,14 @@ $color-hover-accent: #a78bfa;
 $gradient-accent: linear-gradient(to right top, #a78bfa, #8b5cf6, #7c3aed);
 $gradient-purple: $gradient-accent; // legacy alias
 
-$gradient-warm: linear-gradient(to right top, #ff6f91, #ff807d, #ff966d, #ffae61, #ffc75f); // legacy, unaliased
+$gradient-warm: linear-gradient(
+	to right top,
+	#ff6f91,
+	#ff807d,
+	#ff966d,
+	#ffae61,
+	#ffc75f
+); // legacy, unaliased
 
 // --- Typography ---
 $font-sans: 'Geist Variable', sans-serif;
