@@ -1,0 +1,171 @@
+---
+import { icons } from './icons';
+
+interface Props {
+	title: string;
+	description: string;
+	image: string;
+	stack: string[];
+	links: { href: string; label: string; iconKey: string }[];
+}
+
+const { title, description, image, stack, links } = Astro.props;
+---
+
+<div class="work-card">
+	<img src={image} alt={`${title} preview`} />
+	<div class="work-content">
+		<div class="work-header">
+			<h3>{title}</h3>
+			<div class="work-stack">
+				{stack.map((key) => {
+					const Icon = icons[key];
+					return (
+						<span>
+							<Icon />
+						</span>
+					);
+				})}
+			</div>
+		</div>
+		<p>{description}</p>
+		<div class="work-links">
+			{links.map((link) => {
+				const Icon = icons[link.iconKey];
+				return (
+					<a href={link.href} target="_blank" rel="noopener noreferrer">
+						<Icon /><span>{link.label}</span>
+					</a>
+				);
+			})}
+		</div>
+	</div>
+</div>
+
+<style lang="scss">
+	@import '../../styles/tokens';
+
+	.work-card {
+		display: flex;
+		flex-direction: row;
+		border-radius: 20px;
+		overflow: hidden;
+		box-shadow: 0 4px 21px -12px rgba(0, 0, 0, 0.66);
+		margin: 1rem 0;
+
+		img {
+			width: 35%;
+			height: 100%;
+			object-fit: cover;
+		}
+
+		.work-content {
+			width: 65%;
+			display: flex;
+			flex-direction: column;
+			background-color: $color-surface;
+
+			.work-header {
+				display: flex;
+				flex-direction: row;
+				align-items: end;
+				justify-content: space-between;
+				padding: 1rem 2rem 0.25rem 1rem;
+
+				h3 {
+					font-family: $font-heading;
+					color: $color-text;
+					font-size: 2.5rem;
+				}
+
+				.work-stack {
+					display: flex;
+					flex-direction: row;
+					justify-content: flex-start;
+					padding-left: 1rem;
+
+					span {
+						display: flex;
+						align-items: center;
+						font-size: 2rem;
+						padding: 0.2rem;
+					}
+				}
+			}
+
+			p {
+				font-family: $font-body;
+				color: $color-text;
+				font-size: 1.5rem;
+				padding: 1rem;
+			}
+
+			.work-links {
+				display: flex;
+				flex-direction: row;
+				justify-content: flex-start;
+				padding: 1rem;
+
+				a {
+					display: flex;
+					flex-direction: row;
+					align-items: center;
+					margin: 0 1rem;
+					padding: 0.5rem 1rem;
+					text-decoration: none;
+					color: $color-text;
+					font-size: 1.5rem;
+					font-family: $font-body;
+					background: $gradient-purple;
+					border-radius: 20px;
+
+					span {
+						padding-left: 0.5rem;
+					}
+				}
+			}
+		}
+	}
+
+	@media screen and (max-width: $breakpoint-mobile) {
+		.work-card {
+			flex-direction: column;
+			margin: 3rem 0 0;
+
+			img {
+				width: 100%;
+			}
+
+			.work-content {
+				width: 100%;
+				padding: 2.5rem 0 0;
+				text-align: center;
+
+				.work-header {
+					flex-direction: column;
+					align-items: center;
+					padding: 0;
+
+					h3 {
+						padding: 1rem 1.5rem;
+					}
+
+					.work-stack {
+						padding: 0;
+					}
+				}
+
+				p {
+					padding: 1rem 1.5rem;
+					text-align: left;
+				}
+
+				.work-links {
+					padding: 0;
+					margin: 1rem 0 2.5rem;
+					justify-content: center;
+				}
+			}
+		}
+	}
+</style>
