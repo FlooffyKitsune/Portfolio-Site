@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { icons } from '../components/ui/icons';
+import { hotspots } from '../data/hotspots';
 
 const GithubIcon = icons['mdi/github'];
 const LinkedinIcon = icons['mdi/linkedin'];
@@ -9,10 +10,22 @@ const LinkedinIcon = icons['mdi/linkedin'];
 <BaseLayout title="Jarrett Dominic">
 	<main>
 		<img id="background" src="/images/svg/wave.svg" alt="" />
+		<div id="hero-root"></div>
 		<div class="landing-wrapper">
 			<div class="landing-content">
 				<h1>Hi, I am Jarrett Dominic.</h1>
 				<p>I'm a Full-Stack Developer based in Tampa, Florida.</p>
+				<nav class="hotspot-links" data-hero-links aria-label="Portfolio sections">
+					<ul>
+						{
+							hotspots.map((hotspot) => (
+								<li>
+									<a href={hotspot.route}>{hotspot.label}</a>
+								</li>
+							))
+						}
+					</ul>
+				</nav>
 			</div>
 			<div class="button-wrapper">
 				<a href="https://github.com/FlooffyKitsune" target="_blank" rel="noopener noreferrer">
@@ -54,8 +67,14 @@ const LinkedinIcon = icons['mdi/linkedin'];
 			height: calc(50rem + 96px);
 			object-fit: cover;
 			object-position: center;
-			z-index: -1;
+			z-index: -2;
 			opacity: 0.2;
+		}
+
+		#hero-root {
+			position: absolute;
+			inset: 0;
+			z-index: -1;
 		}
 
 		.gradient {
@@ -95,6 +114,30 @@ const LinkedinIcon = icons['mdi/linkedin'];
 				font-size: 1.5rem;
 				padding-bottom: 2rem;
 			}
+
+			.hotspot-links {
+				ul {
+					list-style: none;
+					display: flex;
+					flex-wrap: wrap;
+					gap: 0.75rem;
+				}
+
+				a {
+					display: inline-block;
+					padding: 0.5rem 1.25rem;
+					border-radius: 20px;
+					text-decoration: none;
+					color: $color-text;
+					font-size: 1rem;
+					background: $gradient-purple;
+					transition: opacity 0.2s ease-in-out;
+
+					&:hover {
+						opacity: 0.85;
+					}
+				}
+			}
 		}
 
 		.button-wrapper {
@@ -111,7 +154,7 @@ const LinkedinIcon = icons['mdi/linkedin'];
 				transition: all 0.2s ease-in-out;
 
 				&:hover {
-					color: $color-hover-accent;
+					color: #e4b7e5;
 				}
 			}
 		}
@@ -150,6 +193,10 @@ const LinkedinIcon = icons['mdi/linkedin'];
 				p {
 					font-size: 1.2rem;
 				}
+
+				.hotspot-links ul {
+					justify-content: center;
+				}
 			}
 
 			.button-wrapper {
@@ -167,3 +214,24 @@ const LinkedinIcon = icons['mdi/linkedin'];
 		}
 	}
 </style>
+
+<script>
+	import { shouldUseSimplifiedHero } from '../lib/three/capability-detection';
+
+	const root = document.getElementById('hero-root');
+	const useSimplified = shouldUseSimplifiedHero({
+		viewportWidth: window.innerWidth,
+		prefersReducedMotion: window.matchMedia('(prefers-reduced-motion: reduce)').matches,
+		hardwareConcurrency: navigator.hardwareConcurrency
+	});
+
+	if (!useSimplified && root) {
+		import('../components/islands/mount-hero-3d').then(({ mountHero3D }) => {
+			mountHero3D(root);
+			document.getElementById('background')?.setAttribute('hidden', '');
+			document.querySelectorAll('[data-hero-links]').forEach((el) => {
+				el.setAttribute('hidden', '');
+			});
+		});
+	}
+</script>
