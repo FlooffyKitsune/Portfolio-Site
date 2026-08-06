@@ -12,9 +12,13 @@ const navItems = [
 	<a href="/"><img src="/images/svg/logo.svg?v=1" alt="Logo" /></a>
 	<nav>
 		<ul>
-			{navItems.map((item) => (
-				<li><a href={item.href}>{item.label}</a></li>
-			))}
+			{
+				navItems.map((item) => (
+					<li>
+						<a href={item.href}>{item.label}</a>
+					</li>
+				))
+			}
 		</ul>
 	</nav>
 </header>
