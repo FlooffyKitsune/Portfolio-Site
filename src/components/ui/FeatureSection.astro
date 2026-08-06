@@ -1,0 +1,88 @@
+---
+interface Props {
+	title: string;
+	description: string;
+	reverse?: boolean;
+}
+
+const { title, description, reverse = false } = Astro.props;
+---
+
+<div class:list={['feature-section', { reverse }]} data-reveal>
+	<div class="media">
+		<slot />
+	</div>
+	<div class="copy">
+		<h2>{title}</h2>
+		<p>{description}</p>
+	</div>
+</div>
+
+<style lang="scss">
+	@import '../../styles/tokens';
+
+	.feature-section {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: $space-6;
+		align-items: center;
+
+		.media {
+			width: 100%;
+			order: 1;
+
+			:global(img),
+			:global(video) {
+				width: 100%;
+				height: auto;
+				border-radius: $radius-md;
+				display: block;
+			}
+		}
+
+		.copy {
+			display: flex;
+			flex-direction: column;
+			gap: $space-2;
+			order: 2;
+
+			h2 {
+				font-family: $font-sans;
+				font-weight: $font-weight-heading;
+				font-size: $font-size-h2;
+				color: $color-text;
+				margin: 0;
+			}
+
+			p {
+				font-family: $font-sans;
+				font-size: $font-size-body-lg;
+				color: $color-text-muted;
+				margin: 0;
+			}
+		}
+
+		&.reverse {
+			.media {
+				order: 2;
+			}
+
+			.copy {
+				order: 1;
+			}
+		}
+	}
+
+	@media screen and (max-width: $breakpoint-mobile) {
+		.feature-section {
+			grid-template-columns: 1fr;
+
+			.media,
+			.copy,
+			&.reverse .media,
+			&.reverse .copy {
+				order: initial;
+			}
+		}
+	}
+</style>
