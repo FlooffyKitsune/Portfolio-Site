@@ -1,1 +1,1 @@
-Early version of a portfolio site to be utilized in addition to my sandbox site. Most assets for the final design are still being produced, so this is a stripped down placeholder for the time being.
+Portfolio site for Jarrett Dominic — built with Astro and Svelte islands. Content lives in `src/content` (Projects, Portfolio) and `src/data` (Skills). The homepage hero is a placeholder pending the Three.js 3D hero (see `docs/superpowers/plans/2026-08-06-threejs-hero-hotspot-nav.md`).
