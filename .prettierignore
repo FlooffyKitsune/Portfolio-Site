@@ -2,3 +2,9 @@
 pnpm-lock.yaml
 package-lock.json
 yarn.lock
+
+# SDD workspace scratch directory
+.superpowers
+
+# Historical planning/spec docs — already reviewed/approved, not reformatted by this tooling
+docs
