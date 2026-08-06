@@ -8,7 +8,7 @@ const navItems = [
 ];
 ---
 
-<header>
+<header data-site-header>
 	<a href="/"><img src="/images/svg/logo.svg?v=1" alt="Logo" /></a>
 	<nav>
 		<ul>
@@ -27,12 +27,25 @@ const navItems = [
 	@import '../../styles/tokens';
 
 	header {
+		position: sticky;
+		top: 0;
+		z-index: 10;
 		display: flex;
 		flex-direction: row;
-		background-color: $color-header-bg;
-		box-shadow: $color-shadow 0 5px 15px;
-		width: 100%;
 		align-items: center;
+		width: 100%;
+		background: transparent;
+		border-bottom: 1px solid transparent;
+		transition:
+			background-color $duration-hover $ease-out-quick,
+			border-color $duration-hover $ease-out-quick;
+
+		&.is-scrolled {
+			background: $glass-fill;
+			backdrop-filter: blur($glass-blur);
+			-webkit-backdrop-filter: blur($glass-blur);
+			border-bottom-color: $glass-border;
+		}
 
 		a {
 			display: flex;
@@ -61,19 +74,19 @@ const navItems = [
 
 				li {
 					padding: 0 1rem;
-					font-size: 1.2rem;
-					font-weight: 500;
-					font-family: $font-heading;
-					letter-spacing: 0.1rem;
+					font-size: $font-size-caption;
+					font-weight: $font-weight-medium;
+					font-family: $font-sans;
+					letter-spacing: $letter-spacing-wide;
 					text-transform: uppercase;
 
 					a {
 						text-decoration: none;
-						color: $color-accent-purple;
-						transition: color 0.3s ease;
+						color: $color-accent;
+						transition: color $duration-hover $ease-out-quick;
 
 						&:hover {
-							color: $color-accent-purple-dark;
+							color: $color-hover-accent;
 						}
 					}
 				}
@@ -110,3 +123,28 @@ const navItems = [
 		}
 	}
 </style>
+
+<script>
+	const SCROLL_THRESHOLD = 24;
+	let header: HTMLElement | null = null;
+
+	function updateScrolledState() {
+		if (!header) return;
+		header.classList.toggle('is-scrolled', window.scrollY > SCROLL_THRESHOLD);
+	}
+
+	function setup() {
+		header = document.querySelector('header[data-site-header]');
+		if (!header) return;
+		updateScrolledState();
+		window.addEventListener('scroll', updateScrolledState, { passive: true });
+	}
+
+	function teardown() {
+		window.removeEventListener('scroll', updateScrolledState);
+		header = null;
+	}
+
+	document.addEventListener('astro:page-load', setup);
+	document.addEventListener('astro:before-swap', teardown);
+</script>

@@ -7,10 +7,6 @@
 // should reference the canonical names ($font-sans, $font-mono, $gradient-accent, etc.)
 // directly.
 //
-// $color-accent-purple, $color-accent-purple-dark, $color-header-bg, and $color-shadow
-// are Header.astro's own legacy tokens, left untouched here — Header.astro (and these
-// four) are updated/retired in a later task in this same plan, not this one.
-//
 // $gradient-warm keeps its original value, unaliased — it's a true legacy holdout used
 // by every page's current section-heading underline, slated for removal page-by-page
 // as each page gets its own future redesign pass (out of scope here).
@@ -23,11 +19,6 @@ $color-text-muted: #8b8d98;
 
 $color-accent: #8b5cf6;
 $color-hover-accent: #a78bfa;
-
-$color-accent-purple: #b288c0; // legacy — Header.astro only, see file header
-$color-accent-purple-dark: #63458a; // legacy — Header.astro only
-$color-header-bg: #23272a; // legacy — Header.astro only
-$color-shadow: #00000059; // legacy — Header.astro only
 
 $gradient-accent: linear-gradient(to right top, #a78bfa, #8b5cf6, #7c3aed);
 $gradient-purple: $gradient-accent; // legacy alias
