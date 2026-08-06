@@ -1,0 +1,169 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { icons } from '../components/ui/icons';
+
+const GithubIcon = icons['mdi/github'];
+const LinkedinIcon = icons['mdi/linkedin'];
+---
+
+<BaseLayout title="Jarrett Dominic">
+	<main>
+		<img id="background" src="/images/svg/wave.svg" alt="" />
+		<div class="landing-wrapper">
+			<div class="landing-content">
+				<h1>Hi, I am Jarrett Dominic.</h1>
+				<p>I'm a Full-Stack Developer based in Tampa, Florida.</p>
+			</div>
+			<div class="button-wrapper">
+				<a href="https://github.com/FlooffyKitsune" target="_blank" rel="noopener noreferrer">
+					<GithubIcon />
+				</a>
+				<a
+					href="https://www.linkedin.com/in/jarrett-dominic/"
+					target="_blank"
+					rel="noopener noreferrer"
+				>
+					<LinkedinIcon />
+				</a>
+			</div>
+		</div>
+		<div class="gradient"></div>
+	</main>
+</BaseLayout>
+
+<style lang="scss">
+	@import '../styles/tokens';
+
+	main {
+		width: 100%;
+		height: 50rem;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		color: $color-text;
+		font-family: $font-heading;
+		margin-bottom: -2rem;
+		position: relative;
+
+		#background {
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: calc(50rem + 96px);
+			object-fit: cover;
+			object-position: center;
+			z-index: -1;
+			opacity: 0.2;
+		}
+
+		.gradient {
+			width: 100%;
+			height: 6rem;
+			background: linear-gradient(to bottom, rgba(255, 0, 191, 0), $color-bg);
+			position: absolute;
+			top: 50rem;
+			border-bottom: $color-bg 2rem solid;
+		}
+	}
+
+	.landing-wrapper {
+		display: flex;
+		flex-direction: row-reverse;
+		width: 100%;
+
+		.landing-content {
+			width: 63%;
+			padding: 0 2rem;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: flex-start;
+			border-left: $color-text 1px solid;
+
+			h1 {
+				font-family: $font-heading-serif;
+				font-size: 3rem;
+				font-weight: 700;
+				background: $gradient-purple;
+				-webkit-text-fill-color: transparent;
+				-webkit-background-clip: text;
+			}
+
+			p {
+				font-size: 1.5rem;
+				padding-bottom: 2rem;
+			}
+		}
+
+		.button-wrapper {
+			width: 37%;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: end;
+			padding-right: 1rem;
+
+			a {
+				color: $color-text;
+				font-size: 2.5rem;
+				transition: all 0.2s ease-in-out;
+
+				&:hover {
+					color: $color-hover-accent;
+				}
+			}
+		}
+	}
+
+	@media screen and (max-width: $breakpoint-mobile) {
+		main {
+			height: 100%;
+			margin: 5rem 0;
+
+			#background {
+				height: 100vh;
+			}
+
+			.gradient {
+				display: none;
+			}
+		}
+
+		.landing-wrapper {
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+
+			.landing-content {
+				width: 100%;
+				border-left: none;
+				border-bottom: $color-text 1px solid;
+				padding: 0 2rem;
+				text-align: center;
+
+				h1 {
+					font-size: 2rem;
+				}
+
+				p {
+					font-size: 1.2rem;
+				}
+			}
+
+			.button-wrapper {
+				width: 100%;
+				padding: 0;
+				margin-top: 1rem;
+				flex-direction: row;
+				justify-content: center;
+				align-items: center;
+
+				a {
+					margin: 0 1rem;
+				}
+			}
+		}
+	}
+</style>
