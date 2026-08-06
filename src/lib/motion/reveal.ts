@@ -13,6 +13,15 @@ export interface RevealOptions {
 const REVEAL_SELECTOR = '[data-reveal]';
 
 /**
+ * Every `gsap.matchMedia()` instance created by `revealOnScroll` calls made
+ * from `initRevealElements`. Each one registers native `matchMedia(...)`
+ * change listeners and a GSAP `Context` in GSAP's module-level media
+ * registry; without tracking and killing them in `teardownRevealElements`,
+ * they'd accumulate indefinitely across client-side navigations.
+ */
+let activeMatchMedias: gsap.MatchMedia[] = [];
+
+/**
  * Fades and slides `element` in as it scrolls into view — the default
  * section-entrance animation. Uses `expo.out`, the closest built-in GSAP ease
  * to the `$ease-out-expo` CSS token, so scroll reveals and CSS hover
@@ -48,16 +57,21 @@ export function revealOnScroll(element: Element, options: RevealOptions = {}) {
  */
 export function initRevealElements() {
 	document.querySelectorAll(REVEAL_SELECTOR).forEach((element) => {
-		revealOnScroll(element);
+		activeMatchMedias.push(revealOnScroll(element));
 	});
 }
 
 /**
- * Kills every ScrollTrigger created by `initRevealElements`. Called on
- * `astro:before-swap` (BaseLayout.astro), before the outgoing page's DOM
- * (and the elements these triggers are attached to) is discarded — without
- * this, triggers would accumulate and double-fire across navigations.
+ * Kills every ScrollTrigger and `gsap.matchMedia()` instance created by
+ * `initRevealElements`. Called on `astro:before-swap` (BaseLayout.astro),
+ * before the outgoing page's DOM (and the elements these triggers are
+ * attached to) is discarded — without this, triggers would accumulate and
+ * double-fire across navigations, and the matchMedia instances would leak
+ * their `prefers-reduced-motion` change listeners for the lifetime of the
+ * SPA session.
  */
 export function teardownRevealElements() {
 	ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
+	activeMatchMedias.forEach((mm) => mm.kill());
+	activeMatchMedias = [];
 }
