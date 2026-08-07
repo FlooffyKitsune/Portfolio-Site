@@ -9,13 +9,16 @@ const LinkedinIcon = icons['mdi/linkedin'];
 
 <BaseLayout title="Jarrett Dominic">
 	<main>
-		<img id="background" src="/images/svg/wave.svg" alt="" />
+		<img id="background" data-hero-intro src="/images/svg/wave.svg" alt="" />
 		<div id="hero-root"></div>
 		<div class="landing-wrapper">
-			<div class="landing-content">
+			<div class="landing-content" data-hero-intro>
 				<h1>Hi, I am Jarrett Dominic.</h1>
-				<p>I'm a Full-Stack Developer based in Tampa, Florida.</p>
-				<nav class="hotspot-links" data-hero-links aria-label="Portfolio sections">
+				<p>
+					I'm a Full-Stack Developer based in Tampa, Florida.
+					<span class="loading-pulse" data-loading-pulse hidden aria-hidden="true"></span>
+				</p>
+				<nav class="hotspot-links" aria-label="Portfolio sections">
 					<ul>
 						{
 							hotspots.map((hotspot) => (
@@ -40,12 +43,13 @@ const LinkedinIcon = icons['mdi/linkedin'];
 				</a>
 			</div>
 		</div>
+		<div class="hero-tooltip" data-hero-tooltip hidden>Click around to explore</div>
 		<div class="gradient"></div>
 	</main>
 </BaseLayout>
 
 <style lang="scss">
-	@import '../styles/tokens';
+	@use '../styles/tokens' as *;
 
 	main {
 		width: 100%;
@@ -131,6 +135,16 @@ const LinkedinIcon = icons['mdi/linkedin'];
 				font-size: 1.5rem;
 				padding-bottom: 2rem;
 				/* See the h1 rule above — same reasoning, same tradeoff. */
+
+				.loading-pulse {
+					display: inline-block;
+					width: 0.5rem;
+					height: 0.5rem;
+					margin-left: 0.5rem;
+					border-radius: 50%;
+					background: $color-accent;
+					animation: hero-pulse 1.4s ease-in-out infinite;
+				}
 			}
 
 			.hotspot-links {
@@ -177,6 +191,37 @@ const LinkedinIcon = icons['mdi/linkedin'];
 					color: $color-hover-accent;
 				}
 			}
+		}
+	}
+
+	.hero-tooltip {
+		position: absolute;
+		right: 2rem;
+		bottom: 3rem;
+		z-index: 3;
+		padding: 0.5rem 1rem;
+		border-radius: $radius-md;
+		background: $glass-fill;
+		backdrop-filter: blur($glass-blur);
+		-webkit-backdrop-filter: blur($glass-blur);
+		border: 1px solid $glass-border;
+		color: $color-text;
+		font-family: $font-sans;
+		font-size: $font-size-caption;
+		opacity: 0;
+		visibility: hidden;
+		pointer-events: none;
+	}
+
+	@keyframes hero-pulse {
+		0%,
+		100% {
+			opacity: 0.4;
+			transform: scale(0.85);
+		}
+		50% {
+			opacity: 1;
+			transform: scale(1.15);
 		}
 	}
 
@@ -237,6 +282,7 @@ const LinkedinIcon = icons['mdi/linkedin'];
 
 <script>
 	import { unmount } from 'svelte';
+	import { gsap } from '../lib/motion/gsap-setup';
 	import { shouldUseSimplifiedHero } from '../lib/three/capability-detection';
 
 	// The site uses <ClientRouter />, so this module is evaluated exactly once for
@@ -250,20 +296,57 @@ const LinkedinIcon = icons['mdi/linkedin'];
 	// callback belonging to a superseded page can't touch the current DOM.
 	let generation = 0;
 
-	function setFallbackHidden(hidden: boolean) {
-		const background = document.getElementById('background');
-		if (hidden) background?.setAttribute('hidden', '');
-		else background?.removeAttribute('hidden');
+	function showLoadingPulse() {
+		document.querySelector('[data-loading-pulse]')?.removeAttribute('hidden');
+	}
 
-		document.querySelectorAll('[data-hero-links]').forEach((el) => {
-			if (hidden) el.setAttribute('hidden', '');
-			else el.removeAttribute('hidden');
+	function hideLoadingPulse() {
+		document.querySelector('[data-loading-pulse]')?.setAttribute('hidden', '');
+	}
+
+	function revealHero() {
+		hideLoadingPulse();
+		const introElements = document.querySelectorAll('[data-hero-intro]');
+		gsap.to(introElements, {
+			autoAlpha: 0,
+			duration: 0.8,
+			ease: 'expo.out',
+			onComplete: () => {
+				introElements.forEach((el) => el.setAttribute('hidden', ''));
+				showTooltip();
+			}
+		});
+	}
+
+	function showTooltip() {
+		const tooltip = document.querySelector('[data-hero-tooltip]');
+		if (!tooltip) return;
+		tooltip.removeAttribute('hidden');
+		gsap.to(tooltip, { autoAlpha: 1, duration: 0.8, ease: 'expo.out' });
+	}
+
+	function dismissTooltip() {
+		const tooltip = document.querySelector('[data-hero-tooltip]');
+		if (!tooltip) return;
+		gsap.to(tooltip, {
+			autoAlpha: 0,
+			duration: 0.3,
+			ease: 'expo.out',
+			onComplete: () => tooltip.setAttribute('hidden', '')
 		});
 	}
 
 	function teardownHero() {
 		generation += 1;
 		mounting = false;
+		// The intro/tooltip fades' onComplete callbacks only ever touch local
+		// DOM state (no cross-page side effect like a navigation call), so a
+		// stale tween ticking against an about-to-be-discarded page is harmless
+		// either way — killed here purely for cleanliness, matching this
+		// project's established practice of not leaving animations running
+		// against departed page state.
+		gsap.killTweensOf('[data-hero-intro]');
+		gsap.killTweensOf('[data-hero-tooltip]');
 		if (!app) return;
 		const mounted = app;
 		app = null;
@@ -287,6 +370,11 @@ const LinkedinIcon = icons['mdi/linkedin'];
 		});
 		if (useSimplified) return;
 
+		// Reveal the loading signal as soon as we've committed to the 3D path —
+		// before the dynamic import (and the much larger model download inside
+		// it) even starts, not just once the download begins.
+		showLoadingPulse();
+
 		const mountGeneration = generation;
 		mounting = true;
 
@@ -301,20 +389,24 @@ const LinkedinIcon = icons['mdi/linkedin'];
 					// time would leave a completely blank hero for the whole download.
 					onready: () => {
 						if (mountGeneration !== generation) return;
-						setFallbackHidden(true);
+						revealHero();
 					},
 					onerror: (error: unknown) => {
 						if (mountGeneration !== generation) return;
 						console.error('[hero] 3D scene failed to load; keeping static hero', error);
 						teardownHero();
-						setFallbackHidden(false);
+						hideLoadingPulse();
+					},
+					oninteract: () => {
+						if (mountGeneration !== generation) return;
+						dismissTooltip();
 					}
 				});
 			})
 			.catch((error: unknown) => {
 				if (mountGeneration !== generation) return;
 				console.error('[hero] failed to load 3D hero module; keeping static hero', error);
-				setFallbackHidden(false);
+				hideLoadingPulse();
 			})
 			.finally(() => {
 				if (mountGeneration === generation) mounting = false;
