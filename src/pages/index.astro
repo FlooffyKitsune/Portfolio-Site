@@ -9,15 +9,38 @@ const LinkedinIcon = icons['mdi/linkedin'];
 
 <BaseLayout title="Jarrett Dominic">
 	<main>
+		<!--
+			Runs before `.hotspot-links` below is even parsed, so the
+			`html.hero-3d-capable .hotspot-links { visibility: hidden }` guard
+			(global.scss) applies from the very first frame — otherwise the nav
+			pills would render fully visible and then snap invisible once
+			hideNavLinksForLoad() runs at astro:page-load. Mirrors
+			shouldUseSimplifiedHero()'s exact checks; the real function runs at
+			astro:page-load and is the source of truth, this is only a
+			same-answer pre-paint guess. Visitors who don't qualify (or have JS
+			disabled) never get the class, so the nav always renders normally
+			for them.
+		-->
+		<script is:inline>
+			(function () {
+				var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+				var narrow = window.innerWidth < 768;
+				var lowCores =
+					navigator.hardwareConcurrency !== undefined && navigator.hardwareConcurrency < 4;
+				if (!reducedMotion && !narrow && !lowCores) {
+					document.documentElement.classList.add('hero-3d-capable');
+				}
+			})();
+		</script>
 		<img id="background" data-hero-intro src="/images/svg/wave.svg" alt="" />
 		<div id="hero-root"></div>
 		<div class="landing-wrapper">
 			<div class="landing-content" data-hero-intro>
 				<h1>Hi, I am Jarrett Dominic.</h1>
-				<p>
-					I'm a Full-Stack Developer based in Tampa, Florida.
-					<span class="loading-pulse" data-loading-pulse hidden aria-hidden="true"></span>
-				</p>
+				<p>I'm a Full-Stack Developer based in Tampa, Florida.</p>
+				<div class="loading-bar" data-loading-bar hidden aria-hidden="true">
+					<div class="loading-bar__fill"></div>
+				</div>
 				<nav class="hotspot-links" aria-label="Portfolio sections">
 					<ul>
 						{
@@ -141,20 +164,28 @@ const LinkedinIcon = icons['mdi/linkedin'];
 				font-size: 1.5rem;
 				padding-bottom: 2rem;
 				/* See the h1 rule above — same reasoning, same tradeoff. */
+			}
 
-				.loading-pulse {
-					display: inline-block;
-					width: 0.75rem;
-					height: 0.75rem;
-					margin-left: 0.5rem;
-					border-radius: 50%;
-					background: $color-accent;
-					box-shadow: 0 0 8px 1px $color-accent;
-					animation: hero-pulse 1.1s ease-in-out infinite;
+			.loading-bar {
+				width: 100%;
+				height: 0.4rem;
+				margin-bottom: 2rem;
+				border-radius: 999px;
+				background: rgba($color-text, 0.1);
+				overflow: hidden;
+				position: relative;
 
-					&[hidden] {
-						display: none;
-					}
+				&[hidden] {
+					display: none;
+				}
+
+				.loading-bar__fill {
+					position: absolute;
+					inset: 0 auto 0 0;
+					width: 40%;
+					border-radius: inherit;
+					background: $gradient-purple;
+					animation: loading-bar-scan 1.3s ease-in-out infinite;
 				}
 			}
 
@@ -243,15 +274,12 @@ const LinkedinIcon = icons['mdi/linkedin'];
 		pointer-events: none;
 	}
 
-	@keyframes hero-pulse {
-		0%,
-		100% {
-			opacity: 0.35;
-			transform: scale(0.7);
+	@keyframes loading-bar-scan {
+		0% {
+			left: -40%;
 		}
-		50% {
-			opacity: 1;
-			transform: scale(1.3);
+		100% {
+			left: 100%;
 		}
 	}
 
@@ -331,12 +359,12 @@ const LinkedinIcon = icons['mdi/linkedin'];
 	// hovered (oninteract only fires on a hotspot *change*, not continuously).
 	let interacted = false;
 
-	function showLoadingPulse() {
-		document.querySelector('[data-loading-pulse]')?.removeAttribute('hidden');
+	function showLoadingBar() {
+		document.querySelector('[data-loading-bar]')?.removeAttribute('hidden');
 	}
 
-	function hideLoadingPulse() {
-		document.querySelector('[data-loading-pulse]')?.setAttribute('hidden', '');
+	function hideLoadingBar() {
+		document.querySelector('[data-loading-bar]')?.setAttribute('hidden', '');
 	}
 
 	function hideNavLinksForLoad() {
@@ -404,10 +432,12 @@ const LinkedinIcon = icons['mdi/linkedin'];
 		});
 		// Two separate tweens on purpose: the slide (movement) reads best with
 		// a decelerating ease, while a fade using that same curve looks like an
-		// instant pop rather than a fade (expo.out reaches ~90% of its value
-		// within the first third of the duration) — see the #hero-root fade
-		// below for the same reasoning.
-		gsap.to(wrapper, { left: targetLeft, top: targetTop, duration: 0.8, ease: 'expo.out' });
+		// instant pop rather than a fade — see the #hero-root fade below for
+		// the same reasoning. `power2.out` (not `expo.out`) for the slide
+		// itself too: expo.out is so front-loaded that a ~370px move reads as
+		// an instant jump followed by a barely-perceptible drift, rather than
+		// a visible glide across the full 0.8s.
+		gsap.to(wrapper, { left: targetLeft, top: targetTop, duration: 0.8, ease: 'power2.out' });
 		gsap.to(wrapper, {
 			backgroundColor: targetBackground,
 			borderColor: targetBorderColor,
@@ -417,7 +447,7 @@ const LinkedinIcon = icons['mdi/linkedin'];
 	}
 
 	function revealHero() {
-		hideLoadingPulse();
+		hideLoadingBar();
 		moveButtonsToCorner();
 		// Crossfades the 3D scene in as the intro group fades out below, rather
 		// than it simply being present at full opacity the moment the model
@@ -498,7 +528,7 @@ const LinkedinIcon = icons['mdi/linkedin'];
 		// Reveal the loading signal as soon as we've committed to the 3D path —
 		// before the dynamic import (and the much larger model download inside
 		// it) even starts, not just once the download begins.
-		showLoadingPulse();
+		showLoadingBar();
 		hideNavLinksForLoad();
 
 		const mountGeneration = generation;
@@ -521,7 +551,7 @@ const LinkedinIcon = icons['mdi/linkedin'];
 						if (mountGeneration !== generation) return;
 						console.error('[hero] 3D scene failed to load; keeping static hero', error);
 						teardownHero();
-						hideLoadingPulse();
+						hideLoadingBar();
 						restoreNavLinksDefault();
 					},
 					oninteract: () => {
@@ -534,13 +564,32 @@ const LinkedinIcon = icons['mdi/linkedin'];
 			.catch((error: unknown) => {
 				if (mountGeneration !== generation) return;
 				console.error('[hero] failed to load 3D hero module; keeping static hero', error);
-				hideLoadingPulse();
+				hideLoadingBar();
 				restoreNavLinksDefault();
 			})
 			.finally(() => {
 				if (mountGeneration === generation) mounting = false;
 			});
 	}
+
+	// ClientRouter wipes every attribute off <html> on every swap (see
+	// swapRootAttributes in astro/dist/transitions/swap-functions.js), and the
+	// is:inline script that first added `hero-3d-capable` doesn't re-run on a
+	// later navigation back to this page — so without this, a return visit's
+	// `.hotspot-links` would render visible again (no class to hide it) for a
+	// moment before setupHero() catches up. astro:after-swap runs
+	// synchronously right after the swap and before the new page paints, so
+	// re-adding it here closes that gap. Uses the real shouldUseSimplifiedHero()
+	// (not the is:inline guess) since the module is already loaded by now.
+	document.addEventListener('astro:after-swap', () => {
+		if (!document.getElementById('hero-root')) return;
+		const useSimplified = shouldUseSimplifiedHero({
+			viewportWidth: window.innerWidth,
+			prefersReducedMotion: window.matchMedia('(prefers-reduced-motion: reduce)').matches,
+			hardwareConcurrency: navigator.hardwareConcurrency
+		});
+		if (!useSimplified) document.documentElement.classList.add('hero-3d-capable');
+	});
 
 	// astro:page-load fires after the initial load *and* after every client-side
 	// navigation; astro:before-swap fires just before the outgoing DOM (including
