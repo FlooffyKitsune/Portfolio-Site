@@ -31,8 +31,8 @@ export const hotspotHighlightIntensityBoost = 0.6;
  * CSS color for the full-viewport fade-through overlay shown on hotspot
  * click, before navigating. A CSS-ready string rather than a three.js hex
  * number (unlike `hotspotHighlightColor` above) because this paints a plain
- * DOM element, not a three.js material. Same violet as `$color-accent` /
- * `hotspotHighlightColor` — kept in sync by hand for the same reason noted
- * on `hotspotHighlightColor`.
+ * DOM element, not a three.js material. Matches `$color-bg` in
+ * `src/styles/tokens.scss` for a cinematic fade-to-black effect. Kept in sync
+ * by hand because there's no build-time bridge between SCSS tokens and this file.
  */
-export const fadeOverlayColor = '#8b5cf6';
+export const fadeOverlayColor = '#0a0a0c';
