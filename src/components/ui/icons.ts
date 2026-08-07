@@ -40,6 +40,25 @@ import DocumentSolid from 'virtual:icons/basil/document-solid';
 import GithubMdi from 'virtual:icons/mdi/github';
 import LinkedinMdi from 'virtual:icons/mdi/linkedin';
 import EmailMdi from 'virtual:icons/mdi/email';
+import LuaSimple from 'virtual:icons/simple-icons/lua';
+import AstroSimple from 'virtual:icons/simple-icons/astro';
+import NextDotJs from 'virtual:icons/simple-icons/nextdotjs';
+import ThreeDotJs from 'virtual:icons/simple-icons/threedotjs';
+import SupabaseSimple from 'virtual:icons/simple-icons/supabase';
+import GodotEngine from 'virtual:icons/simple-icons/godotengine';
+import DockerSimple from 'virtual:icons/simple-icons/docker';
+import DatabaseMdi from 'virtual:icons/mdi/database';
+import ApiMdi from 'virtual:icons/mdi/api';
+import GamepadMdi from 'virtual:icons/mdi/gamepad-variant-outline';
+import AppBracketsMdi from 'virtual:icons/mdi/application-brackets-outline';
+import DashboardMdi from 'virtual:icons/mdi/view-dashboard-outline';
+import CubeScanMdi from 'virtual:icons/mdi/cube-scan';
+import BrushMdi from 'virtual:icons/mdi/brush-variant';
+import CubeOutlineMdi from 'virtual:icons/mdi/cube-outline';
+import AnimationPlayMdi from 'virtual:icons/mdi/animation-play-outline';
+import PencilMdi from 'virtual:icons/mdi/pencil-outline';
+import PaletteSwatchMdi from 'virtual:icons/mdi/palette-swatch';
+import PaletteMdi from 'virtual:icons/mdi/palette';
 
 // unplugin-icons compiles each import to a Svelte component; `any` avoids
 // fighting the generated component types just to store them in a lookup map.
@@ -85,5 +104,24 @@ export const icons: Record<string, any> = {
 	'basil/document-solid': DocumentSolid,
 	'mdi/github': GithubMdi,
 	'mdi/linkedin': LinkedinMdi,
-	'mdi/email': EmailMdi
+	'mdi/email': EmailMdi,
+	'simple-icons/lua': LuaSimple,
+	'simple-icons/astro': AstroSimple,
+	'simple-icons/nextdotjs': NextDotJs,
+	'simple-icons/threedotjs': ThreeDotJs,
+	'simple-icons/supabase': SupabaseSimple,
+	'simple-icons/godotengine': GodotEngine,
+	'simple-icons/docker': DockerSimple,
+	'mdi/database': DatabaseMdi,
+	'mdi/api': ApiMdi,
+	'mdi/gamepad-variant-outline': GamepadMdi,
+	'mdi/application-brackets-outline': AppBracketsMdi,
+	'mdi/view-dashboard-outline': DashboardMdi,
+	'mdi/cube-scan': CubeScanMdi,
+	'mdi/brush-variant': BrushMdi,
+	'mdi/cube-outline': CubeOutlineMdi,
+	'mdi/animation-play-outline': AnimationPlayMdi,
+	'mdi/pencil-outline': PencilMdi,
+	'mdi/palette-swatch': PaletteSwatchMdi,
+	'mdi/palette': PaletteMdi
 };
