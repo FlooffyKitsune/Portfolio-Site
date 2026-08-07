@@ -168,6 +168,7 @@ const LinkedinIcon = icons['mdi/linkedin'];
 
 			.loading-bar {
 				width: 100%;
+				max-width: 35rem;
 				height: 0.4rem;
 				margin-bottom: 2rem;
 				border-radius: 999px;
@@ -395,20 +396,41 @@ const LinkedinIcon = icons['mdi/linkedin'];
 		const links = wrapper.querySelectorAll<HTMLElement>('a');
 		if (links.length === 0) return;
 
-		// Add the glass-pill container first, while the wrapper is still in its
-		// normal flex position — this lets the freeze below capture the box's
-		// real (padded) size. `.pinned`'s background/border are read back
-		// below and then immediately overridden to transparent via inline
-		// style, all before this synchronous block yields to a paint — so the
-		// class's own (opaque) colors are never actually rendered; only the
-		// transparent starting point the fade-in below animates from is.
+		// Measure the icons' real on-screen position before any layout change
+		// below. `.button-wrapper`'s own box is NOT where they visually are:
+		// it's a much wider flex item (`align-items: end` right-aligns the
+		// icons deep inside it), and it's also stretched to match
+		// `.landing-content`'s full height (`.landing-wrapper` has no
+		// `align-items` override, so it defaults to `stretch`). Reading the
+		// wrapper's own rect here (an earlier version did) freezes the wrong
+		// starting point — its left edge sits near the wrapper's own left
+		// edge, only a handful of pixels from the target, so the tween below
+		// would move almost nothing and the icons would just snap into place.
+		const linkRects = Array.from(links).map((a) => a.getBoundingClientRect());
+		const iconsLeft = Math.min(...linkRects.map((r) => r.left));
+		const iconsTop = Math.min(...linkRects.map((r) => r.top));
+
+		// Add the glass-pill container — chrome colors start transparent
+		// (overridden below) so they can fade in.
 		wrapper.classList.add('pinned');
+
+		// Dropping the flex width/stretch here lets the box shrink-wrap its
+		// padded content, which the vertical-centering math below needs an
+		// accurate height for. No left/top yet: setting those next, in the
+		// same synchronous block before any paint, means the browser's
+		// intermediate "static position" guess for this element is never
+		// actually rendered.
+		gsap.set(wrapper, { position: 'absolute', width: 'auto', margin: 0 });
 
 		const parentRect = positionedParent.getBoundingClientRect();
 		const mainRect = main.getBoundingClientRect();
 		const pinnedRect = wrapper.getBoundingClientRect();
-		const currentLeft = pinnedRect.left - parentRect.left;
-		const currentTop = pinnedRect.top - parentRect.top;
+		// The pill's padding insets the icons from its own edges — offsetting
+		// the freeze by that amount keeps the icons visually stationary at the
+		// instant the class was added, so only the tween below moves them.
+		const padding = parseFloat(getComputedStyle(wrapper).paddingLeft);
+		const currentLeft = iconsLeft - padding - parentRect.left;
+		const currentTop = iconsTop - padding - parentRect.top;
 		const targetLeft = mainRect.left + 32 - parentRect.left;
 		const targetTop = mainRect.top + mainRect.height / 2 - pinnedRect.height / 2 - parentRect.top;
 
@@ -422,11 +444,8 @@ const LinkedinIcon = icons['mdi/linkedin'];
 		const targetBorderColor = pinnedStyle.borderColor;
 
 		gsap.set(wrapper, {
-			position: 'absolute',
 			left: currentLeft,
 			top: currentTop,
-			width: 'auto',
-			margin: 0,
 			backgroundColor: 'rgba(0, 0, 0, 0)',
 			borderColor: 'rgba(0, 0, 0, 0)'
 		});
@@ -434,7 +453,7 @@ const LinkedinIcon = icons['mdi/linkedin'];
 		// a decelerating ease, while a fade using that same curve looks like an
 		// instant pop rather than a fade — see the #hero-root fade below for
 		// the same reasoning. `power2.out` (not `expo.out`) for the slide
-		// itself too: expo.out is so front-loaded that a ~370px move reads as
+		// itself too: expo.out is so front-loaded that a large move reads as
 		// an instant jump followed by a barely-perceptible drift, rather than
 		// a visible glide across the full 0.8s.
 		gsap.to(wrapper, { left: targetLeft, top: targetTop, duration: 0.8, ease: 'power2.out' });
