@@ -26,9 +26,11 @@
 		onready?: () => void;
 		/** Fired if the glTF fails to download or parse. */
 		onerror?: (error: unknown) => void;
+		/** Fired the first time the visitor hovers or clicks a hotspot. */
+		oninteract?: () => void;
 	}
 
-	let { onready, onerror }: Props = $props();
+	let { onready, onerror, oninteract }: Props = $props();
 
 	interactivity();
 
@@ -135,6 +137,7 @@
 		const id = findHotspotId(event.object);
 		const hotspot = hotspots.find((h) => h.id === id);
 		if (!hotspot) return;
+		oninteract?.();
 
 		const overlay = ensureOverlay();
 		gsap.to(overlay, {
@@ -180,6 +183,7 @@
 		if (hotspotObject) {
 			applyHighlight(hotspotObject);
 			document.body.style.cursor = 'pointer';
+			oninteract?.();
 		} else {
 			document.body.style.cursor = 'default';
 		}
