@@ -1,17 +1,12 @@
 <script lang="ts">
 	import { onDestroy } from 'svelte';
-	import { T, useTask } from '@threlte/core';
+	import { T } from '@threlte/core';
 	import { useGltf, interactivity } from '@threlte/extras';
 	import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
-	import type { Group, Object3D } from 'three';
+	import type { Object3D } from 'three';
 	import { hotspots } from '../../data/hotspots';
 	import { findHotspotId } from '../../lib/three/hotspot-lookup';
-	import {
-		cameraPosition,
-		cameraFov,
-		autoRotateSpeed,
-		dracoDecoderPath
-	} from '../../lib/three/scene-config';
+	import { cameraPosition, cameraFov, dracoDecoderPath } from '../../lib/three/scene-config';
 
 	interface Props {
 		/** Fired once the glTF has finished downloading/parsing and is in the scene. */
@@ -44,12 +39,6 @@
 		document.body.style.cursor = 'default';
 	});
 
-	let group = $state.raw<Group>();
-
-	useTask((delta) => {
-		if (group) group.rotation.y += autoRotateSpeed * delta;
-	});
-
 	function handleClick(event: { object: Object3D }) {
 		const id = findHotspotId(event.object);
 		const hotspot = hotspots.find((h) => h.id === id);
@@ -67,18 +56,26 @@
 	}
 </script>
 
-<T.PerspectiveCamera makeDefault position={cameraPosition} fov={cameraFov} />
+{#if $gltf && $gltf.cameras[0]}
+	<!-- Sourced from the model's own embedded Camera (framed in Blender) so a
+	     re-export with a different angle just works. The scene is fully static
+	     — nothing in this file animates any transform — so this is simply the
+	     camera the model shipped with, rendered as-is. Kept as a sibling of the
+	     model below (not a descendant) for architectural clarity: cameras are
+	     independent of the geometry they view, not a reason tied to rotation. -->
+	<T is={$gltf.cameras[0]} makeDefault />
+{:else}
+	<T.PerspectiveCamera makeDefault position={cameraPosition} fov={cameraFov} />
+{/if}
 
 <T.AmbientLight intensity={0.6} />
 <T.DirectionalLight intensity={1} position={[5, 10, 5]} />
 
 {#if $gltf}
-	<T.Group bind:ref={group}>
-		<T
-			is={$gltf.scene}
-			onclick={handleClick}
-			onpointerenter={handlePointerEnter}
-			onpointerleave={handlePointerLeave}
-		/>
-	</T.Group>
+	<T
+		is={$gltf.scene}
+		onclick={handleClick}
+		onpointerenter={handlePointerEnter}
+		onpointerleave={handlePointerLeave}
+	/>
 {/if}
