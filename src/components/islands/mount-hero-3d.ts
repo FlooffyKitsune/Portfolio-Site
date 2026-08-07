@@ -6,6 +6,8 @@ export interface MountHero3DCallbacks {
 	onready?: () => void;
 	/** Called if the hero model fails to load. */
 	onerror?: (error: unknown) => void;
+	/** Called the first time the visitor hovers or clicks a hotspot. */
+	oninteract?: () => void;
 }
 
 /**
