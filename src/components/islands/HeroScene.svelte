@@ -153,7 +153,24 @@
 	// model as a whole", never once per hotspot-to-hotspot transition.
 	// `onpointermove` reports the actually-intersected mesh on every call,
 	// which is what makes correct per-hotspot tracking possible.
-	function handlePointerMove(event: { object: Object3D }) {
+	//
+	// Only the single registered object ($gltf.scene) has handlers, but
+	// three.js's raycaster still reports every object the ray passes through
+	// (not just the nearest), and Threlte's dispatcher calls onpointermove
+	// once per hit, nearest first, all synchronously within one real pointer
+	// move. Left unguarded, a hit on a hotspot's mesh gets its highlight
+	// applied and then immediately cleared again by the very next hit
+	// (whatever's occluded behind it — desk, wall, ...) before a frame ever
+	// paints, so hover appeared to do nothing at all. `nativeEvent` is the
+	// same object reference across every hit within one dispatch, so tracking
+	// it lets this handler act only on the first (nearest, unoccluded) hit
+	// and ignore the rest.
+	let lastPointerMoveEvent: Event | null = null;
+
+	function handlePointerMove(event: { object: Object3D; nativeEvent: Event }) {
+		if (event.nativeEvent === lastPointerMoveEvent) return;
+		lastPointerMoveEvent = event.nativeEvent;
+
 		const hotspotObject = findHotspotObject(event.object);
 
 		if (hotspotObject === highlightedHotspot) return;
