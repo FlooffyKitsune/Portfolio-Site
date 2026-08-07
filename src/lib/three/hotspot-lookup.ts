@@ -12,3 +12,14 @@ export function findHotspotId(object: Object3D): string | null {
 	}
 	return null;
 }
+
+export function findHotspotObject(object: Object3D): Object3D | null {
+	let current: Object3D | null = object;
+	while (current) {
+		if (current.name.startsWith(HOTSPOT_PREFIX)) {
+			return current;
+		}
+		current = current.parent;
+	}
+	return null;
+}
