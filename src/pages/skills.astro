@@ -61,12 +61,17 @@ import { skillGroups } from '../data/skills';
 				align-items: center;
 				gap: $space-1;
 				padding: $space-1 $space-3;
-				border: 1px solid $glass-border;
+				border: 1px solid rgba($color-accent, 0.25);
 				border-radius: $radius-sm;
-				background: $glass-fill;
+				background: rgba($color-accent, 0.08);
 				color: $color-text;
 				font-family: $font-sans;
 				font-size: $font-size-body;
+				transition: border-color $duration-hover $ease-out-quick;
+
+				&:hover {
+					border-color: rgba($color-accent, 0.6);
+				}
 			}
 		}
 	}
