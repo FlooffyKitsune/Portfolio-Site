@@ -1,6 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import { BoxGeometry, Group, Mesh, MeshStandardMaterial } from 'three';
-import { applyHighlight, clearHighlight, prepareHotspotForHighlight } from './hotspot-highlight';
+import {
+	applyHighlight,
+	clearAllPreparedHotspots,
+	clearHighlight,
+	prepareHotspotForHighlight
+} from './hotspot-highlight';
 import { hotspotHighlightColor, hotspotHighlightIntensityBoost } from './scene-config';
 
 function makeHotspot() {
@@ -58,5 +63,24 @@ describe('hotspot-highlight', () => {
 		applyHighlight(hotspotGroup);
 
 		expect((unrelatedMesh.material as MeshStandardMaterial).emissive.getHex()).toBe(0x000000);
+	});
+
+	it('clearAllPreparedHotspots removes prepared entries, making applyHighlight a no-op again', () => {
+		const { group, mesh } = makeHotspot();
+		prepareHotspotForHighlight(group);
+
+		// Sanity check: highlighting works before the cleanup call.
+		applyHighlight(group);
+		expect((mesh.material as MeshStandardMaterial).emissive.getHex()).toBe(hotspotHighlightColor);
+		clearHighlight(group);
+
+		clearAllPreparedHotspots();
+
+		// With the entry gone, this hotspot should behave exactly as if it had
+		// never been prepared: applyHighlight is a no-op and doesn't throw.
+		expect(() => applyHighlight(group)).not.toThrow();
+		const material = mesh.material as MeshStandardMaterial;
+		expect(material.emissive.getHex()).toBe(0x000000);
+		expect(material.emissiveIntensity).toBe(0);
 	});
 });
