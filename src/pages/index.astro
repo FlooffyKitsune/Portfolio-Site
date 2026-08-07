@@ -120,16 +120,17 @@ const LinkedinIcon = icons['mdi/linkedin'];
 				background: $gradient-purple;
 				-webkit-text-fill-color: transparent;
 				-webkit-background-clip: text;
-				/* Keep the copy selectable. These are flex items in a
-				   `align-items: flex-start` column, so their boxes hug the text
-				   rather than spanning the full column width. */
-				pointer-events: auto;
+				/* Deliberately NOT pointer-events:auto (unlike the links below):
+				   two of the 3D hero's five hotspots render on-screen underneath
+				   this heading's box, and since the hero is the primary way to
+				   reach them, staying click/hover-through here matters more than
+				   this heading being text-selectable. */
 			}
 
 			p {
 				font-size: 1.5rem;
 				padding-bottom: 2rem;
-				pointer-events: auto;
+				/* See the h1 rule above — same reasoning, same tradeoff. */
 			}
 
 			.hotspot-links {
