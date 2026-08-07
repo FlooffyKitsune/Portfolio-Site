@@ -144,12 +144,13 @@ const LinkedinIcon = icons['mdi/linkedin'];
 
 				.loading-pulse {
 					display: inline-block;
-					width: 0.5rem;
-					height: 0.5rem;
+					width: 0.75rem;
+					height: 0.75rem;
 					margin-left: 0.5rem;
 					border-radius: 50%;
 					background: $color-accent;
-					animation: hero-pulse 1.4s ease-in-out infinite;
+					box-shadow: 0 0 8px 1px $color-accent;
+					animation: hero-pulse 1.1s ease-in-out infinite;
 
 					&[hidden] {
 						display: none;
@@ -239,12 +240,12 @@ const LinkedinIcon = icons['mdi/linkedin'];
 	@keyframes hero-pulse {
 		0%,
 		100% {
-			opacity: 0.4;
-			transform: scale(0.85);
+			opacity: 0.35;
+			transform: scale(0.7);
 		}
 		50% {
 			opacity: 1;
-			transform: scale(1.15);
+			transform: scale(1.3);
 		}
 	}
 
@@ -332,6 +333,14 @@ const LinkedinIcon = icons['mdi/linkedin'];
 		document.querySelector('[data-loading-pulse]')?.setAttribute('hidden', '');
 	}
 
+	function hideButtonsForLoad() {
+		gsap.set('.button-wrapper', { opacity: 0 });
+	}
+
+	function restoreButtonsDefault() {
+		gsap.set('.button-wrapper', { opacity: 1 });
+	}
+
 	function moveButtonsToCorner() {
 		const wrapper = document.querySelector<HTMLElement>('.button-wrapper');
 		// `.button-wrapper`'s absolute positioning below resolves against
@@ -350,13 +359,15 @@ const LinkedinIcon = icons['mdi/linkedin'];
 
 		// Add the glass-pill container first, while the wrapper is still in its
 		// normal flex position — this lets the freeze below capture the box's
-		// real (padded) size, rather than having padding appear mid-tween and
-		// cause a visible jump.
+		// real (padded) size. It's still invisible at this point (opacity: 0
+		// since hideButtonsForLoad()), so adding the chrome here causes no
+		// visible jump — nothing is on screen to jump yet.
 		wrapper.classList.add('pinned');
 
 		// Freeze the pill's actual on-screen position as absolute coordinates
 		// before animating. A flex item's `top`/`left` are `auto`, which GSAP
-		// can't tween from.
+		// can't tween from. Geometry is unaffected by opacity, so this is
+		// accurate even while the wrapper is still invisible.
 		const parentRect = positionedParent.getBoundingClientRect();
 		const mainRect = main.getBoundingClientRect();
 		const pinnedRect = wrapper.getBoundingClientRect();
@@ -372,7 +383,13 @@ const LinkedinIcon = icons['mdi/linkedin'];
 			width: 'auto',
 			margin: 0
 		});
+		// Two separate tweens on purpose: the slide (movement) reads best with
+		// a decelerating ease, while a fade using that same curve looks like an
+		// instant pop rather than a fade (expo.out reaches ~90% of its value
+		// within the first third of the duration) — see the #hero-root fade
+		// below for the same reasoning.
 		gsap.to(wrapper, { left: targetLeft, top: targetTop, duration: 0.8, ease: 'expo.out' });
+		gsap.to(wrapper, { opacity: 1, duration: 0.8, ease: 'sine.inOut' });
 	}
 
 	function revealHero() {
@@ -381,13 +398,16 @@ const LinkedinIcon = icons['mdi/linkedin'];
 		// Crossfades the 3D scene in as the intro group fades out below, rather
 		// than it simply being present at full opacity the moment the model
 		// finishes loading (which — outside the text block's own footprint —
-		// was visible across most of the hero area).
-		gsap.to('#hero-root', { opacity: 1, duration: 0.8, ease: 'expo.out' });
+		// was visible across most of the hero area). `sine.inOut` (not
+		// `expo.out`) on purpose: expo.out reaches ~90% of its value within
+		// the first third of the duration, which reads as an instant pop
+		// rather than a fade — sine.inOut spreads the change evenly instead.
+		gsap.to('#hero-root', { opacity: 1, duration: 0.8, ease: 'sine.inOut' });
 		const introElements = document.querySelectorAll('[data-hero-intro]');
 		gsap.to(introElements, {
 			autoAlpha: 0,
 			duration: 0.8,
-			ease: 'expo.out',
+			ease: 'sine.inOut',
 			onComplete: () => {
 				showTooltip();
 			}
@@ -453,8 +473,13 @@ const LinkedinIcon = icons['mdi/linkedin'];
 
 		// Reveal the loading signal as soon as we've committed to the 3D path —
 		// before the dynamic import (and the much larger model download inside
-		// it) even starts, not just once the download begins.
+		// it) even starts, not just once the download begins. The icon links
+		// are hidden for the same window: they'd otherwise sit visible in
+		// their default flex position for the whole load, then jump into
+		// motion once the reveal starts — hiding them here means they instead
+		// slide-and-fade in already in motion, as part of the reveal itself.
 		showLoadingPulse();
+		hideButtonsForLoad();
 
 		const mountGeneration = generation;
 		mounting = true;
@@ -477,6 +502,7 @@ const LinkedinIcon = icons['mdi/linkedin'];
 						console.error('[hero] 3D scene failed to load; keeping static hero', error);
 						teardownHero();
 						hideLoadingPulse();
+						restoreButtonsDefault();
 					},
 					oninteract: () => {
 						if (mountGeneration !== generation) return;
@@ -489,6 +515,7 @@ const LinkedinIcon = icons['mdi/linkedin'];
 				if (mountGeneration !== generation) return;
 				console.error('[hero] failed to load 3D hero module; keeping static hero', error);
 				hideLoadingPulse();
+				restoreButtonsDefault();
 			})
 			.finally(() => {
 				if (mountGeneration === generation) mounting = false;
