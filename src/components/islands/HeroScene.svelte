@@ -5,7 +5,12 @@
 	import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
 	import type { Object3D } from 'three';
 	import { hotspots } from '../../data/hotspots';
-	import { findHotspotId } from '../../lib/three/hotspot-lookup';
+	import { findHotspotId, findHotspotObject } from '../../lib/three/hotspot-lookup';
+	import {
+		applyHighlight,
+		clearHighlight,
+		prepareHotspotForHighlight
+	} from '../../lib/three/hotspot-highlight';
 	import { cameraPosition, cameraFov, dracoDecoderPath } from '../../lib/three/scene-config';
 
 	interface Props {
@@ -26,10 +31,23 @@
 
 	const gltf = useGltf('/models/hero.glb', { dracoLoader });
 
-	// `useGltf` returns an AsyncWritable: a Svelte store that is *also* the
-	// underlying promise, so the caller can be told when the (large) model is
-	// actually usable instead of merely "mounted".
-	gltf.then(() => onready?.()).catch((error: unknown) => onerror?.(error));
+	gltf
+		.then((resolved) => {
+			// One-time material-clone pass per hotspot, so hover highlighting
+			// (wired below) never risks mutating a material shared with a
+			// non-hotspot mesh. Must run before any hover can occur.
+			for (const hotspot of hotspots) {
+				const hotspotObject = resolved.scene.getObjectByName(`hotspot-${hotspot.id}`);
+				if (hotspotObject) prepareHotspotForHighlight(hotspotObject);
+			}
+			onready?.();
+		})
+		.catch((error: unknown) => onerror?.(error));
+
+	// Tracks whichever hotspot is currently highlighted, so a pointermove that
+	// lands on a *different* hotspot (or on no hotspot at all) knows what to
+	// clear before applying (or not applying) a new highlight.
+	let highlightedHotspot: Object3D | null = null;
 
 	onDestroy(() => {
 		dracoLoader.dispose();
@@ -45,14 +63,31 @@
 		if (hotspot) window.location.href = hotspot.route;
 	}
 
-	function handlePointerEnter(event: { object: Object3D }) {
-		if (findHotspotId(event.object)) {
+	// See the file-level note above this task's code block for why this uses
+	// pointermove rather than pointerenter for per-hotspot hover tracking.
+	function handlePointerMove(event: { object: Object3D }) {
+		const hotspotObject = findHotspotObject(event.object);
+
+		if (hotspotObject === highlightedHotspot) return;
+
+		if (highlightedHotspot) clearHighlight(highlightedHotspot);
+
+		if (hotspotObject) {
+			applyHighlight(hotspotObject);
 			document.body.style.cursor = 'pointer';
+		} else {
+			document.body.style.cursor = 'default';
 		}
+
+		highlightedHotspot = hotspotObject;
 	}
 
 	function handlePointerLeave() {
 		document.body.style.cursor = 'default';
+		if (highlightedHotspot) {
+			clearHighlight(highlightedHotspot);
+			highlightedHotspot = null;
+		}
 	}
 </script>
 
@@ -75,7 +110,7 @@
 	<T
 		is={$gltf.scene}
 		onclick={handleClick}
-		onpointerenter={handlePointerEnter}
+		onpointermove={handlePointerMove}
 		onpointerleave={handlePointerLeave}
 	/>
 {/if}
