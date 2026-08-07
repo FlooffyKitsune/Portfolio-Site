@@ -12,37 +12,37 @@ export const skillGroups: SkillGroup[] = [
 	{
 		title: 'Languages',
 		items: [
-			{ label: 'TypeScript', iconKey: 'simple-icons/typescript' },
-			{ label: 'JavaScript', iconKey: 'simple-icons/javascript' },
-			{ label: 'Python', iconKey: 'simple-icons/python' },
-			{ label: 'Java', iconKey: 'fa-brands/java' },
-			{ label: 'PHP', iconKey: 'simple-icons/php' },
-			{ label: 'Lua', iconKey: 'simple-icons/lua' },
+			{ label: 'TypeScript', iconKey: 'logos/typescript-icon' },
+			{ label: 'JavaScript', iconKey: 'logos/javascript' },
+			{ label: 'Python', iconKey: 'logos/python' },
+			{ label: 'Java', iconKey: 'logos/java' },
+			{ label: 'PHP', iconKey: 'logos/php' },
+			{ label: 'Lua', iconKey: 'logos/lua' },
 			{ label: 'SQL', iconKey: 'mdi/database' },
-			{ label: 'HTML', iconKey: 'simple-icons/html5' },
-			{ label: 'CSS', iconKey: 'simple-icons/css3' }
+			{ label: 'HTML', iconKey: 'logos/html-5' },
+			{ label: 'CSS', iconKey: 'logos/css-3' }
 		]
 	},
 	{
 		title: 'Full-Stack Development',
 		items: [
-			{ label: 'React', iconKey: 'simple-icons/react' },
-			{ label: 'Svelte', iconKey: 'simple-icons/svelte' },
-			{ label: 'Astro', iconKey: 'simple-icons/astro' },
-			{ label: 'Next.js', iconKey: 'simple-icons/nextdotjs' },
-			{ label: 'Node.js', iconKey: 'simple-icons/nodedotjs' },
+			{ label: 'React', iconKey: 'logos/react' },
+			{ label: 'Svelte', iconKey: 'logos/svelte-icon' },
+			{ label: 'Astro', iconKey: 'logos/astro-icon' },
+			{ label: 'Next.js', iconKey: 'logos/nextjs-icon' },
+			{ label: 'Node.js', iconKey: 'logos/nodejs-icon' },
 			{ label: 'REST APIs', iconKey: 'mdi/api' },
-			{ label: 'MySQL', iconKey: 'simple-icons/mysql' },
-			{ label: 'MongoDB', iconKey: 'simple-icons/mongodb' },
-			{ label: 'Firebase', iconKey: 'simple-icons/firebase' },
-			{ label: 'Three.js', iconKey: 'simple-icons/threedotjs' },
-			{ label: 'Supabase', iconKey: 'simple-icons/supabase' }
+			{ label: 'MySQL', iconKey: 'logos/mysql' },
+			{ label: 'MongoDB', iconKey: 'logos/mongodb-icon' },
+			{ label: 'Firebase', iconKey: 'logos/firebase-icon' },
+			{ label: 'Three.js', iconKey: 'logos/threejs' },
+			{ label: 'Supabase', iconKey: 'logos/supabase-icon' }
 		]
 	},
 	{
 		title: 'Game Development',
 		items: [
-			{ label: 'Godot', iconKey: 'simple-icons/godotengine' },
+			{ label: 'Godot', iconKey: 'logos/godot-icon' },
 			{ label: 'Game Systems', iconKey: 'mdi/gamepad-variant-outline' },
 			{ label: 'Gameplay Programming', iconKey: 'mdi/application-brackets-outline' },
 			{ label: 'UI / UX', iconKey: 'mdi/view-dashboard-outline' },
@@ -52,7 +52,7 @@ export const skillGroups: SkillGroup[] = [
 	{
 		title: 'Creative',
 		items: [
-			{ label: 'Blender', iconKey: 'simple-icons/blender' },
+			{ label: 'Blender', iconKey: 'logos/blender' },
 			{ label: 'Clip Studio Paint', iconKey: 'mdi/brush-variant' },
 			{ label: '3D Modeling', iconKey: 'mdi/cube-outline' },
 			{ label: '3D Animation', iconKey: 'mdi/animation-play-outline' },
@@ -64,12 +64,12 @@ export const skillGroups: SkillGroup[] = [
 	{
 		title: 'Tools & Infrastructure',
 		items: [
-			{ label: 'Git', iconKey: 'simple-icons/git' },
+			{ label: 'Git', iconKey: 'logos/git-icon' },
 			{ label: 'GitHub', iconKey: 'simple-icons/github' },
-			{ label: 'VS Code', iconKey: 'simple-icons/visualstudiocode' },
-			{ label: 'Docker', iconKey: 'simple-icons/docker' },
-			{ label: 'AWS', iconKey: 'simple-icons/amazonaws' },
-			{ label: 'Adobe Creative Suite', iconKey: 'simple-icons/adobecreativecloud' }
+			{ label: 'VS Code', iconKey: 'logos/visual-studio-code' },
+			{ label: 'Docker', iconKey: 'logos/docker-icon' },
+			{ label: 'AWS', iconKey: 'logos/aws' },
+			{ label: 'Adobe Creative Suite', iconKey: 'logos/adobe-icon' }
 		]
 	}
 ];

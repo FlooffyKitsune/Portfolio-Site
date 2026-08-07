@@ -59,6 +59,28 @@ import AnimationPlayMdi from 'virtual:icons/mdi/animation-play-outline';
 import PencilMdi from 'virtual:icons/mdi/pencil-outline';
 import PaletteSwatchMdi from 'virtual:icons/mdi/palette-swatch';
 import PaletteMdi from 'virtual:icons/mdi/palette';
+import JavascriptLogo from 'virtual:icons/logos/javascript';
+import PythonLogo from 'virtual:icons/logos/python';
+import JavaLogo from 'virtual:icons/logos/java';
+import PhpLogo from 'virtual:icons/logos/php';
+import LuaLogo from 'virtual:icons/logos/lua';
+import Html5Logo from 'virtual:icons/logos/html-5';
+import Css3Logo from 'virtual:icons/logos/css-3';
+import ReactLogo from 'virtual:icons/logos/react';
+import AstroLogo from 'virtual:icons/logos/astro-icon';
+import NextjsLogo from 'virtual:icons/logos/nextjs-icon';
+import NodejsLogo from 'virtual:icons/logos/nodejs-icon';
+import MysqlLogo from 'virtual:icons/logos/mysql';
+import MongodbLogo from 'virtual:icons/logos/mongodb-icon';
+import FirebaseLogo from 'virtual:icons/logos/firebase-icon';
+import ThreejsLogo from 'virtual:icons/logos/threejs';
+import SupabaseLogo from 'virtual:icons/logos/supabase-icon';
+import GodotLogo from 'virtual:icons/logos/godot-icon';
+import GitLogo from 'virtual:icons/logos/git-icon';
+import VsCodeLogo from 'virtual:icons/logos/visual-studio-code';
+import DockerLogo from 'virtual:icons/logos/docker-icon';
+import AwsLogo from 'virtual:icons/logos/aws';
+import AdobeLogo from 'virtual:icons/logos/adobe-icon';
 
 // unplugin-icons compiles each import to a Svelte component; `any` avoids
 // fighting the generated component types just to store them in a lookup map.
@@ -123,5 +145,27 @@ export const icons: Record<string, any> = {
 	'mdi/animation-play-outline': AnimationPlayMdi,
 	'mdi/pencil-outline': PencilMdi,
 	'mdi/palette-swatch': PaletteSwatchMdi,
-	'mdi/palette': PaletteMdi
+	'mdi/palette': PaletteMdi,
+	'logos/javascript': JavascriptLogo,
+	'logos/python': PythonLogo,
+	'logos/java': JavaLogo,
+	'logos/php': PhpLogo,
+	'logos/lua': LuaLogo,
+	'logos/html-5': Html5Logo,
+	'logos/css-3': Css3Logo,
+	'logos/react': ReactLogo,
+	'logos/astro-icon': AstroLogo,
+	'logos/nextjs-icon': NextjsLogo,
+	'logos/nodejs-icon': NodejsLogo,
+	'logos/mysql': MysqlLogo,
+	'logos/mongodb-icon': MongodbLogo,
+	'logos/firebase-icon': FirebaseLogo,
+	'logos/threejs': ThreejsLogo,
+	'logos/supabase-icon': SupabaseLogo,
+	'logos/godot-icon': GodotLogo,
+	'logos/git-icon': GitLogo,
+	'logos/visual-studio-code': VsCodeLogo,
+	'logos/docker-icon': DockerLogo,
+	'logos/aws': AwsLogo,
+	'logos/adobe-icon': AdobeLogo
 };
