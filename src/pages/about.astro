@@ -14,17 +14,26 @@ const DocumentIcon = icons['basil/document-solid'];
 			<div class="about-copy">
 				<h1>About Me</h1>
 				<p>
-					I'm a versatile developer with a primary focus on front-end development. In addition to my
-					expertise in crafting user-friendly interfaces, I bring valuable experience in backend
-					development and graphic design to the table. My coding journey is fueled by a genuine
-					passion for creating digital experiences that seamlessly blend aesthetics and
-					functionality. From developing interactive web applications to designing captivating user
-					interfaces, I thrive on turning ideas into reality.
+					I'm a software engineer who likes building things. That's probably the simplest way to put
+					it.
 				</p>
 				<p>
-					Beyond the screen, I enjoy working on DIY projects and building things from scratch, as
-					well as working with virtual reality. When not immersed in the digital world, you can find
-					me pursuing outdoor adventures whether it be mountain biking or rock climbing.
+					I work across full-stack development, game development, 3D, 2D, and creative tooling, and
+					I tend to pick up whatever skills a project needs along the way. I've never been
+					particularly good at staying in one box. One project might have me building a web
+					application, another might have me developing a game in Godot, and another might have me
+					buried in Blender or Clip Studio trying to make something look right.
+				</p>
+				<p>
+					What I enjoy most is taking an idea from "this would be cool" to something that actually
+					exists. I like understanding how things work, learning new tools, and occasionally going
+					far deeper down a technical rabbit hole than was probably necessary.
+				</p>
+				<p>
+					Beyond the screen, I like keeping things moving. I enjoy traveling, exploring new places,
+					mountain biking, rock climbing, and generally finding excuses to get outside. I'm just as
+					happy spending a day figuring out a technical problem as I am spending one somewhere I've
+					never been before.
 				</p>
 				<a
 					class="resume-button"
@@ -52,9 +61,9 @@ const DocumentIcon = icons['basil/document-solid'];
 			margin: 0 auto;
 			padding: 0 $space-5;
 			display: grid;
-			grid-template-columns: 1fr 1fr;
+			grid-template-columns: 2fr 3fr;
 			gap: $space-6;
-			align-items: center;
+			align-items: start;
 
 			img {
 				width: 100%;
@@ -63,6 +72,14 @@ const DocumentIcon = icons['basil/document-solid'];
 				object-fit: cover;
 				border-radius: $radius-md;
 				display: block;
+				/* The bio grew from two short paragraphs to four longer ones,
+				   well past the photo's own height — rather than growing the
+				   photo to match (it was never meant to be a dominant visual
+				   element), it stays pinned in view as the now-taller text
+				   column scrolls past it. `$space-8` clears Header.astro's own
+				   sticky bar so the two don't overlap when both are stuck. */
+				position: sticky;
+				top: $space-8;
 			}
 
 			.about-copy {
@@ -119,6 +136,7 @@ const DocumentIcon = icons['basil/document-solid'];
 				text-align: center;
 
 				img {
+					position: static;
 					max-width: 16rem;
 					margin: 0 auto;
 				}
