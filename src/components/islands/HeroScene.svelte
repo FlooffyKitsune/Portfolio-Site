@@ -39,8 +39,21 @@
 
 	const gltf = useGltf('/models/hero.glb', { dracoLoader });
 
+	// Guards the async continuation below against a component that's already
+	// been torn down. `hero.glb` is large enough that a visitor can easily
+	// navigate away (a header nav link, say) while it's still downloading: in
+	// that case `onDestroy` runs first — clearing a `preparedHotspots` Map that
+	// is still empty — and only then does the download settle. Without this
+	// flag the prepare pass would run afterwards and write entries into that
+	// module-scoped Map on behalf of a component instance that no longer
+	// exists, so no future teardown could ever reach them. (`index.astro`
+	// solves the same late-arrival problem for its own use of this promise
+	// with a `generation` counter; this is this component's equivalent.)
+	let destroyed = false;
+
 	gltf
 		.then((resolved) => {
+			if (destroyed) return;
 			// One-time material-clone pass per hotspot, so hover highlighting
 			// (wired below) never risks mutating a material shared with a
 			// non-hotspot mesh. Must run before any hover can occur.
@@ -50,7 +63,10 @@
 			}
 			onready?.();
 		})
-		.catch((error: unknown) => onerror?.(error));
+		.catch((error: unknown) => {
+			if (destroyed) return;
+			onerror?.(error);
+		});
 
 	// Tracks whichever hotspot is currently highlighted, so a pointermove that
 	// lands on a *different* hotspot (or on no hotspot at all) knows what to
@@ -85,11 +101,19 @@
 	}
 
 	onDestroy(() => {
+		destroyed = true;
 		dracoLoader.dispose();
 		// The scene is commonly unmounted while the pointer is still over a
 		// hotspot (clicking one navigates away), which would otherwise leave
 		// `cursor: pointer` stuck on <body> for the rest of the session.
 		document.body.style.cursor = 'default';
+		// That same "unmounted while hovering a hotspot" case also leaves the
+		// hotspot's cloned material still mutated to the highlight color.
+		// Restore it before dropping the state that knows how to, so teardown
+		// leaves no material in a highlighted state — rather than relying on
+		// the fact that Threlte's loader cache is per-<Canvas>, and so a
+		// remount happens to re-parse fresh materials anyway.
+		if (highlightedHotspot) clearHighlight(highlightedHotspot);
 		// `preparedHotspots` inside hotspot-highlight.ts is module-scoped, so it
 		// survives remounts under Astro's <ClientRouter /> (see mount-hero-3d.ts:
 		// navigating back to `/` within a session unmounts and remounts this
@@ -121,8 +145,14 @@
 		});
 	}
 
-	// See the file-level note above this task's code block for why this uses
-	// pointermove rather than pointerenter for per-hotspot hover tracking.
+	// Hover tracking is driven by pointermove rather than pointerenter/leave
+	// because Threlte's `interactivity()` registers handlers on whichever
+	// object they're attached to — here the single scene-root `$gltf.scene` —
+	// and tracks hover state keyed by that root object's identity. So
+	// `onpointerenter`/`onpointerleave` alone fire once for "entered/left the
+	// model as a whole", never once per hotspot-to-hotspot transition.
+	// `onpointermove` reports the actually-intersected mesh on every call,
+	// which is what makes correct per-hotspot tracking possible.
 	function handlePointerMove(event: { object: Object3D }) {
 		const hotspotObject = findHotspotObject(event.object);
 

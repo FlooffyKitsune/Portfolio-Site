@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { BoxGeometry, Group, Mesh, MeshStandardMaterial } from 'three';
 import {
 	applyHighlight,
@@ -82,5 +82,17 @@ describe('hotspot-highlight', () => {
 		const material = mesh.material as MeshStandardMaterial;
 		expect(material.emissive.getHex()).toBe(0x000000);
 		expect(material.emissiveIntensity).toBe(0);
+	});
+
+	it('clearAllPreparedHotspots disposes the cloned materials it drops', () => {
+		const { group, mesh } = makeHotspot();
+		prepareHotspotForHighlight(group);
+
+		const cloned = mesh.material as MeshStandardMaterial;
+		const disposeSpy = vi.spyOn(cloned, 'dispose');
+
+		clearAllPreparedHotspots();
+
+		expect(disposeSpy).toHaveBeenCalledOnce();
 	});
 });

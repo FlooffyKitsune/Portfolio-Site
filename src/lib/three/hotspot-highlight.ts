@@ -2,7 +2,6 @@ import type { Color, Mesh, MeshStandardMaterial, Object3D } from 'three';
 import { hotspotHighlightColor, hotspotHighlightIntensityBoost } from './scene-config';
 
 interface MeshOriginalState {
-	mesh: Mesh;
 	material: MeshStandardMaterial;
 	emissive: Color;
 	emissiveIntensity: number;
@@ -25,11 +24,14 @@ function collectMeshes(root: Object3D): Mesh[] {
  * across multiple objects (common in exported glTFs for efficiency). Call
  * once per hotspot after the model has loaded, before any hover can occur.
  *
- * Materials are expected to be `MeshStandardMaterial` (or a subclass, like
+ * Materials are `MeshStandardMaterial` (or a subclass, like
  * `MeshPhysicalMaterial`, which extends it and keeps the same `emissive`/
  * `emissiveIntensity` properties) — the standard result of glTF's default
- * metallic-roughness material model. Verify this against the real
- * `hero.glb` during implementation rather than assuming it.
+ * metallic-roughness material model. This was confirmed against the real
+ * `hero.glb`: every hotspot primitive uses `TRIANGLES` mode with a material,
+ * and the material extensions the export relies on (`KHR_materials_specular`,
+ * `KHR_materials_ior`, `KHR_materials_emissive_strength`) all map onto
+ * `MeshStandardMaterial`/`MeshPhysicalMaterial` in three.js's GLTFLoader.
  */
 export function prepareHotspotForHighlight(hotspotObject: Object3D): void {
 	const states: MeshOriginalState[] = [];
@@ -41,7 +43,6 @@ export function prepareHotspotForHighlight(hotspotObject: Object3D): void {
 		const cloned = original.clone();
 		mesh.material = cloned;
 		states.push({
-			mesh,
 			material: cloned,
 			emissive: original.emissive.clone(),
 			emissiveIntensity: original.emissiveIntensity
@@ -70,8 +71,10 @@ export function clearHighlight(hotspotObject: Object3D): void {
 }
 
 /**
- * Forgets every hotspot's prepared state, so the cloned materials (and the
- * meshes/geometries they keep reachable) become garbage-collectible.
+ * Disposes every hotspot's cloned materials and forgets the prepared state,
+ * so those clones release their GPU-side resources immediately rather than
+ * waiting on GC (mirroring the `dracoLoader.dispose()` call on the same
+ * teardown path).
  *
  * `preparedHotspots` is module-scoped, not tied to any component instance —
  * and this site uses Astro's `<ClientRouter />`, under which navigating away
@@ -80,13 +83,18 @@ export function clearHighlight(hotspotObject: Object3D): void {
  * module graph, including this Map, survives that remount. Without calling
  * this on teardown, every remount's `prepareHotspotForHighlight` pass would
  * add five more entries on top of the previous mount's five, each holding a
- * strong reference to that mount's now-orphaned Mesh/material objects —
- * unbounded growth across repeat homepage visits in one session.
+ * strong reference to that mount's now-orphaned material clones — unbounded
+ * growth across repeat homepage visits in one session.
  *
- * Call once from the component's teardown path (after clearing any active
- * highlight, though order doesn't matter for correctness — this just drops
- * references).
+ * Call once from the component's teardown path, *after* clearing any active
+ * highlight: this is the only record of a highlighted material's original
+ * emissive values, so once it's gone there's nothing left to restore from.
  */
 export function clearAllPreparedHotspots(): void {
+	for (const states of preparedHotspots.values()) {
+		for (const state of states) {
+			state.material.dispose();
+		}
+	}
 	preparedHotspots.clear();
 }
