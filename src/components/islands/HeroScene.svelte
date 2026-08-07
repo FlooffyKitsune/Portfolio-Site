@@ -8,6 +8,7 @@
 	import { findHotspotId, findHotspotObject } from '../../lib/three/hotspot-lookup';
 	import {
 		applyHighlight,
+		clearAllPreparedHotspots,
 		clearHighlight,
 		prepareHotspotForHighlight
 	} from '../../lib/three/hotspot-highlight';
@@ -55,6 +56,12 @@
 		// hotspot (clicking one navigates away), which would otherwise leave
 		// `cursor: pointer` stuck on <body> for the rest of the session.
 		document.body.style.cursor = 'default';
+		// `preparedHotspots` inside hotspot-highlight.ts is module-scoped, so it
+		// survives remounts under Astro's <ClientRouter /> (see mount-hero-3d.ts:
+		// navigating back to `/` within a session unmounts and remounts this
+		// component without a full page reload). Without this, every remount's
+		// prepare pass would leak the previous mount's cloned materials/meshes.
+		clearAllPreparedHotspots();
 	});
 
 	function handleClick(event: { object: Object3D }) {

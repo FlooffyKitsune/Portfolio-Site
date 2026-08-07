@@ -68,3 +68,25 @@ export function clearHighlight(hotspotObject: Object3D): void {
 		state.material.emissiveIntensity = state.emissiveIntensity;
 	}
 }
+
+/**
+ * Forgets every hotspot's prepared state, so the cloned materials (and the
+ * meshes/geometries they keep reachable) become garbage-collectible.
+ *
+ * `preparedHotspots` is module-scoped, not tied to any component instance —
+ * and this site uses Astro's `<ClientRouter />`, under which navigating away
+ * from and back to `/` within one browsing session unmounts and remounts
+ * `Hero3D` without a full page reload (see `mount-hero-3d.ts`). The JS
+ * module graph, including this Map, survives that remount. Without calling
+ * this on teardown, every remount's `prepareHotspotForHighlight` pass would
+ * add five more entries on top of the previous mount's five, each holding a
+ * strong reference to that mount's now-orphaned Mesh/material objects —
+ * unbounded growth across repeat homepage visits in one session.
+ *
+ * Call once from the component's teardown path (after clearing any active
+ * highlight, though order doesn't matter for correctness — this just drops
+ * references).
+ */
+export function clearAllPreparedHotspots(): void {
+	preparedHotspots.clear();
+}
