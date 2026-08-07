@@ -194,7 +194,13 @@ const LinkedinIcon = icons['mdi/linkedin'];
 
 			/* Applied by moveButtonsToCorner() once the hero reveals — a glass
 			   pill matching .hero-tooltip's recipe, so the icons read as a
-			   deliberate floating control rather than two bare glyphs. */
+			   deliberate floating control rather than two bare glyphs. The
+			   background/border start transparent here (overridden back to
+			   these values instantly via inline style the moment the class is
+			   added) so moveButtonsToCorner() can fade them in via GSAP —
+			   backdrop-filter is applied immediately, not faded, since
+			   animating it is comparatively expensive and its own effect is
+			   subtle enough not to need one. */
 			&.pinned {
 				gap: 0.75rem;
 				padding: 0.75rem;
@@ -333,12 +339,16 @@ const LinkedinIcon = icons['mdi/linkedin'];
 		document.querySelector('[data-loading-pulse]')?.setAttribute('hidden', '');
 	}
 
-	function hideButtonsForLoad() {
-		gsap.set('.button-wrapper', { opacity: 0 });
+	function hideNavLinksForLoad() {
+		// The hotspot nav (About/Skills/Projects/Portfolio/Contact) duplicates
+		// routes the site header already exposes — while the 3D scene is still
+		// loading there's nothing gained by showing it, so it's suppressed for
+		// that window instead of sitting there unused under the tagline.
+		gsap.set('.hotspot-links', { autoAlpha: 0 });
 	}
 
-	function restoreButtonsDefault() {
-		gsap.set('.button-wrapper', { opacity: 1 });
+	function restoreNavLinksDefault() {
+		gsap.set('.hotspot-links', { autoAlpha: 1 });
 	}
 
 	function moveButtonsToCorner() {
@@ -359,15 +369,13 @@ const LinkedinIcon = icons['mdi/linkedin'];
 
 		// Add the glass-pill container first, while the wrapper is still in its
 		// normal flex position — this lets the freeze below capture the box's
-		// real (padded) size. It's still invisible at this point (opacity: 0
-		// since hideButtonsForLoad()), so adding the chrome here causes no
-		// visible jump — nothing is on screen to jump yet.
+		// real (padded) size. `.pinned`'s background/border are read back
+		// below and then immediately overridden to transparent via inline
+		// style, all before this synchronous block yields to a paint — so the
+		// class's own (opaque) colors are never actually rendered; only the
+		// transparent starting point the fade-in below animates from is.
 		wrapper.classList.add('pinned');
 
-		// Freeze the pill's actual on-screen position as absolute coordinates
-		// before animating. A flex item's `top`/`left` are `auto`, which GSAP
-		// can't tween from. Geometry is unaffected by opacity, so this is
-		// accurate even while the wrapper is still invisible.
 		const parentRect = positionedParent.getBoundingClientRect();
 		const mainRect = main.getBoundingClientRect();
 		const pinnedRect = wrapper.getBoundingClientRect();
@@ -376,12 +384,23 @@ const LinkedinIcon = icons['mdi/linkedin'];
 		const targetLeft = mainRect.left + 32 - parentRect.left;
 		const targetTop = mainRect.top + mainRect.height / 2 - pinnedRect.height / 2 - parentRect.top;
 
+		// Read the pill's real chrome colors from CSS (now resolved, since
+		// `.pinned` was just added) so the fade-in below animates toward this
+		// project's actual design tokens without duplicating their values
+		// here — the icons themselves stay visible throughout, only this
+		// background/border pair is what fades in.
+		const pinnedStyle = getComputedStyle(wrapper);
+		const targetBackground = pinnedStyle.backgroundColor;
+		const targetBorderColor = pinnedStyle.borderColor;
+
 		gsap.set(wrapper, {
 			position: 'absolute',
 			left: currentLeft,
 			top: currentTop,
 			width: 'auto',
-			margin: 0
+			margin: 0,
+			backgroundColor: 'rgba(0, 0, 0, 0)',
+			borderColor: 'rgba(0, 0, 0, 0)'
 		});
 		// Two separate tweens on purpose: the slide (movement) reads best with
 		// a decelerating ease, while a fade using that same curve looks like an
@@ -389,7 +408,12 @@ const LinkedinIcon = icons['mdi/linkedin'];
 		// within the first third of the duration) — see the #hero-root fade
 		// below for the same reasoning.
 		gsap.to(wrapper, { left: targetLeft, top: targetTop, duration: 0.8, ease: 'expo.out' });
-		gsap.to(wrapper, { opacity: 1, duration: 0.8, ease: 'sine.inOut' });
+		gsap.to(wrapper, {
+			backgroundColor: targetBackground,
+			borderColor: targetBorderColor,
+			duration: 0.8,
+			ease: 'sine.inOut'
+		});
 	}
 
 	function revealHero() {
@@ -473,13 +497,9 @@ const LinkedinIcon = icons['mdi/linkedin'];
 
 		// Reveal the loading signal as soon as we've committed to the 3D path —
 		// before the dynamic import (and the much larger model download inside
-		// it) even starts, not just once the download begins. The icon links
-		// are hidden for the same window: they'd otherwise sit visible in
-		// their default flex position for the whole load, then jump into
-		// motion once the reveal starts — hiding them here means they instead
-		// slide-and-fade in already in motion, as part of the reveal itself.
+		// it) even starts, not just once the download begins.
 		showLoadingPulse();
-		hideButtonsForLoad();
+		hideNavLinksForLoad();
 
 		const mountGeneration = generation;
 		mounting = true;
@@ -502,7 +522,7 @@ const LinkedinIcon = icons['mdi/linkedin'];
 						console.error('[hero] 3D scene failed to load; keeping static hero', error);
 						teardownHero();
 						hideLoadingPulse();
-						restoreButtonsDefault();
+						restoreNavLinksDefault();
 					},
 					oninteract: () => {
 						if (mountGeneration !== generation) return;
@@ -515,7 +535,7 @@ const LinkedinIcon = icons['mdi/linkedin'];
 				if (mountGeneration !== generation) return;
 				console.error('[hero] failed to load 3D hero module; keeping static hero', error);
 				hideLoadingPulse();
-				restoreButtonsDefault();
+				restoreNavLinksDefault();
 			})
 			.finally(() => {
 				if (mountGeneration === generation) mounting = false;
