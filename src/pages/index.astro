@@ -144,6 +144,10 @@ const LinkedinIcon = icons['mdi/linkedin'];
 					border-radius: 50%;
 					background: $color-accent;
 					animation: hero-pulse 1.4s ease-in-out infinite;
+
+					&[hidden] {
+						display: none;
+					}
 				}
 			}
 
@@ -295,6 +299,11 @@ const LinkedinIcon = icons['mdi/linkedin'];
 	// Bumped on every teardown so a late-arriving dynamic import or onready/onerror
 	// callback belonging to a superseded page can't touch the current DOM.
 	let generation = 0;
+	// Tracks whether the visitor has already discovered hotspot interaction (via
+	// hover or click), so the tooltip never shows — or re-shows — after the fact,
+	// even if the reveal's fade completes while a hotspot happens to already be
+	// hovered (oninteract only fires on a hotspot *change*, not continuously).
+	let interacted = false;
 
 	function showLoadingPulse() {
 		document.querySelector('[data-loading-pulse]')?.removeAttribute('hidden');
@@ -312,13 +321,13 @@ const LinkedinIcon = icons['mdi/linkedin'];
 			duration: 0.8,
 			ease: 'expo.out',
 			onComplete: () => {
-				introElements.forEach((el) => el.setAttribute('hidden', ''));
 				showTooltip();
 			}
 		});
 	}
 
 	function showTooltip() {
+		if (interacted) return;
 		const tooltip = document.querySelector('[data-hero-tooltip]');
 		if (!tooltip) return;
 		tooltip.removeAttribute('hidden');
@@ -328,6 +337,7 @@ const LinkedinIcon = icons['mdi/linkedin'];
 	function dismissTooltip() {
 		const tooltip = document.querySelector('[data-hero-tooltip]');
 		if (!tooltip) return;
+		gsap.killTweensOf(tooltip);
 		gsap.to(tooltip, {
 			autoAlpha: 0,
 			duration: 0.3,
@@ -339,6 +349,7 @@ const LinkedinIcon = icons['mdi/linkedin'];
 	function teardownHero() {
 		generation += 1;
 		mounting = false;
+		interacted = false;
 		// The intro/tooltip fades' onComplete callbacks only ever touch local
 		// DOM state (no cross-page side effect like a navigation call), so a
 		// stale tween ticking against an about-to-be-discarded page is harmless
@@ -399,6 +410,7 @@ const LinkedinIcon = icons['mdi/linkedin'];
 					},
 					oninteract: () => {
 						if (mountGeneration !== generation) return;
+						interacted = true;
 						dismissTooltip();
 					}
 				});
