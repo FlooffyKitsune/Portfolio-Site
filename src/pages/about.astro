@@ -1,6 +1,8 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { icons } from '../components/ui/icons';
+import { Image } from 'astro:assets';
+import jarrettPhoto from '../assets/images/jarrett.png';
 
 const DocumentIcon = icons['basil/document-solid'];
 ---
@@ -8,7 +10,7 @@ const DocumentIcon = icons['basil/document-solid'];
 <BaseLayout title="About — Jarrett Dominic">
 	<section id="about">
 		<div class="about-grid" data-reveal>
-			<img src="/images/jarrett.png" alt="Jarrett Dominic" />
+			<Image src={jarrettPhoto} alt="Jarrett Dominic" width={1024} height={1024} />
 			<div class="about-copy">
 				<h1>About Me</h1>
 				<p>
