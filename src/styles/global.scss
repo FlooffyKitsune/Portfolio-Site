@@ -17,22 +17,23 @@ body {
  * `autoAlpha: 0` by src/lib/motion/reveal.ts, but that only runs at
  * `astro:page-load` (window `load` — after images and fonts). Without this rule
  * they render fully visible from first paint and then snap invisible to
- * re-animate. The `js` class is added by an inline <head> script in
- * BaseLayout.astro, so no-JS visitors never match this selector and always see
- * full content.
+ * re-animate.
+ *
+ * Both conditions are deliberately the exact conditions under which GSAP is
+ * guaranteed to take over, so nothing can ever be hidden with no code left to
+ * reveal it:
+ *
+ * - `.js` is added by an inline <head> script in BaseLayout.astro, so no-JS
+ *   visitors never match and always see full content.
+ * - `no-preference` mirrors the `motionOk` condition in
+ *   `createReducedMotionContext`. Reduced-motion visitors are excluded because
+ *   they get the final state instantly and never see an animation, so hiding
+ *   their content until GSAP boots would be a pure regression; and a browser
+ *   too old to support `prefers-reduced-motion` matches neither of GSAP's
+ *   conditions (so neither branch runs) — it must not match this rule either.
  */
-html.js [data-reveal] {
-	visibility: hidden;
-}
-
-/**
- * Reduced-motion visitors get the final state instantly and never see an
- * animation, so hiding their content until GSAP boots would be a pure
- * regression. GSAP's reduced-motion branch still runs `autoAlpha: 1` over the
- * top of this, which resolves to `visibility: inherit` — visible either way.
- */
-@media (prefers-reduced-motion: reduce) {
+@media (prefers-reduced-motion: no-preference) {
 	html.js [data-reveal] {
-		visibility: visible;
+		visibility: hidden;
 	}
 }
