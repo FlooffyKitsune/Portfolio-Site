@@ -127,19 +127,23 @@ hotspot to another without leaving the model entirely, the previous hotspot's hi
 must still be cleared (track the currently-highlighted object and clear it before applying
 a new one, rather than relying solely on a single "pointer left the model" event).
 
-## Click — accent fade, then navigate
+## Click — near-black fade, then navigate
 
 Replace `window.location.href = hotspot.route` with a two-step sequence:
 
 1. A full-viewport overlay element (created once, appended to `document.body` — not part
    of the Threlte/Canvas scene graph, this is a 2D DOM/CSS overlay drawn on top of
-   everything) fades from transparent to a translucent accent-violet tint via GSAP, using
-   the motion system's existing tokens (`$duration-reveal`/`$ease-out-expo`-equivalent GSAP
-   values, matching what `src/lib/motion/reveal.ts` already uses, for visual consistency
-   with the rest of the site's motion language — this does not need to go through the
-   `revealOnScroll`/`[data-reveal]` machinery, which is for scroll-triggered reveals, not
-   this click-triggered overlay, but it should use the same GSAP instance from
-   `gsap-setup.ts` and the same easing/duration values already established).
+   everything) fades from transparent to a fully opaque near-black tint (matching
+   `$color-bg`) via GSAP, using the same shared `gsap-setup.ts` instance the rest of the
+   site's motion uses. **Revised after implementation:** the original design called for a
+   translucent accent-violet tint at `$duration-reveal`'s 0.8s — built and shipped that
+   way, then changed after trying it in a real browser: the opaque violet flash read as
+   jarring, and 0.5s (a deliberate choice for a navigation gate rather than a content
+   reveal) felt snappier than the reveal system's 0.8s. The color is now near-black
+   (`$color-bg`, `#0a0a0c`) instead of the accent, and the fade is fully opaque
+   (`autoAlpha: 1`) rather than translucent, at a 0.5s duration — this reads as a calmer
+   cinematic fade-to-black, consistent with how the destination page's own view-transition
+   crossfade then takes over from full coverage.
 2. Only once that fade's `onComplete` fires does navigation actually happen, via Astro's
    `navigate(hotspot.route)` (imported from `astro:transitions/client`) instead of
    `window.location.href` — this routes through the site's existing `<ClientRouter/>`
