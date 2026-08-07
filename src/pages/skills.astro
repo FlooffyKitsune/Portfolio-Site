@@ -1,58 +1,83 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import SkillGroup from '../components/ui/SkillGroup.astro';
+import HeroTitle from '../components/ui/HeroTitle.astro';
+import SectionIntro from '../components/ui/SectionIntro.astro';
+import { icons } from '../components/ui/icons';
 import { skillGroups } from '../data/skills';
 ---
 
 <BaseLayout title="Skills — Jarrett Dominic">
 	<section id="skills">
-		<h1>Skills</h1>
-		<div class="skills-wrapper">
-			{skillGroups.map((group) => <SkillGroup title={group.title} items={group.items} />)}
+		<HeroTitle title="Skills" size="h1" />
+		<div class="skill-groups">
+			{
+				skillGroups.map((group) => (
+					<div class="skill-group">
+						<SectionIntro title={group.title} />
+						<ul class="skill-chips">
+							{group.items.map((item) => {
+								const Icon = icons[item.iconKey];
+								return (
+									<li>
+										<Icon />
+										<span>{item.label}</span>
+									</li>
+								);
+							})}
+						</ul>
+					</div>
+				))
+			}
 		</div>
 	</section>
 </BaseLayout>
 
 <style lang="scss">
-	@import '../styles/tokens';
+	@use '../styles/tokens' as *;
 
 	#skills {
 		width: 100%;
-		padding: 8rem 13% 5rem;
+		max-width: 72rem;
+		margin: 0 auto;
+		padding: $space-8 $space-5;
 
-		h1 {
-			font-family: $font-heading;
-			font-size: 2.5rem;
-			margin-bottom: 1rem;
-			background-image: $gradient-warm;
-			-webkit-text-fill-color: transparent;
-			-webkit-background-clip: text;
-
-			&::after {
-				content: '';
-				display: block;
-				height: 2px;
-				background: $gradient-warm no-repeat;
-			}
+		.skill-groups {
+			display: flex;
+			flex-direction: column;
+			gap: $space-8;
+			margin-top: $space-6;
 		}
 
-		.skills-wrapper {
+		.skill-chips {
+			list-style: none;
 			display: flex;
-			flex-direction: row;
 			flex-wrap: wrap;
+			gap: $space-2;
+			margin: 0;
+			padding: 0;
+
+			li {
+				display: flex;
+				align-items: center;
+				gap: $space-1;
+				padding: $space-1 $space-3;
+				border: 1px solid $glass-border;
+				border-radius: $radius-sm;
+				background: $glass-fill;
+				color: $color-text;
+				font-family: $font-sans;
+				font-size: $font-size-body;
+			}
 		}
 	}
 
 	@media screen and (max-width: $breakpoint-mobile) {
 		#skills {
-			padding: 6rem 0 0;
+			padding: $space-6 $space-4;
+			text-align: center;
 
-			h1 {
-				text-align: center;
-			}
-
-			.skills-wrapper {
-				display: inline;
+			.skill-chips {
+				justify-content: center;
 			}
 		}
 	}
