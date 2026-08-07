@@ -82,6 +82,12 @@ const LinkedinIcon = icons['mdi/linkedin'];
 			   behind the stacking context root's own box for hit-testing purposes,
 			   which makes it unable to receive any pointer/click events at all. */
 			z-index: 0;
+			/* Starts invisible and fades in via revealHero() below, so the 3D
+			   scene dissolves into view instead of popping to full opacity the
+			   instant the model finishes loading — most of the hero area isn't
+			   covered by the text block, so that pop was visible across nearly
+			   the whole screen before this fade existed. */
+			opacity: 0;
 		}
 
 		.gradient {
@@ -184,6 +190,19 @@ const LinkedinIcon = icons['mdi/linkedin'];
 			justify-content: center;
 			align-items: end;
 			padding-right: 1rem;
+
+			/* Applied by moveButtonsToCorner() once the hero reveals — a glass
+			   pill matching .hero-tooltip's recipe, so the icons read as a
+			   deliberate floating control rather than two bare glyphs. */
+			&.pinned {
+				gap: 0.75rem;
+				padding: 0.75rem;
+				border-radius: $radius-md;
+				background: $glass-fill;
+				backdrop-filter: blur($glass-blur);
+				-webkit-backdrop-filter: blur($glass-blur);
+				border: 1px solid $glass-border;
+			}
 
 			a {
 				pointer-events: auto;
@@ -317,9 +336,9 @@ const LinkedinIcon = icons['mdi/linkedin'];
 		const wrapper = document.querySelector<HTMLElement>('.button-wrapper');
 		// `.button-wrapper`'s absolute positioning below resolves against
 		// `.landing-wrapper` (its nearest positioned ancestor), not `main` — but
-		// the target corner is meant to sit against `main`'s own top-left,
-		// matching the 2rem inset `.hero-tooltip` already uses elsewhere on this
-		// page. Both rects are captured so the target can be expressed in
+		// the target position is meant to sit against `main`'s own box (left
+		// inset matching `.hero-tooltip`'s established 2rem, vertically
+		// centered). Both rects are captured so the target can be expressed in
 		// `main`'s box and then translated into `.landing-wrapper`'s coordinate
 		// space (the offset between the two is constant either way).
 		const positionedParent = document.querySelector<HTMLElement>('.landing-wrapper');
@@ -329,19 +348,22 @@ const LinkedinIcon = icons['mdi/linkedin'];
 		const links = wrapper.querySelectorAll<HTMLElement>('a');
 		if (links.length === 0) return;
 
-		// Freeze the icons' actual on-screen position as absolute coordinates
-		// before touching any layout. A flex item's `top`/`left` are `auto`,
-		// which GSAP can't tween from — and the icons are right-aligned
-		// (`align-items: end`) inside a much wider flex column, so measuring
-		// the wrapper's own box (rather than the icons themselves) would
-		// freeze the wrong starting point for the tween below.
+		// Add the glass-pill container first, while the wrapper is still in its
+		// normal flex position — this lets the freeze below capture the box's
+		// real (padded) size, rather than having padding appear mid-tween and
+		// cause a visible jump.
+		wrapper.classList.add('pinned');
+
+		// Freeze the pill's actual on-screen position as absolute coordinates
+		// before animating. A flex item's `top`/`left` are `auto`, which GSAP
+		// can't tween from.
 		const parentRect = positionedParent.getBoundingClientRect();
 		const mainRect = main.getBoundingClientRect();
-		const linkRects = Array.from(links).map((a) => a.getBoundingClientRect());
-		const currentLeft = Math.min(...linkRects.map((r) => r.left)) - parentRect.left;
-		const currentTop = Math.min(...linkRects.map((r) => r.top)) - parentRect.top;
+		const pinnedRect = wrapper.getBoundingClientRect();
+		const currentLeft = pinnedRect.left - parentRect.left;
+		const currentTop = pinnedRect.top - parentRect.top;
 		const targetLeft = mainRect.left + 32 - parentRect.left;
-		const targetTop = mainRect.top + 32 - parentRect.top;
+		const targetTop = mainRect.top + mainRect.height / 2 - pinnedRect.height / 2 - parentRect.top;
 
 		gsap.set(wrapper, {
 			position: 'absolute',
@@ -356,6 +378,11 @@ const LinkedinIcon = icons['mdi/linkedin'];
 	function revealHero() {
 		hideLoadingPulse();
 		moveButtonsToCorner();
+		// Crossfades the 3D scene in as the intro group fades out below, rather
+		// than it simply being present at full opacity the moment the model
+		// finishes loading (which — outside the text block's own footprint —
+		// was visible across most of the hero area).
+		gsap.to('#hero-root', { opacity: 1, duration: 0.8, ease: 'expo.out' });
 		const introElements = document.querySelectorAll('[data-hero-intro]');
 		gsap.to(introElements, {
 			autoAlpha: 0,
@@ -400,6 +427,7 @@ const LinkedinIcon = icons['mdi/linkedin'];
 		gsap.killTweensOf('[data-hero-intro]');
 		gsap.killTweensOf('[data-hero-tooltip]');
 		gsap.killTweensOf('.button-wrapper');
+		gsap.killTweensOf('#hero-root');
 		if (!app) return;
 		const mounted = app;
 		app = null;
