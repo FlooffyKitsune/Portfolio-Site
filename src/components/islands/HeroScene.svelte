@@ -96,6 +96,14 @@
 		// component without a full page reload). Without this, every remount's
 		// prepare pass would leak the previous mount's cloned materials/meshes.
 		clearAllPreparedHotspots();
+		// If the component unmounts mid-fade (e.g. the visitor clicked a plain
+		// header nav link before a hotspot's 0.5s fade tween finished), GSAP
+		// doesn't auto-cancel a tween just because its target node is removed
+		// from the DOM — it keeps ticking and still fires `onComplete`, which
+		// would call `navigate()` again and silently override the navigation
+		// the visitor just made. Kill the tween first so `onComplete` never
+		// fires for a component instance that's already gone.
+		if (overlayElement) gsap.killTweensOf(overlayElement);
 		overlayElement?.remove();
 	});
 
