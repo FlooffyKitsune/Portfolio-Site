@@ -14,7 +14,7 @@ const { title } = Astro.props;
 </div>
 
 <style lang="scss">
-	@import '../../styles/tokens';
+	@use '../../styles/tokens' as *;
 
 	.callout {
 		border: 1px solid $glass-border;
