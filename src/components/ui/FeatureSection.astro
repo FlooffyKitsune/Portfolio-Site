@@ -19,7 +19,7 @@ const { title, description, reverse = false } = Astro.props;
 </div>
 
 <style lang="scss">
-	@import '../../styles/tokens';
+	@use '../../styles/tokens' as *;
 
 	.feature-section {
 		display: grid;
