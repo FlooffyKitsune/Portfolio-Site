@@ -14,3 +14,15 @@ export const cameraFov = 45;
  * wiring to copy the decoder out of `node_modules`.
  */
 export const dracoDecoderPath = 'https://www.gstatic.com/draco/v1/decoders/';
+
+/**
+ * Hover-highlight color and intensity boost for hotspot meshes.
+ *
+ * Plain numeric/JS values, not the SCSS `$color-accent` token — three.js
+ * material properties take raw color values, and there's no build-time
+ * bridge between the SCSS token system and this file. Keep this in sync by
+ * hand if `$color-accent` in `src/styles/tokens.scss` ever changes; as of
+ * this writing `$color-accent: #8b5cf6`.
+ */
+export const hotspotHighlightColor = 0x8b5cf6;
+export const hotspotHighlightIntensityBoost = 0.6;
