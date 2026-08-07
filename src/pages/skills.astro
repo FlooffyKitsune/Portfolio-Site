@@ -14,7 +14,7 @@ import { skillGroups } from '../data/skills';
 				skillGroups.map((group) => (
 					<div class="skill-group">
 						<SectionIntro title={group.title} />
-						<ul class="skill-chips">
+						<ul class="skill-chips" data-reveal>
 							{group.items.map((item) => {
 								const Icon = icons[item.iconKey];
 								return (
