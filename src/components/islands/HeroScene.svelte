@@ -4,6 +4,8 @@
 	import { useGltf, interactivity } from '@threlte/extras';
 	import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
 	import type { Object3D } from 'three';
+	import { navigate } from 'astro:transitions/client';
+	import { gsap } from '../../lib/motion/gsap-setup';
 	import { hotspots } from '../../data/hotspots';
 	import { findHotspotId, findHotspotObject } from '../../lib/three/hotspot-lookup';
 	import {
@@ -12,7 +14,12 @@
 		clearHighlight,
 		prepareHotspotForHighlight
 	} from '../../lib/three/hotspot-highlight';
-	import { cameraPosition, cameraFov, dracoDecoderPath } from '../../lib/three/scene-config';
+	import {
+		cameraPosition,
+		cameraFov,
+		dracoDecoderPath,
+		fadeOverlayColor
+	} from '../../lib/three/scene-config';
 
 	interface Props {
 		/** Fired once the glTF has finished downloading/parsing and is in the scene. */
@@ -50,6 +57,33 @@
 	// clear before applying (or not applying) a new highlight.
 	let highlightedHotspot: Object3D | null = null;
 
+	// Created lazily on first click — a full-viewport DOM overlay for the
+	// accent-fade transition. This can't be part of this component's own
+	// template: everything HeroScene.svelte renders is interpreted as Threlte
+	// scene-graph content (it's mounted inside a <Canvas>), so a plain HTML
+	// element has to be created imperatively instead, outside Threlte's control.
+	let overlayElement: HTMLDivElement | null = null;
+
+	function ensureOverlay(): HTMLDivElement {
+		if (!overlayElement) {
+			overlayElement = document.createElement('div');
+			overlayElement.style.cssText = `
+				position: fixed;
+				inset: 0;
+				background: ${fadeOverlayColor};
+				opacity: 0;
+				visibility: hidden;
+				pointer-events: none;
+				z-index: 50;
+			`;
+			// Above this site's sticky header (z-index: 10, see Header.astro) and
+			// every other positioned element on the homepage (max z-index: 2, see
+			// index.astro) — must render on top of everything during the fade.
+			document.body.appendChild(overlayElement);
+		}
+		return overlayElement;
+	}
+
 	onDestroy(() => {
 		dracoLoader.dispose();
 		// The scene is commonly unmounted while the pointer is still over a
@@ -62,12 +96,21 @@
 		// component without a full page reload). Without this, every remount's
 		// prepare pass would leak the previous mount's cloned materials/meshes.
 		clearAllPreparedHotspots();
+		overlayElement?.remove();
 	});
 
 	function handleClick(event: { object: Object3D }) {
 		const id = findHotspotId(event.object);
 		const hotspot = hotspots.find((h) => h.id === id);
-		if (hotspot) window.location.href = hotspot.route;
+		if (!hotspot) return;
+
+		const overlay = ensureOverlay();
+		gsap.to(overlay, {
+			autoAlpha: 1,
+			duration: 0.5,
+			ease: 'expo.out',
+			onComplete: () => navigate(hotspot.route)
+		});
 	}
 
 	// See the file-level note above this task's code block for why this uses

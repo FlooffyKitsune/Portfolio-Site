@@ -26,3 +26,13 @@ export const dracoDecoderPath = 'https://www.gstatic.com/draco/v1/decoders/';
  */
 export const hotspotHighlightColor = 0x8b5cf6;
 export const hotspotHighlightIntensityBoost = 0.6;
+
+/**
+ * CSS color for the full-viewport fade-through overlay shown on hotspot
+ * click, before navigating. A CSS-ready string rather than a three.js hex
+ * number (unlike `hotspotHighlightColor` above) because this paints a plain
+ * DOM element, not a three.js material. Same violet as `$color-accent` /
+ * `hotspotHighlightColor` — kept in sync by hand for the same reason noted
+ * on `hotspotHighlightColor`.
+ */
+export const fadeOverlayColor = '#8b5cf6';
