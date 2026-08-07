@@ -313,8 +313,49 @@ const LinkedinIcon = icons['mdi/linkedin'];
 		document.querySelector('[data-loading-pulse]')?.setAttribute('hidden', '');
 	}
 
+	function moveButtonsToCorner() {
+		const wrapper = document.querySelector<HTMLElement>('.button-wrapper');
+		// `.button-wrapper`'s absolute positioning below resolves against
+		// `.landing-wrapper` (its nearest positioned ancestor), not `main` — but
+		// the target corner is meant to sit against `main`'s own top-left,
+		// matching the 2rem inset `.hero-tooltip` already uses elsewhere on this
+		// page. Both rects are captured so the target can be expressed in
+		// `main`'s box and then translated into `.landing-wrapper`'s coordinate
+		// space (the offset between the two is constant either way).
+		const positionedParent = document.querySelector<HTMLElement>('.landing-wrapper');
+		const main = document.querySelector<HTMLElement>('main');
+		if (!wrapper || !positionedParent || !main) return;
+
+		const links = wrapper.querySelectorAll<HTMLElement>('a');
+		if (links.length === 0) return;
+
+		// Freeze the icons' actual on-screen position as absolute coordinates
+		// before touching any layout. A flex item's `top`/`left` are `auto`,
+		// which GSAP can't tween from — and the icons are right-aligned
+		// (`align-items: end`) inside a much wider flex column, so measuring
+		// the wrapper's own box (rather than the icons themselves) would
+		// freeze the wrong starting point for the tween below.
+		const parentRect = positionedParent.getBoundingClientRect();
+		const mainRect = main.getBoundingClientRect();
+		const linkRects = Array.from(links).map((a) => a.getBoundingClientRect());
+		const currentLeft = Math.min(...linkRects.map((r) => r.left)) - parentRect.left;
+		const currentTop = Math.min(...linkRects.map((r) => r.top)) - parentRect.top;
+		const targetLeft = mainRect.left + 32 - parentRect.left;
+		const targetTop = mainRect.top + 32 - parentRect.top;
+
+		gsap.set(wrapper, {
+			position: 'absolute',
+			left: currentLeft,
+			top: currentTop,
+			width: 'auto',
+			margin: 0
+		});
+		gsap.to(wrapper, { left: targetLeft, top: targetTop, duration: 0.8, ease: 'expo.out' });
+	}
+
 	function revealHero() {
 		hideLoadingPulse();
+		moveButtonsToCorner();
 		const introElements = document.querySelectorAll('[data-hero-intro]');
 		gsap.to(introElements, {
 			autoAlpha: 0,
@@ -358,6 +399,7 @@ const LinkedinIcon = icons['mdi/linkedin'];
 		// against departed page state.
 		gsap.killTweensOf('[data-hero-intro]');
 		gsap.killTweensOf('[data-hero-tooltip]');
+		gsap.killTweensOf('.button-wrapper');
 		if (!app) return;
 		const mounted = app;
 		app = null;
