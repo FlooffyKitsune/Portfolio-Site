@@ -37,3 +37,19 @@ body {
 		visibility: hidden;
 	}
 }
+
+/**
+ * Homepage hero FOUC guard. `.hotspot-links` (the page-nav pills under the
+ * hero tagline) is suppressed for the whole 3D-loading window — see
+ * hideNavLinksForLoad()/revealHero() in index.astro — but that JS only runs
+ * at `astro:page-load`, after first paint. Without this, capable visitors
+ * would see the pills for a moment before they vanish. `.hero-3d-capable` is
+ * added by an inline script in index.astro before `.hotspot-links` is even
+ * parsed, mirroring shouldUseSimplifiedHero()'s exact checks — so this only
+ * applies to visitors who will actually reach the 3D path. Everyone else
+ * (mobile/reduced-motion/low-power/no-JS) never gets the class and always
+ * sees the pills, unaffected.
+ */
+html.hero-3d-capable .hotspot-links {
+	visibility: hidden;
+}
