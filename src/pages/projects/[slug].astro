@@ -2,6 +2,7 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import HeroTitle from '../../components/ui/HeroTitle.astro';
 import { icons } from '../../components/ui/icons';
+import { iconLabels } from '../../components/ui/icon-labels';
 import { getCollection, render } from 'astro:content';
 
 export async function getStaticPaths() {
@@ -15,7 +16,7 @@ export async function getStaticPaths() {
 }
 
 const { entry } = Astro.props;
-const { title, description, shortDescription, image, stack, tags, links } = entry.data;
+const { title, description, shortDescription, image, stack, links } = entry.data;
 const { Content } = await render(entry);
 const ImagePlaceholderIcon = icons['mdi/image-outline'];
 ---
@@ -36,31 +37,21 @@ const ImagePlaceholderIcon = icons['mdi/image-outline'];
 			}
 		</div>
 		<div class="meta-row">
-			<div class="tech-info">
-				{
-					stack.length > 0 && (
-						<div class="work-stack">
-							{stack.map((key) => {
-								const Icon = icons[key];
-								return (
-									<span class="stack-tag">
-										<Icon />
-									</span>
-								);
-							})}
-						</div>
-					)
-				}
-				{
-					tags && tags.length > 0 && (
-						<div class="work-tags">
-							{tags.map((tag) => (
-								<span class="tag-pill">{tag}</span>
-							))}
-						</div>
-					)
-				}
-			</div>
+			{
+				stack.length > 0 && (
+					<div class="work-stack">
+						{stack.map((key) => {
+							const Icon = icons[key];
+							const label = iconLabels[key] ?? key;
+							return (
+								<span class="stack-tag" role="img" aria-label={label} data-label={label}>
+									<Icon />
+								</span>
+							);
+						})}
+					</div>
+				)
+			}
 			<div class="work-links">
 				{
 					links.map((link) => {
@@ -148,18 +139,13 @@ const ImagePlaceholderIcon = icons['mdi/image-outline'];
 			justify-content: space-between;
 			gap: $space-3;
 
-			.tech-info {
-				display: flex;
-				flex-direction: column;
-				gap: $space-2;
-			}
-
 			.work-stack {
 				display: flex;
 				flex-wrap: wrap;
 				gap: $space-1;
 
 				.stack-tag {
+					position: relative;
 					display: flex;
 					align-items: center;
 					justify-content: center;
@@ -169,22 +155,40 @@ const ImagePlaceholderIcon = icons['mdi/image-outline'];
 					background: rgba($color-accent, 0.08);
 					color: $color-text-muted;
 					font-size: 1.25rem;
-				}
-			}
+					transition: border-color $duration-hover $ease-out-quick;
 
-			.work-tags {
-				display: flex;
-				flex-wrap: wrap;
-				gap: $space-1;
+					&:hover,
+					&:focus-visible {
+						border-color: rgba($color-accent, 0.6);
+					}
 
-				.tag-pill {
-					padding: $space-1 $space-3;
-					border: 1px solid rgba($color-accent, 0.2);
-					border-radius: $radius-sm;
-					background: rgba($color-accent, 0.08);
-					color: $color-text-muted;
-					font-family: $font-sans;
-					font-size: $font-size-body;
+					&::after {
+						content: attr(data-label);
+						position: absolute;
+						bottom: calc(100% + $space-1);
+						left: 50%;
+						transform: translate(-50%, $space-1);
+						padding: $space-1 $space-2;
+						border-radius: $radius-sm;
+						background: $color-surface;
+						border: 1px solid $glass-border;
+						color: $color-text;
+						font-family: $font-sans;
+						font-size: $font-size-caption;
+						white-space: nowrap;
+						opacity: 0;
+						pointer-events: none;
+						transition:
+							opacity $duration-hover $ease-out-quick,
+							transform $duration-hover $ease-out-quick;
+						z-index: 2;
+					}
+
+					&:hover::after,
+					&:focus-visible::after {
+						opacity: 1;
+						transform: translate(-50%, 0);
+					}
 				}
 			}
 

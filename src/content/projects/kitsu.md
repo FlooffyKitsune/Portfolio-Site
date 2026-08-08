@@ -9,8 +9,5 @@ stack:
   - 'simple-icons/ollama'
   - 'logos/discord-icon'
   - 'logos/threejs'
-tags:
-  - 'AI'
-  - 'Automation'
 links: []
 ---

@@ -1,17 +1,17 @@
 ---
 import { icons } from './icons';
+import { iconLabels } from './icon-labels';
 
 interface Props {
 	title: string;
 	description: string;
 	image?: string;
 	stack: string[];
-	tags?: string[];
 	links: { href: string; label: string; iconKey: string }[];
 	detailsUrl?: string;
 }
 
-const { title, description, image, stack, tags, links, detailsUrl } = Astro.props;
+const { title, description, image, stack, links, detailsUrl } = Astro.props;
 const ImagePlaceholderIcon = icons['mdi/image-outline'];
 ---
 
@@ -37,21 +37,13 @@ const ImagePlaceholderIcon = icons['mdi/image-outline'];
 				<div class="work-stack">
 					{stack.map((key) => {
 						const Icon = icons[key];
+						const label = iconLabels[key] ?? key;
 						return (
-							<span class="stack-tag">
+							<span class="stack-tag" role="img" aria-label={label} data-label={label}>
 								<Icon />
 							</span>
 						);
 					})}
-				</div>
-			)
-		}
-		{
-			tags && tags.length > 0 && (
-				<div class="work-tags">
-					{tags.map((tag) => (
-						<span class="tag-pill">{tag}</span>
-					))}
 				</div>
 			)
 		}
@@ -176,6 +168,7 @@ const ImagePlaceholderIcon = icons['mdi/image-outline'];
 				gap: $space-1;
 
 				.stack-tag {
+					position: relative;
 					display: flex;
 					align-items: center;
 					justify-content: center;
@@ -185,22 +178,44 @@ const ImagePlaceholderIcon = icons['mdi/image-outline'];
 					background: rgba($color-accent, 0.08);
 					color: $color-text-muted;
 					font-size: 1.1rem;
-				}
-			}
+					transition: border-color $duration-hover $ease-out-quick;
 
-			.work-tags {
-				display: flex;
-				flex-wrap: wrap;
-				gap: $space-1;
+					&:hover,
+					&:focus-visible {
+						border-color: rgba($color-accent, 0.6);
+					}
 
-				.tag-pill {
-					padding: $space-1 $space-2;
-					border: 1px solid rgba($color-accent, 0.2);
-					border-radius: $radius-sm;
-					background: rgba($color-accent, 0.08);
-					color: $color-text-muted;
-					font-family: $font-sans;
-					font-size: $font-size-caption;
+					// Name tooltip: CSS-only, driven by `data-label` so unfamiliar
+					// visitors can identify a logo without JS. `role="img"` +
+					// `aria-label` (set alongside `data-label` in the markup)
+					// covers screen readers independently of this hover state.
+					&::after {
+						content: attr(data-label);
+						position: absolute;
+						bottom: calc(100% + $space-1);
+						left: 50%;
+						transform: translate(-50%, $space-1);
+						padding: $space-1 $space-2;
+						border-radius: $radius-sm;
+						background: $color-surface;
+						border: 1px solid $glass-border;
+						color: $color-text;
+						font-family: $font-sans;
+						font-size: $font-size-caption;
+						white-space: nowrap;
+						opacity: 0;
+						pointer-events: none;
+						transition:
+							opacity $duration-hover $ease-out-quick,
+							transform $duration-hover $ease-out-quick;
+						z-index: 2;
+					}
+
+					&:hover::after,
+					&:focus-visible::after {
+						opacity: 1;
+						transform: translate(-50%, 0);
+					}
 				}
 			}
 

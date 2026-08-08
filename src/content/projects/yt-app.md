@@ -8,7 +8,6 @@ stack:
   - 'logos/javascript'
   - 'logos/semantic-ui'
   - 'logos/youtube-icon'
-tags: []
 links:
   - href: 'https://github.com/FlooffyKitsune/yt-app'
     label: 'GitHub'
