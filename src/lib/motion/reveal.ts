@@ -44,6 +44,45 @@ export function revealOnScroll(element: Element, options: RevealOptions = {}) {
 
 	gsap.set(element, { autoAlpha: 0, y });
 
+	// A `start: 'top 85%'` ScrollTrigger only ever fires by *crossing* that
+	// line as the user scrolls further down — it needs the element's top to
+	// go from above the line to at-or-below it. On a tall/wide viewport where
+	// the page barely exceeds the viewport height (a maximized window on a
+	// large monitor is the common case), an element near the bottom of the
+	// page can sit permanently below that threshold: even scrolled all the
+	// way to the bottom, there isn't enough remaining scroll distance to
+	// carry its top edge up to the line. The crossing this trigger waits for
+	// then never happens, and the element stays `visibility: hidden`
+	// forever. Detect that up front — using the *minimum* top the element
+	// could ever reach, at maximum scroll — and reveal immediately instead of
+	// registering a ScrollTrigger whose condition is mathematically
+	// unreachable. Elements that already satisfy the threshold right now
+	// (e.g. content near the top of the page, already on screen at load)
+	// aren't affected by this check and fall through to the normal
+	// ScrollTrigger path below, which already renders those correctly.
+	// The 100px safety margin below is deliberate slack, not precision: this
+	// calculation can't perfectly replicate ScrollTrigger's own internal
+	// pixel math (it recalculates against `document.scrollingElement` on its
+	// own `refresh()` pass, which can land a handful of pixels off from a
+	// measurement taken here). Getting this wrong in the "still reachable"
+	// direction means a permanently invisible element; getting it wrong in
+	// the "unreachable" direction just means an element that could have
+	// scroll-triggered instead reveals a little early. That asymmetry is why
+	// the margin errs generously toward the immediate-reveal branch.
+	const SAFETY_MARGIN_PX = 100;
+	const thresholdMatch = /^top (\d+(?:\.\d+)?)%$/.exec(start);
+	const thresholdRatio = thresholdMatch ? Number(thresholdMatch[1]) / 100 : 0.85;
+	const threshold = window.innerHeight * thresholdRatio - SAFETY_MARGIN_PX;
+	const maxScrollY = document.documentElement.scrollHeight - window.innerHeight;
+	const remainingScroll = Math.max(0, maxScrollY - window.scrollY);
+	const minReachableTop = element.getBoundingClientRect().top - remainingScroll;
+	const unreachable = minReachableTop > threshold;
+
+	if (unreachable) {
+		gsap.to(element, { autoAlpha: 1, y: 0, duration, ease: 'expo.out' });
+		return;
+	}
+
 	gsap.to(element, {
 		autoAlpha: 1,
 		y: 0,
