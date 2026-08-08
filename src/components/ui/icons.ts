@@ -88,6 +88,7 @@ import IllustratorLogo from 'virtual:icons/logos/adobe-illustrator';
 import Cinema4dSimple from 'virtual:icons/simple-icons/cinema4d';
 import OllamaSimple from 'virtual:icons/simple-icons/ollama';
 import AutoFixMdi from 'virtual:icons/mdi/auto-fix';
+import ImageOutlineMdi from 'virtual:icons/mdi/image-outline';
 
 // unplugin-icons compiles each import to a Svelte component; `any` avoids
 // fighting the generated component types just to store them in a lookup map.
@@ -181,5 +182,6 @@ export const icons: Record<string, any> = {
 	'simple-icons/ollama': OllamaSimple,
 	'mdi/auto-fix': AutoFixMdi,
 	'mdi/content-copy': ContentCopyMdi,
-	'mdi/check': CheckMdi
+	'mdi/check': CheckMdi,
+	'mdi/image-outline': ImageOutlineMdi
 };

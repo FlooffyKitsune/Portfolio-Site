@@ -4,36 +4,54 @@ import { icons } from './icons';
 interface Props {
 	title: string;
 	description: string;
-	image: string;
+	image?: string;
 	stack: string[];
+	tags?: string[];
 	links: { href: string; label: string; iconKey: string }[];
 	detailsUrl?: string;
 }
 
-const { title, description, image, stack, links, detailsUrl } = Astro.props;
+const { title, description, image, stack, tags, links, detailsUrl } = Astro.props;
+const ImagePlaceholderIcon = icons['mdi/image-outline'];
 ---
 
 <article class="work-card">
 	<div class="work-image">
-		<img src={image} alt={`${title} preview`} loading="lazy" />
+		{
+			image ? (
+				<img src={image} alt={`${title} preview`} loading="lazy" />
+			) : (
+				<div class="image-placeholder">
+					<ImagePlaceholderIcon />
+				</div>
+			)
+		}
 	</div>
 	<div class="work-content">
 		<h2>
 			{detailsUrl ? <a class="work-title-link" href={detailsUrl}>{title}</a> : title}
 		</h2>
 		<p>{description}</p>
-		<div class="work-stack">
-			{
-				stack.map((key) => {
-					const Icon = icons[key];
-					return (
-						<span class="stack-tag">
-							<Icon />
-						</span>
-					);
-				})
-			}
-		</div>
+		{
+			tags && tags.length > 0 ? (
+				<div class="work-tags">
+					{tags.map((tag) => (
+						<span class="tag-pill">{tag}</span>
+					))}
+				</div>
+			) : (
+				<div class="work-stack">
+					{stack.map((key) => {
+						const Icon = icons[key];
+						return (
+							<span class="stack-tag">
+								<Icon />
+							</span>
+						);
+					})}
+				</div>
+			)
+		}
 		<div class="work-links">
 			{
 				links.map((link) => {
@@ -88,6 +106,17 @@ const { title, description, image, stack, links, detailsUrl } = Astro.props;
 				object-fit: cover;
 				display: block;
 				transition: transform 0.3s $ease-out-quick;
+			}
+
+			.image-placeholder {
+				width: 100%;
+				height: 100%;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				background: $glass-fill;
+				color: $color-text-muted;
+				font-size: 2.5rem;
 			}
 		}
 
@@ -153,6 +182,22 @@ const { title, description, image, stack, links, detailsUrl } = Astro.props;
 					background: rgba($color-accent, 0.08);
 					color: $color-text-muted;
 					font-size: 1.1rem;
+				}
+			}
+
+			.work-tags {
+				display: flex;
+				flex-wrap: wrap;
+				gap: $space-1;
+
+				.tag-pill {
+					padding: $space-1 $space-2;
+					border: 1px solid rgba($color-accent, 0.2);
+					border-radius: $radius-sm;
+					background: rgba($color-accent, 0.08);
+					color: $color-text-muted;
+					font-family: $font-sans;
+					font-size: $font-size-caption;
 				}
 			}
 
