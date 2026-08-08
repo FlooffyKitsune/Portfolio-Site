@@ -54,8 +54,9 @@ export const skillGroups: SkillGroup[] = [
 		items: [
 			{ label: 'Blender', iconKey: 'logos/blender' },
 			{ label: 'Clip Studio Paint', iconKey: 'mdi/brush-variant' },
+			{ label: 'Photoshop', iconKey: 'logos/adobe-photoshop' },
+			{ label: 'Illustrator', iconKey: 'logos/adobe-illustrator' },
 			{ label: '3D Modeling', iconKey: 'mdi/cube-outline' },
-			{ label: '3D Animation', iconKey: 'mdi/animation-play-outline' },
 			{ label: '2D Illustration', iconKey: 'mdi/pencil-outline' },
 			{ label: 'UI Design', iconKey: 'mdi/palette-swatch' },
 			{ label: 'Graphic Design', iconKey: 'mdi/palette' }
@@ -69,7 +70,10 @@ export const skillGroups: SkillGroup[] = [
 			{ label: 'VS Code', iconKey: 'logos/visual-studio-code' },
 			{ label: 'Docker', iconKey: 'logos/docker-icon' },
 			{ label: 'AWS', iconKey: 'logos/aws' },
-			{ label: 'Adobe Creative Suite', iconKey: 'logos/adobe-icon' }
+			{ label: 'Adobe Creative Suite', iconKey: 'logos/adobe-icon' },
+			{ label: 'Autodesk', iconKey: 'simple-icons/autodesk' },
+			{ label: 'Maxon', iconKey: 'simple-icons/cinema4d' },
+			{ label: 'Ollama', iconKey: 'simple-icons/ollama' }
 		]
 	}
 ];
