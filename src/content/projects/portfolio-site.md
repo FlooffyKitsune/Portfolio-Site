@@ -9,6 +9,5 @@ stack:
   - 'logos/threejs'
   - 'logos/typescript-icon'
   - 'logos/greensock-icon'
-tags: []
 links: []
 ---

@@ -7,8 +7,5 @@ stack:
   - 'logos/cloudflare-workers-icon'
   - 'simple-icons/turso'
   - 'logos/discord-icon'
-tags:
-  - 'Backend'
-  - 'APIs'
 links: []
 ---

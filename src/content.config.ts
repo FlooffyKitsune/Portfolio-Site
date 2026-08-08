@@ -22,11 +22,6 @@ const projectEntry = workEntry.extend({
 	// exists — WorkCard renders a placeholder in its place. Portfolio's
 	// `image` (via the unmodified `workEntry`) stays required.
 	image: z.string().optional(),
-	// Free-text tags (e.g. "Multiplayer", "Creative Direction") rendered as
-	// plain pills — unlike `stack`, which is a list of icon keys. Not every
-	// project tag has a sensible brand icon, so this is the mechanism for
-	// projects whose tags are conceptual as much as technical.
-	tags: z.array(z.string()).optional(),
 	shortDescription: z.string().optional(),
 	detailsPage: z.boolean().optional().default(false),
 	featured: z.boolean().optional().default(false)

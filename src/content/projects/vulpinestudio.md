@@ -8,9 +8,5 @@ stack:
   - 'logos/svelte-icon'
   - 'logos/tailwindcss-icon'
   - 'logos/greensock-icon'
-tags:
-  - 'Game Development'
-  - 'Software'
-  - 'Web Development'
 links: []
 ---
