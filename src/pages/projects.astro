@@ -49,9 +49,10 @@ const entries = (await getCollection('projects')).sort((a, b) => a.data.order - 
 		}
 
 		.work-wrapper {
-			display: flex;
-			flex-direction: column;
-			margin-top: $space-6;
+			display: grid;
+			grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
+			gap: $space-5;
+			margin-top: $space-8;
 		}
 	}
 
