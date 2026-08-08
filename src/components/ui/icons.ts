@@ -85,6 +85,7 @@ import PhotoshopLogo from 'virtual:icons/logos/adobe-photoshop';
 import IllustratorLogo from 'virtual:icons/logos/adobe-illustrator';
 import Cinema4dSimple from 'virtual:icons/simple-icons/cinema4d';
 import OllamaSimple from 'virtual:icons/simple-icons/ollama';
+import AutoFixMdi from 'virtual:icons/mdi/auto-fix';
 
 // unplugin-icons compiles each import to a Svelte component; `any` avoids
 // fighting the generated component types just to store them in a lookup map.
@@ -175,5 +176,6 @@ export const icons: Record<string, any> = {
 	'logos/adobe-photoshop': PhotoshopLogo,
 	'logos/adobe-illustrator': IllustratorLogo,
 	'simple-icons/cinema4d': Cinema4dSimple,
-	'simple-icons/ollama': OllamaSimple
+	'simple-icons/ollama': OllamaSimple,
+	'mdi/auto-fix': AutoFixMdi
 };
