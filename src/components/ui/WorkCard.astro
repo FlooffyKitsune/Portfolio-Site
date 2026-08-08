@@ -33,13 +33,7 @@ const ImagePlaceholderIcon = icons['mdi/image-outline'];
 		</h2>
 		<p>{description}</p>
 		{
-			tags && tags.length > 0 ? (
-				<div class="work-tags">
-					{tags.map((tag) => (
-						<span class="tag-pill">{tag}</span>
-					))}
-				</div>
-			) : (
+			stack.length > 0 && (
 				<div class="work-stack">
 					{stack.map((key) => {
 						const Icon = icons[key];
@@ -49,6 +43,15 @@ const ImagePlaceholderIcon = icons['mdi/image-outline'];
 							</span>
 						);
 					})}
+				</div>
+			)
+		}
+		{
+			tags && tags.length > 0 && (
+				<div class="work-tags">
+					{tags.map((tag) => (
+						<span class="tag-pill">{tag}</span>
+					))}
 				</div>
 			)
 		}

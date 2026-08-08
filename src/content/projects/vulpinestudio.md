@@ -2,11 +2,15 @@
 title: 'VulpineStudio'
 order: 2
 description: 'An independent studio exploring games, software, art, and whatever interesting idea seems worth building next.'
-stack: []
+stack:
+  - 'logos/typescript-icon'
+  - 'logos/astro-icon'
+  - 'logos/svelte-icon'
+  - 'logos/tailwindcss-icon'
+  - 'logos/greensock-icon'
 tags:
   - 'Game Development'
   - 'Software'
-  - 'Branding'
-  - 'Creative Direction'
+  - 'Web Development'
 links: []
 ---

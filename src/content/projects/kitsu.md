@@ -1,13 +1,16 @@
 ---
 title: 'Kitsu'
 order: 3
-description: 'A personal software project exploring conversational AI, automation, and interactive tools across Discord and other interfaces.'
-stack: []
+description: 'A personal software project exploring conversational AI, automation, and interactive tools across multiple interfaces.'
+stack:
+  - 'logos/python'
+  - 'logos/rust'
+  - 'logos/fastapi-icon'
+  - 'simple-icons/ollama'
+  - 'logos/discord-icon'
+  - 'logos/threejs'
 tags:
-  - 'Python'
-  - 'JavaScript'
   - 'AI'
-  - 'Discord'
   - 'Automation'
 links: []
 ---
