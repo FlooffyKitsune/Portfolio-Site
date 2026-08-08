@@ -41,6 +41,17 @@ import { skillGroups } from '../data/skills';
 		margin: 0 auto;
 		padding: $space-8 $space-5;
 
+		/* HeroTitle is a separate component, so its own scoped styles (which
+		   set a plain $color-text heading) aren't reachable without :global()
+		   — this page-specific override doesn't belong on the shared
+		   component itself, since no other consumer wants it. */
+		:global(.hero-title h1) {
+			background-image: $gradient-warm;
+			-webkit-text-fill-color: transparent;
+			-webkit-background-clip: text;
+			background-clip: text;
+		}
+
 		.skill-groups {
 			display: flex;
 			flex-direction: column;
