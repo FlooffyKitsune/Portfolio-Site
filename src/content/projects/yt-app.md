@@ -1,7 +1,7 @@
 ---
 title: 'YT-App'
 order: 6
-description: "A basic React base site that utilizes Google's API to allow the user to search YouTube videos through a search bar. A main video is displayed with its title and description and five suggested videos and their titles are shown as well. SemanticUI was utilized for quick formatting of the site content."
+description: "A basic React base site that utilizes Google's API to allow the user to search YouTube videos through a search bar."
 image: '/images/projects/tube.png'
 stack: []
 tags:
