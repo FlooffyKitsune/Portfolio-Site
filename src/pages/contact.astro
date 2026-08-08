@@ -27,8 +27,8 @@ const email = 'jarrettdominic@proton.me';
 		</div>
 
 		<div class="primary-contact" data-reveal>
-			<div class="email-row">
-				<a class="email-button" href={`mailto:${email}`}>
+			<div class="email-code">
+				<a class="email-link" href={`mailto:${email}`}>
 					<EmailIcon /><span>{email}</span>
 				</a>
 				<button
@@ -122,31 +122,46 @@ const email = 'jarrettdominic@proton.me';
 			align-items: center;
 		}
 
-		.email-row {
-			display: flex;
-			flex-wrap: wrap;
-			align-items: center;
-			justify-content: center;
-			gap: $space-2;
+		.email-code {
+			display: inline-flex;
+			align-items: stretch;
+			max-width: 100%;
+			border: 1px solid $glass-border;
+			border-radius: $radius-md;
+			background: $color-surface;
+			overflow: hidden;
+			transition: border-color $duration-hover $ease-out-quick;
+
+			&:hover,
+			&:focus-within {
+				border-color: rgba($color-accent, 0.5);
+			}
 		}
 
-		.email-button {
+		.email-link {
 			display: flex;
 			align-items: center;
 			gap: $space-2;
-			padding: $space-3 $space-5;
-			border-radius: $radius-md;
-			background: $gradient-accent;
+			padding: $space-3 $space-4;
+			min-width: 0;
 			color: $color-text;
-			font-family: $font-sans;
-			font-weight: $font-weight-heading;
-			font-size: $font-size-body-lg;
+			font-family: $font-mono;
+			font-size: $font-size-body;
 			text-decoration: none;
-			transition: filter $duration-hover $ease-out-quick;
+			transition:
+				color $duration-hover $ease-out-quick,
+				background-color $duration-hover $ease-out-quick;
+
+			span {
+				overflow: hidden;
+				text-overflow: ellipsis;
+				white-space: nowrap;
+			}
 
 			&:hover,
 			&:focus-visible {
-				filter: brightness(1.1);
+				color: $color-accent;
+				background-color: rgba($color-accent, 0.06);
 			}
 		}
 
@@ -155,22 +170,22 @@ const email = 'jarrettdominic@proton.me';
 			display: flex;
 			align-items: center;
 			justify-content: center;
-			width: 2.75rem;
-			height: 2.75rem;
 			flex-shrink: 0;
-			border-radius: 50%;
-			background: $glass-fill;
-			border: 1px solid $glass-border;
-			backdrop-filter: blur($glass-blur);
-			-webkit-backdrop-filter: blur($glass-blur);
-			color: $color-text;
+			padding: 0 $space-4;
+			border: none;
+			border-left: 1px solid $glass-border;
+			background: transparent;
+			color: $color-text-muted;
 			font-size: 1.1rem;
 			cursor: pointer;
-			transition: border-color $duration-hover $ease-out-quick;
+			transition:
+				color $duration-hover $ease-out-quick,
+				background-color $duration-hover $ease-out-quick;
 
 			&:hover,
 			&:focus-visible {
-				border-color: rgba($color-accent, 0.6);
+				color: $color-accent;
+				background-color: rgba($color-accent, 0.06);
 			}
 
 			.copy-icon-swap {
@@ -295,9 +310,12 @@ const email = 'jarrettdominic@proton.me';
 			padding: $space-6 $space-4;
 			gap: $space-6;
 
-			.email-button {
-				font-size: $font-size-body;
-				padding: $space-2 $space-4;
+			.email-link {
+				padding: $space-2 $space-3;
+			}
+
+			.copy-button {
+				padding: 0 $space-3;
 			}
 		}
 	}
