@@ -17,9 +17,15 @@ const workEntry = z.object({
 	order: z.number()
 });
 
+const projectEntry = workEntry.extend({
+	shortDescription: z.string().optional(),
+	detailsPage: z.boolean().optional().default(false),
+	featured: z.boolean().optional().default(false)
+});
+
 const projects = defineCollection({
 	loader: glob({ pattern: '**/*.md', base: './src/content/projects' }),
-	schema: workEntry
+	schema: projectEntry
 });
 
 const portfolio = defineCollection({
