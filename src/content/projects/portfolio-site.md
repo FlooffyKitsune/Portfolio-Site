@@ -1,15 +1,13 @@
 ---
 title: 'This Portfolio'
 order: 5
-description: 'A personal portfolio built around interactive 3D environments, combining web development with 3D modeling, rendering, and interaction design.'
+description: "A constantly evolving showcase of projects I've worked on. My portfolio is a more professional representation of my work and skills."
 image: '/images/projects/portfolio.png'
 stack: []
 tags:
   - 'Astro'
   - 'Svelte'
   - 'Three.js'
-  - 'Blender'
   - 'TypeScript'
-  - '3D'
 links: []
 ---
