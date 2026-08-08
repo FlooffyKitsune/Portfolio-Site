@@ -15,8 +15,9 @@ export async function getStaticPaths() {
 }
 
 const { entry } = Astro.props;
-const { title, description, shortDescription, image, stack, links } = entry.data;
+const { title, description, shortDescription, image, stack, tags, links } = entry.data;
 const { Content } = await render(entry);
+const ImagePlaceholderIcon = icons['mdi/image-outline'];
 ---
 
 <BaseLayout title={`${title} — Jarrett Dominic`}>
@@ -24,21 +25,37 @@ const { Content } = await render(entry);
 		<a class="back-link" href="/projects">← Back to Projects</a>
 		<HeroTitle title={title} size="h1" supporting={shortDescription ?? description} />
 		<div class="hero-image">
-			<img src={image} alt={`${title} preview`} />
+			{
+				image ? (
+					<img src={image} alt={`${title} preview`} />
+				) : (
+					<div class="image-placeholder">
+						<ImagePlaceholderIcon />
+					</div>
+				)
+			}
 		</div>
 		<div class="meta-row">
-			<div class="work-stack">
-				{
-					stack.map((key) => {
-						const Icon = icons[key];
-						return (
-							<span class="stack-tag">
-								<Icon />
-							</span>
-						);
-					})
-				}
-			</div>
+			{
+				tags && tags.length > 0 ? (
+					<div class="work-tags">
+						{tags.map((tag) => (
+							<span class="tag-pill">{tag}</span>
+						))}
+					</div>
+				) : (
+					<div class="work-stack">
+						{stack.map((key) => {
+							const Icon = icons[key];
+							return (
+								<span class="stack-tag">
+									<Icon />
+								</span>
+							);
+						})}
+					</div>
+				)
+			}
 			<div class="work-links">
 				{
 					links.map((link) => {
@@ -97,6 +114,7 @@ const { Content } = await render(entry);
 			border-radius: $radius-md;
 			overflow: hidden;
 			max-height: 28rem;
+			aspect-ratio: 16 / 9;
 
 			img {
 				width: 100%;
@@ -104,6 +122,17 @@ const { Content } = await render(entry);
 				max-height: 28rem;
 				object-fit: cover;
 				display: block;
+			}
+
+			.image-placeholder {
+				width: 100%;
+				height: 100%;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				background: $glass-fill;
+				color: $color-text-muted;
+				font-size: 3rem;
 			}
 		}
 
@@ -129,6 +158,22 @@ const { Content } = await render(entry);
 					background: rgba($color-accent, 0.08);
 					color: $color-text-muted;
 					font-size: 1.25rem;
+				}
+			}
+
+			.work-tags {
+				display: flex;
+				flex-wrap: wrap;
+				gap: $space-1;
+
+				.tag-pill {
+					padding: $space-1 $space-3;
+					border: 1px solid rgba($color-accent, 0.2);
+					border-radius: $radius-sm;
+					background: rgba($color-accent, 0.08);
+					color: $color-text-muted;
+					font-family: $font-sans;
+					font-size: $font-size-body;
 				}
 			}
 
