@@ -9,5 +9,8 @@ stack:
   - 'logos/threejs'
   - 'logos/typescript-icon'
   - 'logos/greensock-icon'
-links: []
+links:
+  - href: 'https://github.com/FlooffyKitsune/Portfolio-Site'
+    label: 'GitHub'
+    iconKey: 'simple-icons/github'
 ---

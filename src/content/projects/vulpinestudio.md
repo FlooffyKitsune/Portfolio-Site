@@ -8,5 +8,8 @@ stack:
   - 'logos/svelte-icon'
   - 'logos/tailwindcss-icon'
   - 'logos/greensock-icon'
-links: []
+links:
+  - href: 'https://www.vulpinestudio.com/'
+    label: 'Website'
+    iconKey: 'mdi/web'
 ---
