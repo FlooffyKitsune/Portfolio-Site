@@ -1,7 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import HeroTitle from '../components/ui/HeroTitle.astro';
-import { icons } from '../components/ui/icons';
+import {icons} from '../components/ui/icons';
 
 const EmailIcon = icons['mdi/email'];
 const GithubIcon = icons['mdi/github'];
@@ -21,7 +21,7 @@ const email = 'jarrettdominic@proton.me';
 				supporting="Have a project, collaboration, or just want to say hi?"
 			/>
 			<p class="intro-body">
-				I'm always open to interesting ideas, creative projects, and conversations about
+				I’m always open to interesting ideas, creative projects, and conversations about
 				things worth building.
 			</p>
 		</div>
@@ -36,8 +36,7 @@ const email = 'jarrettdominic@proton.me';
 					class="copy-button"
 					id="copy-email"
 					data-email={email}
-					aria-label="Copy email address"
-				>
+					aria-label="Copy email address">
 					<span class="copy-icon-swap">
 						<CopyIcon class="icon-copy" />
 						<CheckIcon class="icon-check" />
@@ -56,8 +55,7 @@ const email = 'jarrettdominic@proton.me';
 					href="https://github.com/FlooffyKitsune"
 					target="_blank"
 					rel="noopener noreferrer"
-					aria-label="GitHub"
-				>
+					aria-label="GitHub">
 					<GithubIcon />
 				</a>
 				<a
@@ -65,8 +63,7 @@ const email = 'jarrettdominic@proton.me';
 					href="https://www.linkedin.com/in/jarrett-dominic/"
 					target="_blank"
 					rel="noopener noreferrer"
-					aria-label="LinkedIn"
-				>
+					aria-label="LinkedIn">
 					<LinkedinIcon />
 				</a>
 			</div>
@@ -200,15 +197,21 @@ const email = 'jarrettdominic@proton.me';
 				.icon-check {
 					position: absolute;
 					inset: 0;
+				}
+
+				.icon-copy {
 					transition:
-						opacity $duration-hover $ease-out-quick,
-						transform $duration-hover $ease-out-quick;
+						opacity 0.15s $ease-out-quick,
+						transform 0.15s $ease-out-quick;
 				}
 
 				.icon-check {
 					opacity: 0;
-					transform: scale(0.6);
+					transform: scale(0.5);
 					color: $color-accent;
+					transition:
+						opacity 0.15s $ease-out-quick 0.08s,
+						transform 0.15s $ease-out-quick 0.08s;
 				}
 			}
 
@@ -235,7 +238,7 @@ const email = 'jarrettdominic@proton.me';
 			&.copied {
 				.icon-copy {
 					opacity: 0;
-					transform: scale(0.6);
+					transform: scale(0.5);
 				}
 
 				.icon-check {
