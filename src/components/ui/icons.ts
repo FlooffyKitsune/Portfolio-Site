@@ -89,6 +89,13 @@ import Cinema4dSimple from 'virtual:icons/simple-icons/cinema4d';
 import OllamaSimple from 'virtual:icons/simple-icons/ollama';
 import AutoFixMdi from 'virtual:icons/mdi/auto-fix';
 import ImageOutlineMdi from 'virtual:icons/mdi/image-outline';
+import RustLogo from 'virtual:icons/logos/rust';
+import DiscordLogo from 'virtual:icons/logos/discord-icon';
+import TailwindcssLogo from 'virtual:icons/logos/tailwindcss-icon';
+import GreensockLogo from 'virtual:icons/logos/greensock-icon';
+import CloudflareWorkersLogo from 'virtual:icons/logos/cloudflare-workers-icon';
+import TursoSimple from 'virtual:icons/simple-icons/turso';
+import FastapiLogo from 'virtual:icons/logos/fastapi-icon';
 
 // unplugin-icons compiles each import to a Svelte component; `any` avoids
 // fighting the generated component types just to store them in a lookup map.
@@ -183,5 +190,12 @@ export const icons: Record<string, any> = {
 	'mdi/auto-fix': AutoFixMdi,
 	'mdi/content-copy': ContentCopyMdi,
 	'mdi/check': CheckMdi,
-	'mdi/image-outline': ImageOutlineMdi
+	'mdi/image-outline': ImageOutlineMdi,
+	'logos/rust': RustLogo,
+	'logos/discord-icon': DiscordLogo,
+	'logos/tailwindcss-icon': TailwindcssLogo,
+	'logos/greensock-icon': GreensockLogo,
+	'logos/cloudflare-workers-icon': CloudflareWorkersLogo,
+	'simple-icons/turso': TursoSimple,
+	'logos/fastapi-icon': FastapiLogo
 };

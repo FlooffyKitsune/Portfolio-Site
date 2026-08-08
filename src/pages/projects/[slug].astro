@@ -36,26 +36,31 @@ const ImagePlaceholderIcon = icons['mdi/image-outline'];
 			}
 		</div>
 		<div class="meta-row">
-			{
-				tags && tags.length > 0 ? (
-					<div class="work-tags">
-						{tags.map((tag) => (
-							<span class="tag-pill">{tag}</span>
-						))}
-					</div>
-				) : (
-					<div class="work-stack">
-						{stack.map((key) => {
-							const Icon = icons[key];
-							return (
-								<span class="stack-tag">
-									<Icon />
-								</span>
-							);
-						})}
-					</div>
-				)
-			}
+			<div class="tech-info">
+				{
+					stack.length > 0 && (
+						<div class="work-stack">
+							{stack.map((key) => {
+								const Icon = icons[key];
+								return (
+									<span class="stack-tag">
+										<Icon />
+									</span>
+								);
+							})}
+						</div>
+					)
+				}
+				{
+					tags && tags.length > 0 && (
+						<div class="work-tags">
+							{tags.map((tag) => (
+								<span class="tag-pill">{tag}</span>
+							))}
+						</div>
+					)
+				}
+			</div>
 			<div class="work-links">
 				{
 					links.map((link) => {
@@ -142,6 +147,12 @@ const ImagePlaceholderIcon = icons['mdi/image-outline'];
 			align-items: center;
 			justify-content: space-between;
 			gap: $space-3;
+
+			.tech-info {
+				display: flex;
+				flex-direction: column;
+				gap: $space-2;
+			}
 
 			.work-stack {
 				display: flex;
