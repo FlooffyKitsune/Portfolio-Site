@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import HeroTitle from '../components/ui/HeroTitle.astro';
 import { icons } from '../components/ui/icons';
 
 const EmailIcon = icons['mdi/email'];
@@ -9,89 +10,116 @@ const LinkedinIcon = icons['mdi/linkedin'];
 
 <BaseLayout title="Contact — Jarrett Dominic">
 	<section id="contact">
-		<h1>Contact</h1>
-		<p>Have a project in mind or just want to say hi? Reach out.</p>
-		<a class="email-link" href="mailto:jarrettdominic@proton.me">
-			<EmailIcon /><span>jarrettdominic@proton.me</span>
-		</a>
-		<div class="social-links">
-			<a href="https://github.com/FlooffyKitsune" target="_blank" rel="noopener noreferrer">
-				<GithubIcon />
+		<HeroTitle
+			title="Contact"
+			size="h1"
+			supporting="Have a project in mind or just want to say hi? Reach out."
+		/>
+		<div class="contact-links" data-reveal>
+			<a class="email-link" href="mailto:jarrettdominic@proton.me">
+				<EmailIcon /><span>jarrettdominic@proton.me</span>
 			</a>
-			<a
-				href="https://www.linkedin.com/in/jarrett-dominic/"
-				target="_blank"
-				rel="noopener noreferrer"
-			>
-				<LinkedinIcon />
-			</a>
+			<div class="social-links">
+				<a
+					class="social-icon"
+					href="https://github.com/FlooffyKitsune"
+					target="_blank"
+					rel="noopener noreferrer"
+					aria-label="GitHub"
+				>
+					<GithubIcon />
+				</a>
+				<a
+					class="social-icon"
+					href="https://www.linkedin.com/in/jarrett-dominic/"
+					target="_blank"
+					rel="noopener noreferrer"
+					aria-label="LinkedIn"
+				>
+					<LinkedinIcon />
+				</a>
+			</div>
 		</div>
 	</section>
 </BaseLayout>
 
 <style lang="scss">
-	@import '../styles/tokens';
+	@use '../styles/tokens' as *;
 
 	#contact {
 		width: 100%;
 		min-height: 30rem;
-		padding: 8rem 13% 10rem;
+		padding: $space-8 $space-5;
 		background-color: $color-bg;
-		color: $color-text;
 		display: flex;
 		flex-direction: column;
 		align-items: center;
 		text-align: center;
+		gap: $space-6;
 
-		h1 {
-			font-family: $font-heading;
-			font-size: 2.5rem;
-			margin-bottom: 1rem;
+		:global(.hero-title) {
+			align-items: center;
+		}
+
+		:global(.hero-title h1) {
 			background-image: $gradient-warm;
 			-webkit-text-fill-color: transparent;
 			-webkit-background-clip: text;
+			background-clip: text;
 		}
 
-		p {
-			font-family: $font-body;
-			font-size: 1.25rem;
-			margin-bottom: 2rem;
+		.contact-links {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			gap: $space-4;
 		}
 
 		.email-link {
 			display: flex;
 			align-items: center;
-			gap: 0.75rem;
-			font-size: 1.5rem;
+			gap: $space-2;
+			font-family: $font-sans;
+			font-weight: $font-weight-heading;
+			font-size: $font-size-h2;
 			color: $color-text;
 			text-decoration: none;
-			margin-bottom: 2rem;
-			transition: color 0.2s ease-in-out;
+			transition: color $duration-hover $ease-out-quick;
 
 			&:hover {
-				color: $color-hover-accent;
+				color: $color-accent;
 			}
 		}
 
 		.social-links {
 			display: flex;
-			gap: 1.5rem;
+			gap: $space-3;
+		}
 
-			a {
-				color: $color-text;
-				font-size: 2.5rem;
-				transition: color 0.2s ease-in-out;
+		.social-icon {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			width: 2.75rem;
+			height: 2.75rem;
+			border-radius: 50%;
+			background: $glass-fill;
+			border: 1px solid $glass-border;
+			backdrop-filter: blur($glass-blur);
+			-webkit-backdrop-filter: blur($glass-blur);
+			color: $color-text;
+			font-size: 1.25rem;
+			transition: border-color $duration-hover $ease-out-quick;
 
-				&:hover {
-					color: $color-hover-accent;
-				}
+			&:hover {
+				border-color: rgba($color-accent, 0.6);
 			}
 		}
 	}
 
 	@media screen and (max-width: $breakpoint-mobile) {
 		#contact {
-			padding: 6rem 1.5rem 4rem;
+			padding: $space-6 $space-4;
 		}
 	}
 </style>
