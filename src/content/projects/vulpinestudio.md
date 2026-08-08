@@ -2,6 +2,7 @@
 title: 'VulpineStudio'
 order: 2
 description: 'An independent studio exploring games, software, art, and whatever interesting idea seems worth building next.'
+image: '/images/projects/vulpinestudio.png'
 stack:
   - 'logos/typescript-icon'
   - 'logos/astro-icon'
