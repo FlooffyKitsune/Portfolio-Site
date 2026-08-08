@@ -81,6 +81,10 @@ import VsCodeLogo from 'virtual:icons/logos/visual-studio-code';
 import DockerLogo from 'virtual:icons/logos/docker-icon';
 import AwsLogo from 'virtual:icons/logos/aws';
 import AdobeLogo from 'virtual:icons/logos/adobe-icon';
+import PhotoshopLogo from 'virtual:icons/logos/adobe-photoshop';
+import IllustratorLogo from 'virtual:icons/logos/adobe-illustrator';
+import Cinema4dSimple from 'virtual:icons/simple-icons/cinema4d';
+import OllamaSimple from 'virtual:icons/simple-icons/ollama';
 
 // unplugin-icons compiles each import to a Svelte component; `any` avoids
 // fighting the generated component types just to store them in a lookup map.
@@ -167,5 +171,9 @@ export const icons: Record<string, any> = {
 	'logos/visual-studio-code': VsCodeLogo,
 	'logos/docker-icon': DockerLogo,
 	'logos/aws': AwsLogo,
-	'logos/adobe-icon': AdobeLogo
+	'logos/adobe-icon': AdobeLogo,
+	'logos/adobe-photoshop': PhotoshopLogo,
+	'logos/adobe-illustrator': IllustratorLogo,
+	'simple-icons/cinema4d': Cinema4dSimple,
+	'simple-icons/ollama': OllamaSimple
 };
