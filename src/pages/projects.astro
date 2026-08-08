@@ -24,6 +24,7 @@ const entries = (await getCollection('projects')).sort((a, b) => a.data.order - 
 							image={entry.data.image}
 							stack={entry.data.stack}
 							links={entry.data.links}
+							detailsUrl={entry.data.detailsPage ? `/projects/${entry.id}` : undefined}
 						/>
 					</div>
 				))
