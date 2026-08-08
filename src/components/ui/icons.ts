@@ -81,6 +81,8 @@ import VsCodeLogo from 'virtual:icons/logos/visual-studio-code';
 import DockerLogo from 'virtual:icons/logos/docker-icon';
 import AwsLogo from 'virtual:icons/logos/aws';
 import AdobeLogo from 'virtual:icons/logos/adobe-icon';
+import ContentCopyMdi from 'virtual:icons/mdi/content-copy';
+import CheckMdi from 'virtual:icons/mdi/check';
 import PhotoshopLogo from 'virtual:icons/logos/adobe-photoshop';
 import IllustratorLogo from 'virtual:icons/logos/adobe-illustrator';
 import Cinema4dSimple from 'virtual:icons/simple-icons/cinema4d';
@@ -177,5 +179,7 @@ export const icons: Record<string, any> = {
 	'logos/adobe-illustrator': IllustratorLogo,
 	'simple-icons/cinema4d': Cinema4dSimple,
 	'simple-icons/ollama': OllamaSimple,
-	'mdi/auto-fix': AutoFixMdi
+	'mdi/auto-fix': AutoFixMdi,
+	'mdi/content-copy': ContentCopyMdi,
+	'mdi/check': CheckMdi
 };
