@@ -236,14 +236,22 @@ const email = 'jarrettdominic@proton.me';
 			}
 
 			&.copied {
-				.icon-copy {
-					opacity: 0;
-					transform: scale(0.5);
-				}
+				// Nested to match .icon-copy/.icon-check's own selector depth
+				// (.copy-button .copy-icon-swap .icon-check): Astro's per-compound
+				// [data-astro-cid] scoping attribute means a shallower selector here
+				// (e.g. `&.copied .icon-check`) would lose the specificity fight to
+				// the base rule despite coming later in source order, leaving the
+				// checkmark permanently at opacity:0.
+				.copy-icon-swap {
+					.icon-copy {
+						opacity: 0;
+						transform: scale(0.5);
+					}
 
-				.icon-check {
-					opacity: 1;
-					transform: scale(1);
+					.icon-check {
+						opacity: 1;
+						transform: scale(1);
+					}
 				}
 
 				.copy-tooltip {
