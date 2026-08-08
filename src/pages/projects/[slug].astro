@@ -1,0 +1,214 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import HeroTitle from '../../components/ui/HeroTitle.astro';
+import { icons } from '../../components/ui/icons';
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+	const entries = await getCollection('projects');
+	return entries
+		.filter((entry) => entry.data.detailsPage)
+		.map((entry) => ({
+			params: { slug: entry.id },
+			props: { entry }
+		}));
+}
+
+const { entry } = Astro.props;
+const { title, description, shortDescription, image, stack, links } = entry.data;
+const { Content } = await render(entry);
+---
+
+<BaseLayout title={`${title} — Jarrett Dominic`}>
+	<section id="project-detail">
+		<a class="back-link" href="/projects">← Back to Projects</a>
+		<HeroTitle title={title} size="h1" supporting={shortDescription ?? description} />
+		<div class="hero-image">
+			<img src={image} alt={`${title} preview`} />
+		</div>
+		<div class="meta-row">
+			<div class="work-stack">
+				{
+					stack.map((key) => {
+						const Icon = icons[key];
+						return (
+							<span class="stack-tag">
+								<Icon />
+							</span>
+						);
+					})
+				}
+			</div>
+			<div class="work-links">
+				{
+					links.map((link) => {
+						const Icon = icons[link.iconKey];
+						return (
+							<a href={link.href} target="_blank" rel="noopener noreferrer">
+								<Icon />
+								<span>{link.label}</span>
+							</a>
+						);
+					})
+				}
+			</div>
+		</div>
+		<p class="description">{description}</p>
+		<div class="body-content">
+			<Content />
+		</div>
+	</section>
+</BaseLayout>
+
+<style lang="scss">
+	@use '../../styles/tokens' as *;
+
+	#project-detail {
+		width: 100%;
+		max-width: 56rem;
+		margin: 0 auto;
+		padding: $space-8 $space-5;
+		display: flex;
+		flex-direction: column;
+		gap: $space-5;
+
+		:global(.hero-title h1) {
+			background-image: $gradient-warm;
+			-webkit-text-fill-color: transparent;
+			-webkit-background-clip: text;
+			background-clip: text;
+		}
+
+		.back-link {
+			align-self: flex-start;
+			color: $color-text-muted;
+			font-family: $font-sans;
+			font-size: $font-size-caption;
+			text-decoration: none;
+			transition: color $duration-hover $ease-out-quick;
+
+			&:hover,
+			&:focus-visible {
+				color: $color-accent;
+			}
+		}
+
+		.hero-image {
+			border-radius: $radius-md;
+			overflow: hidden;
+			max-height: 28rem;
+
+			img {
+				width: 100%;
+				height: 100%;
+				max-height: 28rem;
+				object-fit: cover;
+				display: block;
+			}
+		}
+
+		.meta-row {
+			display: flex;
+			flex-wrap: wrap;
+			align-items: center;
+			justify-content: space-between;
+			gap: $space-3;
+
+			.work-stack {
+				display: flex;
+				flex-wrap: wrap;
+				gap: $space-1;
+
+				.stack-tag {
+					display: flex;
+					align-items: center;
+					justify-content: center;
+					padding: $space-1;
+					border: 1px solid rgba($color-accent, 0.2);
+					border-radius: $radius-sm;
+					background: rgba($color-accent, 0.08);
+					color: $color-text-muted;
+					font-size: 1.25rem;
+				}
+			}
+
+			.work-links {
+				display: flex;
+				flex-wrap: wrap;
+				gap: $space-2;
+
+				a {
+					display: flex;
+					align-items: center;
+					gap: $space-1;
+					padding: $space-2 $space-4;
+					border: 1px solid rgba($color-accent, 0.25);
+					border-radius: $radius-sm;
+					background: rgba($color-accent, 0.08);
+					color: $color-text;
+					font-family: $font-sans;
+					font-size: $font-size-body;
+					text-decoration: none;
+					transition: border-color $duration-hover $ease-out-quick;
+
+					&:hover,
+					&:focus-visible {
+						border-color: rgba($color-accent, 0.6);
+					}
+				}
+			}
+		}
+
+		.description {
+			font-family: $font-sans;
+			font-size: $font-size-body-lg;
+			color: $color-text-muted;
+			line-height: 1.6;
+			margin: 0;
+		}
+
+		.body-content {
+			font-family: $font-sans;
+			color: $color-text-muted;
+			line-height: 1.6;
+
+			:global(h2) {
+				font-family: $font-sans;
+				font-weight: $font-weight-heading;
+				font-size: $font-size-h2;
+				color: $color-text;
+				margin: $space-5 0 $space-2;
+			}
+
+			:global(h3) {
+				font-family: $font-sans;
+				font-weight: $font-weight-heading;
+				font-size: $font-size-body-lg;
+				color: $color-text;
+				margin: $space-4 0 $space-2;
+			}
+
+			:global(p) {
+				margin: 0 0 $space-3;
+			}
+
+			:global(ul),
+			:global(ol) {
+				margin: 0 0 $space-3;
+				padding-left: $space-4;
+			}
+		}
+	}
+
+	@media screen and (max-width: $breakpoint-mobile) {
+		#project-detail {
+			padding: $space-6 $space-4;
+			text-align: center;
+
+			.meta-row {
+				flex-direction: column;
+				align-items: center;
+			}
+		}
+	}
+</style>
