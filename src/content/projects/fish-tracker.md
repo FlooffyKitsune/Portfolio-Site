@@ -2,6 +2,7 @@
 title: 'Fish Tracker'
 order: 4
 description: 'A Discord-based system for collecting and managing community-submitted fish suggestions for Driftlake.'
+image: '/images/projects/discord.jpg'
 stack:
   - 'logos/typescript-icon'
   - 'logos/cloudflare-workers-icon'
