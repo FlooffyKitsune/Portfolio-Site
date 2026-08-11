@@ -44,7 +44,6 @@ export const skillGroups: SkillGroup[] = [
 			{ label: 'Game Systems', iconKey: 'mdi/gamepad-variant-outline' },
 			{ label: 'Gameplay Programming', iconKey: 'mdi/application-brackets-outline' },
 			{ label: 'UI / UX', iconKey: 'mdi/view-dashboard-outline' },
-			{ label: 'Technical Art', iconKey: 'mdi/auto-fix' },
 			{ label: 'Asset Integration', iconKey: 'mdi/cube-scan' }
 		]
 	},
@@ -63,11 +62,9 @@ export const skillGroups: SkillGroup[] = [
 		title: 'Tools & Infrastructure',
 		items: [
 			{ label: 'Git', iconKey: 'logos/git-icon' },
-			{ label: 'GitHub', iconKey: 'simple-icons/github' },
 			{ label: 'VS Code', iconKey: 'logos/visual-studio-code' },
 			{ label: 'AWS', iconKey: 'logos/aws' },
 			{ label: 'Firebase', iconKey: 'logos/firebase-icon' },
-			{ label: 'NPM', iconKey: 'simple-icons/npm' },
 			{ label: 'Three.js', iconKey: 'logos/threejs' },
 			{ label: 'Supabase', iconKey: 'logos/supabase-icon' },
 			{ label: 'Docker', iconKey: 'logos/docker-icon' },

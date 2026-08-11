@@ -1,7 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { icons } from '../components/ui/icons';
-import { Image } from 'astro:assets';
+import {icons} from '../components/ui/icons';
+import {Image} from 'astro:assets';
 import jarrettPhoto from '../assets/images/jarrett.png';
 
 const DocumentIcon = icons['basil/document-solid'];
@@ -16,34 +16,34 @@ const DocumentIcon = icons['basil/document-solid'];
 					class="resume-button"
 					href="/pdf/JarrettDominicResume.pdf"
 					target="_blank"
-					rel="noopener noreferrer"
-				>
+					rel="noopener noreferrer">
 					<span>Download CV</span><DocumentIcon />
 				</a>
 			</div>
 			<div class="about-copy">
 				<h1>About Me</h1>
 				<p>
-					I'm a software engineer who likes building things. That's probably the simplest way to put
-					it.
+					I'm a software engineer who likes building things. That's probably the simplest
+					way to put it.
 				</p>
 				<p>
-					I work across full-stack development, game development, 3D, 2D, and creative tooling, and
-					I tend to pick up whatever skills a project needs along the way. I've never been
-					particularly good at staying in one box. One project might have me building a web
-					application, another might have me developing a game in Godot, and another might have me
-					buried in Blender or Clip Studio trying to make something look right.
+					I work across full-stack development, game development, 3D, 2D, and creative
+					tooling, and I tend to pick up whatever skills a project needs along the way.
+					One project might have me building a web application, another might have me
+					developing a game in Godot, and another might have me buried in Blender or
+					Photoshop trying to make something look right.
 				</p>
 				<p>
-					What I enjoy most is taking an idea from "this would be cool" to something that actually
-					exists. I like understanding how things work, learning new tools, and occasionally going
-					far deeper down a technical rabbit hole than was probably necessary.
+					What I enjoy most is taking an idea from "this would be cool" to something that
+					actually exists. I like understanding how things work, learning new tools, and
+					occasionally going far deeper down a technical rabbit hole than was probably
+					necessary.
 				</p>
 				<p>
-					Beyond the screen, I like keeping things moving. I enjoy traveling, exploring new places,
-					mountain biking, rock climbing, and generally finding excuses to get outside. I'm just as
-					happy spending a day figuring out a technical problem as I am spending one somewhere I've
-					never been before.
+					Beyond the screen, I like keeping things moving. I enjoy traveling, exploring
+					new places, mountain biking, rock climbing, and generally finding excuses to get
+					outside. I'm just as happy spending a day figuring out a technical problem as I
+					am spending one somewhere I've never been before.
 				</p>
 			</div>
 		</div>
@@ -71,7 +71,7 @@ const DocumentIcon = icons['basil/document-solid'];
 			align-items: flex-start;
 
 			.about-photo {
-				flex: 2;
+				flex: 3;
 				min-width: 0;
 				display: flex;
 				flex-direction: column;
@@ -117,7 +117,7 @@ const DocumentIcon = icons['basil/document-solid'];
 			}
 
 			.about-copy {
-				flex: 3;
+				flex: 5;
 				min-width: 0;
 				display: flex;
 				flex-direction: column;
