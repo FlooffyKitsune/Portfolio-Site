@@ -4,7 +4,9 @@ order: 3
 description: 'A collection of some different works commissioned from me (only works I was given permission to share are shown).'
 image: '/images/projects/kl.png'
 stack:
-  - 'simple-icons/adobecreativecloud'
+  - 'logos/adobe-photoshop'
+  - 'logos/adobe-illustrator'
+  - 'logos/adobe-xd'
   - 'logos/blender'
   - 'simple-icons/autodesk'
 links:
