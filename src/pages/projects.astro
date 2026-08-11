@@ -1,0 +1,66 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import HeroTitle from '../components/ui/HeroTitle.astro';
+import WorkCard from '../components/ui/WorkCard.astro';
+import { getCollection } from 'astro:content';
+
+const entries = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order);
+---
+
+<BaseLayout title="Projects — Jarrett Dominic">
+	<section id="projects">
+		<HeroTitle
+			title="Projects"
+			size="h1"
+			supporting="Software and web projects I've built end to end, from quick experiments to full applications."
+		/>
+		<div class="work-wrapper">
+			{
+				entries.map((entry) => (
+					<div data-reveal>
+						<WorkCard
+							title={entry.data.title}
+							description={entry.data.description}
+							image={entry.data.image}
+							stack={entry.data.stack}
+							links={entry.data.links}
+							detailsUrl={entry.data.detailsPage ? `/projects/${entry.id}` : undefined}
+						/>
+					</div>
+				))
+			}
+		</div>
+	</section>
+</BaseLayout>
+
+<style lang="scss">
+	@use '../styles/tokens' as *;
+
+	#projects {
+		width: 100%;
+		max-width: 78rem;
+		margin: 0 auto;
+		padding: $space-8 $space-5;
+
+		:global(.hero-title h1) {
+			background-image: $gradient-warm;
+			-webkit-text-fill-color: transparent;
+			-webkit-background-clip: text;
+			background-clip: text;
+		}
+
+		.work-wrapper {
+			display: grid;
+			grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
+			gap: $space-5;
+			margin-top: $space-8;
+		}
+	}
+
+	@media screen and (max-width: $breakpoint-mobile) {
+		#projects {
+			padding: $space-6 $space-4;
+			text-align: center;
+		}
+	}
+</style>

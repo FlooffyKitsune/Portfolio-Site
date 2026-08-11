@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="35" height="35" id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #deb7d6;
+      }
+
+      .cls-1, .cls-2, .cls-3, .cls-4, .cls-5 {
+        font-family: AlverataIrregular, 'Alverata Irregular';
+        font-size: 30px;
+      }
+
+      .cls-2 {
+        fill: #7f5a9b;
+      }
+
+      .cls-3 {
+        fill: #63468b;
+      }
+
+      .cls-4 {
+        fill: #b188bd;
+      }
+
+      .cls-5 {
+        fill: #fff;
+      }
+    </style>
+  </defs>
+  <text class="cls-3" transform="translate(-.22 27.67)"><tspan x="0" y="0">JD</tspan></text>
+  <text class="cls-2" transform="translate(.78 26.67)"><tspan x="0" y="0">JD</tspan></text>
+  <text class="cls-4" transform="translate(1.78 25.67)"><tspan x="0" y="0">JD</tspan></text>
+  <text class="cls-1" transform="translate(2.78 24.67)"><tspan x="0" y="0">JD</tspan></text>
+  <text class="cls-5" transform="translate(3.78 23.67)"><tspan x="0" y="0">JD</tspan></text>
+</svg>

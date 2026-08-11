@@ -1,0 +1,40 @@
+---
+interface Props {
+	title?: string;
+}
+
+const { title } = Astro.props;
+---
+
+<div class="callout" data-reveal>
+	{title && <p class="title">{title}</p>}
+	<div class="content">
+		<slot />
+	</div>
+</div>
+
+<style lang="scss">
+	@use '../../styles/tokens' as *;
+
+	.callout {
+		border: 1px solid $glass-border;
+		border-radius: $radius-md;
+		padding: $space-4;
+		background: $surface-subtle;
+
+		.title {
+			font-family: $font-sans;
+			font-weight: $font-weight-heading;
+			font-size: $font-size-h2;
+			color: $color-text;
+			margin: 0 0 $space-2;
+		}
+
+		.content {
+			font-family: $font-sans;
+			font-size: $font-size-body;
+			color: $color-text-muted;
+			line-height: 1.6;
+		}
+	}
+</style>

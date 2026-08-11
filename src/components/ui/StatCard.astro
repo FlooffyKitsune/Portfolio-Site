@@ -1,0 +1,38 @@
+---
+interface Props {
+	value: string;
+	label: string;
+}
+
+const { value, label } = Astro.props;
+---
+
+<div class="stat-card" data-reveal>
+	<p class="value">{value}</p>
+	<p class="label">{label}</p>
+</div>
+
+<style lang="scss">
+	@use '../../styles/tokens' as *;
+
+	.stat-card {
+		display: flex;
+		flex-direction: column;
+		gap: $space-1;
+
+		.value {
+			font-family: $font-mono;
+			font-size: $font-size-h1;
+			font-weight: $font-weight-medium;
+			color: $color-text;
+			margin: 0;
+		}
+
+		.label {
+			font-family: $font-sans;
+			font-size: $font-size-caption;
+			color: $color-text-muted;
+			margin: 0;
+		}
+	}
+</style>

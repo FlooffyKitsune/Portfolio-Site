@@ -1,0 +1,55 @@
+@import './tokens';
+
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+body {
+	background-color: $color-bg;
+	color: $color-text;
+	font-family: $font-body;
+}
+
+/**
+ * Scroll-reveal pre-paint guard. `[data-reveal]` elements are animated in from
+ * `autoAlpha: 0` by src/lib/motion/reveal.ts, but that only runs at
+ * `astro:page-load` (window `load` — after images and fonts). Without this rule
+ * they render fully visible from first paint and then snap invisible to
+ * re-animate.
+ *
+ * Both conditions are deliberately the exact conditions under which GSAP is
+ * guaranteed to take over, so nothing can ever be hidden with no code left to
+ * reveal it:
+ *
+ * - `.js` is added by an inline <head> script in BaseLayout.astro, so no-JS
+ *   visitors never match and always see full content.
+ * - `no-preference` mirrors the `motionOk` condition in
+ *   `createReducedMotionContext`. Reduced-motion visitors are excluded because
+ *   they get the final state instantly and never see an animation, so hiding
+ *   their content until GSAP boots would be a pure regression; and a browser
+ *   too old to support `prefers-reduced-motion` matches neither of GSAP's
+ *   conditions (so neither branch runs) — it must not match this rule either.
+ */
+@media (prefers-reduced-motion: no-preference) {
+	html.js [data-reveal] {
+		visibility: hidden;
+	}
+}
+
+/**
+ * Homepage hero FOUC guard. `.hotspot-links` (the page-nav pills under the
+ * hero tagline) is suppressed for the whole 3D-loading window — see
+ * hideNavLinksForLoad()/revealHero() in index.astro — but that JS only runs
+ * at `astro:page-load`, after first paint. Without this, capable visitors
+ * would see the pills for a moment before they vanish. `.hero-3d-capable` is
+ * added by an inline script in index.astro before `.hotspot-links` is even
+ * parsed, mirroring shouldUseSimplifiedHero()'s exact checks — so this only
+ * applies to visitors who will actually reach the 3D path. Everyone else
+ * (mobile/reduced-motion/low-power/no-JS) never gets the class and always
+ * sees the pills, unaffected.
+ */
+html.hero-3d-capable .hotspot-links {
+	visibility: hidden;
+}

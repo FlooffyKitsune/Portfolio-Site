@@ -1,0 +1,23 @@
+---
+const year = new Date().getFullYear();
+---
+
+<footer>
+	<p>© {year} Jarrett Dominic</p>
+</footer>
+
+<style lang="scss">
+	@use '../../styles/tokens' as *;
+
+	footer {
+		width: 100%;
+		height: 6rem;
+		background: $color-bg;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		color: $color-text-muted;
+		font-family: $font-sans;
+		font-size: $font-size-caption;
+	}
+</style>

@@ -1,0 +1,178 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import {icons} from '../components/ui/icons';
+import {Image} from 'astro:assets';
+import jarrettPhoto from '../assets/images/jarrett.png';
+
+const DocumentIcon = icons['basil/document-solid'];
+---
+
+<BaseLayout title="About — Jarrett Dominic">
+	<section id="about">
+		<div class="about-grid" data-reveal>
+			<div class="about-photo">
+				<Image src={jarrettPhoto} alt="Jarrett Dominic" width={1024} height={1024} />
+				<a
+					class="resume-button"
+					href="/pdf/JarrettDominicResume.pdf"
+					target="_blank"
+					rel="noopener noreferrer">
+					<span>Download CV</span><DocumentIcon />
+				</a>
+			</div>
+			<div class="about-copy">
+				<h1>About Me</h1>
+				<p>
+					I'm a software engineer who likes building things. That's probably the simplest
+					way to put it.
+				</p>
+				<p>
+					I work across full-stack development, game development, 3D, 2D, and creative
+					tooling, and I tend to pick up whatever skills a project needs along the way.
+					One project might have me building a web application, another might have me
+					developing a game in Godot, and another might have me buried in Blender or
+					Photoshop trying to make something look right.
+				</p>
+				<p>
+					What I enjoy most is taking an idea from "this would be cool" to something that
+					actually exists. I like understanding how things work, learning new tools, and
+					occasionally going far deeper down a technical rabbit hole than was probably
+					necessary.
+				</p>
+				<p>
+					Beyond the screen, I like keeping things moving. I enjoy traveling, exploring
+					new places, mountain biking, rock climbing, and generally finding excuses to get
+					outside. I'm just as happy spending a day figuring out a technical problem as I
+					am spending one somewhere I've never been before.
+				</p>
+			</div>
+		</div>
+	</section>
+</BaseLayout>
+
+<style lang="scss">
+	@use '../styles/tokens' as *;
+
+	#about {
+		width: 100%;
+		padding: $space-8 0;
+		background-color: $color-bg;
+
+		.about-grid {
+			max-width: 72rem;
+			margin: 0 auto;
+			padding: 0 $space-5;
+			/* flex, not grid: a grid row sizes to its tallest item, which would
+			   leave a dead gap under the photo's own (shorter) column for the
+			   rest of the now-much-taller text column's height. Flex items size
+			   to their own content instead. */
+			display: flex;
+			gap: $space-6;
+			align-items: flex-start;
+
+			.about-photo {
+				flex: 3;
+				min-width: 0;
+				display: flex;
+				flex-direction: column;
+				gap: $space-2;
+				/* The bio grew from two short paragraphs to four longer ones,
+				   well past the photo's own height — rather than growing the
+				   photo to match (it was never meant to be a dominant visual
+				   element), it stays pinned in view (photo + CV button
+				   together) as the now-taller text column scrolls past it.
+				   `$space-8` clears Header.astro's own sticky bar so the two
+				   don't overlap when both are stuck. */
+				position: sticky;
+				top: $space-8;
+
+				img {
+					width: 100%;
+					height: auto;
+					aspect-ratio: 1 / 1;
+					object-fit: cover;
+					border-radius: $radius-md;
+					display: block;
+				}
+
+				.resume-button {
+					align-self: flex-start;
+					display: flex;
+					align-items: center;
+					gap: $space-1;
+					padding: $space-2 $space-4;
+					border-radius: $radius-md;
+					background: $gradient-accent;
+					color: $color-text;
+					font-family: $font-sans;
+					font-weight: $font-weight-heading;
+					font-size: $font-size-body;
+					text-decoration: none;
+					transition: filter $duration-hover $ease-out-quick;
+
+					&:hover {
+						filter: brightness(1.1);
+					}
+				}
+			}
+
+			.about-copy {
+				flex: 5;
+				min-width: 0;
+				display: flex;
+				flex-direction: column;
+				gap: $space-2;
+
+				h1 {
+					font-family: $font-sans;
+					font-weight: $font-weight-heading;
+					font-size: $font-size-h1;
+					margin: 0;
+					background-image: $gradient-warm;
+					-webkit-text-fill-color: transparent;
+					-webkit-background-clip: text;
+					background-clip: text;
+				}
+
+				p {
+					font-family: $font-sans;
+					font-size: $font-size-body-lg;
+					color: $color-text-muted;
+					line-height: 1.6;
+					margin: 0;
+				}
+			}
+		}
+	}
+
+	@media screen and (max-width: $breakpoint-mobile) {
+		#about {
+			padding: $space-6 0;
+
+			.about-grid {
+				flex-direction: column;
+				text-align: center;
+
+				.about-photo {
+					flex: none;
+					position: static;
+					align-items: center;
+
+					img {
+						max-width: 16rem;
+						margin: 0 auto;
+					}
+
+					.resume-button {
+						align-self: center;
+					}
+				}
+
+				.about-copy {
+					flex: none;
+					align-items: center;
+				}
+			}
+		}
+	}
+</style>

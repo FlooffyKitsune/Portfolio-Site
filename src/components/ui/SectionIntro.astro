@@ -1,0 +1,51 @@
+---
+interface Props {
+	eyebrow?: string;
+	title: string;
+	description?: string;
+}
+
+const { eyebrow, title, description } = Astro.props;
+---
+
+<div class="section-intro" data-reveal>
+	{eyebrow && <p class="eyebrow">{eyebrow}</p>}
+	<h2>{title}</h2>
+	{description && <p class="description">{description}</p>}
+</div>
+
+<style lang="scss">
+	@use '../../styles/tokens' as *;
+
+	.section-intro {
+		display: flex;
+		flex-direction: column;
+		gap: $space-1;
+		margin-bottom: $space-6;
+
+		.eyebrow {
+			font-family: $font-mono;
+			font-size: $font-size-caption;
+			letter-spacing: $letter-spacing-wide;
+			text-transform: uppercase;
+			color: $color-accent;
+			margin: 0;
+		}
+
+		h2 {
+			font-family: $font-sans;
+			font-weight: $font-weight-heading;
+			font-size: $font-size-h2;
+			color: $color-text;
+			margin: 0;
+		}
+
+		.description {
+			font-family: $font-sans;
+			font-size: $font-size-body-lg;
+			color: $color-text-muted;
+			max-width: $prose-max-width;
+			margin: 0;
+		}
+	}
+</style>

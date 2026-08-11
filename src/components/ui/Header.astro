@@ -1,0 +1,150 @@
+---
+const navItems = [
+	{ href: '/about', label: 'About' },
+	{ href: '/skills', label: 'Skills' },
+	{ href: '/projects', label: 'Projects' },
+	{ href: '/portfolio', label: 'Portfolio' },
+	{ href: '/contact', label: 'Contact' }
+];
+---
+
+<header data-site-header>
+	<a href="/"><img src="/images/svg/logo.svg?v=1" alt="Logo" /></a>
+	<nav>
+		<ul>
+			{
+				navItems.map((item) => (
+					<li>
+						<a href={item.href}>{item.label}</a>
+					</li>
+				))
+			}
+		</ul>
+	</nav>
+</header>
+
+<style lang="scss">
+	@use '../../styles/tokens' as *;
+
+	header {
+		position: sticky;
+		top: 0;
+		z-index: 10;
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		width: 100%;
+		background: transparent;
+		border-bottom: 1px solid transparent;
+		transition:
+			background-color $duration-hover $ease-out-quick,
+			border-color $duration-hover $ease-out-quick;
+
+		&.is-scrolled {
+			background: $glass-fill;
+			backdrop-filter: blur($glass-blur);
+			-webkit-backdrop-filter: blur($glass-blur);
+			border-bottom-color: $glass-border;
+		}
+
+		a {
+			display: flex;
+		}
+
+		img {
+			width: 5rem;
+			padding-top: $space-2;
+			margin-left: $space-5;
+		}
+
+		nav {
+			min-height: 10vh;
+			margin: auto;
+			width: 90%;
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+
+			ul {
+				width: 100%;
+				list-style: none;
+				display: flex;
+				justify-content: flex-end;
+				align-items: center;
+
+				li {
+					padding: 0 $space-2;
+					font-size: $font-size-caption;
+					font-weight: $font-weight-medium;
+					font-family: $font-sans;
+					letter-spacing: $letter-spacing-wide;
+					text-transform: uppercase;
+
+					a {
+						text-decoration: none;
+						color: $color-accent;
+						transition: color $duration-hover $ease-out-quick;
+
+						&:hover {
+							color: $color-hover-accent;
+						}
+					}
+				}
+			}
+		}
+	}
+
+	@media screen and (max-width: $breakpoint-mobile) {
+		header {
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			padding: $space-2 0;
+
+			img {
+				margin: 0;
+			}
+
+			nav {
+				min-height: auto;
+				width: 100%;
+				margin-top: $space-1;
+
+				ul {
+					flex-wrap: wrap;
+					justify-content: center;
+
+					li {
+						padding: $space-1;
+						font-size: $font-size-body;
+					}
+				}
+			}
+		}
+	}
+</style>
+
+<script>
+	const SCROLL_THRESHOLD = 24;
+	let header: HTMLElement | null = null;
+
+	function updateScrolledState() {
+		if (!header) return;
+		header.classList.toggle('is-scrolled', window.scrollY > SCROLL_THRESHOLD);
+	}
+
+	function setup() {
+		header = document.querySelector('header[data-site-header]');
+		if (!header) return;
+		updateScrolledState();
+		window.addEventListener('scroll', updateScrolledState, { passive: true });
+	}
+
+	function teardown() {
+		window.removeEventListener('scroll', updateScrolledState);
+		header = null;
+	}
+
+	document.addEventListener('astro:page-load', setup);
+	document.addEventListener('astro:before-swap', teardown);
+</script>

@@ -1,0 +1,116 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import HeroTitle from '../components/ui/HeroTitle.astro';
+import Callout from '../components/ui/Callout.astro';
+import { icons } from '../components/ui/icons';
+import { skillGroups } from '../data/skills';
+---
+
+<BaseLayout title="Skills — Jarrett Dominic">
+	<section id="skills">
+		<HeroTitle
+			title="Skills"
+			size="h1"
+			supporting="I work across software, games, and digital art, choosing the tools that fit the problem rather than limiting myself to one stack."
+		/>
+		<div class="skill-grid">
+			{
+				skillGroups.map((group) => (
+					<Callout title={group.title}>
+						<ul class="skill-chips">
+							{group.items.map((item) => {
+								const Icon = icons[item.iconKey];
+								return (
+									<li>
+										<Icon />
+										<span>{item.label}</span>
+									</li>
+								);
+							})}
+						</ul>
+					</Callout>
+				))
+			}
+		</div>
+	</section>
+</BaseLayout>
+
+<style lang="scss">
+	@use '../styles/tokens' as *;
+
+	#skills {
+		width: 100%;
+		max-width: 72rem;
+		margin: 0 auto;
+		padding: $space-8 $space-5;
+
+		/* HeroTitle is a separate component, so its own scoped styles (which
+		   set a plain $color-text heading) aren't reachable without :global()
+		   — this page-specific override doesn't belong on the shared
+		   component itself, since no other consumer wants it. */
+		:global(.hero-title h1) {
+			background-image: $gradient-warm;
+			-webkit-text-fill-color: transparent;
+			-webkit-background-clip: text;
+			background-clip: text;
+		}
+
+		.skill-grid {
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			gap: $space-4;
+			margin-top: $space-6;
+		}
+
+		.skill-chips {
+			list-style: none;
+			display: flex;
+			flex-wrap: wrap;
+			gap: $space-1;
+			margin: $space-2 0 0;
+			padding: 0;
+
+			li {
+				display: flex;
+				align-items: center;
+				gap: $space-1;
+				padding: $space-1 $space-2;
+				border: 1px solid rgba($color-accent, 0.25);
+				border-radius: $radius-sm;
+				background: rgba($color-accent, 0.08);
+				color: $color-text;
+				font-family: $font-sans;
+				font-size: $font-size-caption;
+				transition: border-color $duration-hover $ease-out-quick;
+
+				&:hover {
+					border-color: rgba($color-accent, 0.6);
+				}
+			}
+		}
+	}
+
+	/* Callout renders its own root element from a separate component, so it
+	   doesn't carry this page's scope attribute — :global() is required to
+	   reach it. The last card (always "Tools & Infrastructure", see
+	   skills.ts) spans the full grid width below the 2-column layout above
+	   it, rather than sitting in its own single column. */
+	:global(#skills .skill-grid > .callout:last-child) {
+		grid-column: 1 / -1;
+	}
+
+	@media screen and (max-width: $breakpoint-mobile) {
+		#skills {
+			padding: $space-6 $space-4;
+			text-align: center;
+
+			.skill-grid {
+				grid-template-columns: 1fr;
+			}
+
+			.skill-chips {
+				justify-content: center;
+			}
+		}
+	}
+</style>

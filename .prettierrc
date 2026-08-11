@@ -3,6 +3,10 @@
 	"singleQuote": true,
 	"trailingComma": "none",
 	"printWidth": 100,
-	"plugins": ["prettier-plugin-svelte"],
-	"overrides": [{ "files": "*.svelte", "options": { "parser": "svelte" } }]
+	"endOfLine": "auto",
+	"plugins": ["prettier-plugin-astro", "prettier-plugin-svelte"],
+	"overrides": [
+		{ "files": "*.svelte", "options": { "parser": "svelte" } },
+		{ "files": "*.astro", "options": { "parser": "astro" } }
+	]
 }

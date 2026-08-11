@@ -1,0 +1,618 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { icons } from '../components/ui/icons';
+import { hotspots } from '../data/hotspots';
+
+const GithubIcon = icons['mdi/github'];
+const LinkedinIcon = icons['mdi/linkedin'];
+---
+
+<BaseLayout title="Jarrett Dominic">
+	<main>
+		<!--
+			Runs before `.hotspot-links` below is even parsed, so the
+			`html.hero-3d-capable .hotspot-links { visibility: hidden }` guard
+			(global.scss) applies from the very first frame — otherwise the nav
+			pills would render fully visible and then snap invisible once
+			hideNavLinksForLoad() runs at astro:page-load. Mirrors
+			shouldUseSimplifiedHero()'s exact checks; the real function runs at
+			astro:page-load and is the source of truth, this is only a
+			same-answer pre-paint guess. Visitors who don't qualify (or have JS
+			disabled) never get the class, so the nav always renders normally
+			for them.
+		-->
+		<script is:inline>
+			(function () {
+				var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+				var narrow = window.innerWidth < 768;
+				var lowCores =
+					navigator.hardwareConcurrency !== undefined && navigator.hardwareConcurrency < 4;
+				if (!reducedMotion && !narrow && !lowCores) {
+					document.documentElement.classList.add('hero-3d-capable');
+				}
+			})();
+		</script>
+		<img id="background" data-hero-intro src="/images/svg/wave.svg" alt="" />
+		<div id="hero-root"></div>
+		<div class="landing-wrapper">
+			<div class="landing-content" data-hero-intro>
+				<h1>Hi, I am Jarrett Dominic.</h1>
+				<p>I'm a Full-Stack Developer based in Tampa, Florida.</p>
+				<div class="loading-bar" data-loading-bar hidden aria-hidden="true">
+					<div class="loading-bar__fill"></div>
+				</div>
+				<nav class="hotspot-links" aria-label="Portfolio sections">
+					<ul>
+						{
+							hotspots.map((hotspot) => (
+								<li>
+									<a href={hotspot.route}>{hotspot.label}</a>
+								</li>
+							))
+						}
+					</ul>
+				</nav>
+			</div>
+			<div class="button-wrapper">
+				<a href="https://github.com/FlooffyKitsune" target="_blank" rel="noopener noreferrer">
+					<GithubIcon />
+				</a>
+				<a
+					href="https://www.linkedin.com/in/jarrett-dominic/"
+					target="_blank"
+					rel="noopener noreferrer"
+				>
+					<LinkedinIcon />
+				</a>
+			</div>
+		</div>
+		<div class="hero-tooltip" data-hero-tooltip hidden>Click around to explore</div>
+		<div class="gradient"></div>
+	</main>
+</BaseLayout>
+
+<style lang="scss">
+	@use '../styles/tokens' as *;
+
+	main {
+		width: 100%;
+		height: 50rem;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		color: $color-text;
+		font-family: $font-heading;
+		margin-bottom: -2rem;
+		position: relative;
+
+		#background {
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: calc(50rem + 96px);
+			object-fit: cover;
+			object-position: center;
+			z-index: -2;
+			opacity: 0.2;
+		}
+
+		#hero-root {
+			position: absolute;
+			inset: 0;
+			/* Must stay non-negative: a negative z-index here places the canvas
+			   behind the stacking context root's own box for hit-testing purposes,
+			   which makes it unable to receive any pointer/click events at all. */
+			z-index: 0;
+			/* Starts invisible and fades in via revealHero() below, so the 3D
+			   scene dissolves into view instead of popping to full opacity the
+			   instant the model finishes loading — most of the hero area isn't
+			   covered by the text block, so that pop was visible across nearly
+			   the whole screen before this fade existed. */
+			opacity: 0;
+		}
+
+		.gradient {
+			width: 100%;
+			height: 6rem;
+			background: linear-gradient(to bottom, rgba(255, 0, 191, 0), $color-bg);
+			position: absolute;
+			top: 50rem;
+			border-bottom: $color-bg 2rem solid;
+			z-index: 2;
+		}
+	}
+
+	.landing-wrapper {
+		display: flex;
+		flex-direction: row-reverse;
+		width: 100%;
+		position: relative;
+		z-index: 1;
+		/* This wrapper is full-width and sits above #hero-root purely so the text
+		   renders on top of the canvas. Without this it would also intercept every
+		   click across a full-width band through the vertical centre of the page —
+		   exactly where the 3D model and its hotspots are. Pointer events pass
+		   through the layout boxes; the actual content opts back in below. */
+		pointer-events: none;
+
+		.landing-content {
+			width: 63%;
+			padding: 0 2rem;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: flex-start;
+			border-left: $color-text 1px solid;
+
+			h1 {
+				font-family: $font-heading-serif;
+				font-size: 3rem;
+				font-weight: 700;
+				background: $gradient-purple;
+				-webkit-text-fill-color: transparent;
+				-webkit-background-clip: text;
+				/* Deliberately NOT pointer-events:auto (unlike the links below):
+				   two of the 3D hero's five hotspots render on-screen underneath
+				   this heading's box, and since the hero is the primary way to
+				   reach them, staying click/hover-through here matters more than
+				   this heading being text-selectable. */
+			}
+
+			p {
+				font-size: 1.5rem;
+				padding-bottom: 2rem;
+				/* See the h1 rule above — same reasoning, same tradeoff. */
+			}
+
+			.loading-bar {
+				width: 100%;
+				max-width: 35rem;
+				height: 0.4rem;
+				margin-bottom: 2rem;
+				border-radius: 999px;
+				background: rgba($color-text, 0.1);
+				overflow: hidden;
+				position: relative;
+
+				&[hidden] {
+					display: none;
+				}
+
+				.loading-bar__fill {
+					position: absolute;
+					inset: 0 auto 0 0;
+					width: 40%;
+					border-radius: inherit;
+					background: $gradient-purple;
+					animation: loading-bar-scan 1.3s ease-in-out infinite;
+				}
+			}
+
+			.hotspot-links {
+				ul {
+					list-style: none;
+					display: flex;
+					flex-wrap: wrap;
+					gap: 0.75rem;
+				}
+
+				a {
+					pointer-events: auto;
+					display: inline-block;
+					padding: 0.5rem 1.25rem;
+					border-radius: 20px;
+					text-decoration: none;
+					color: $color-text;
+					font-size: 1rem;
+					background: $gradient-purple;
+					transition: opacity 0.2s ease-in-out;
+
+					&:hover {
+						opacity: 0.85;
+					}
+				}
+			}
+		}
+
+		.button-wrapper {
+			width: 37%;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: end;
+			padding-right: 1rem;
+
+			/* Applied by moveButtonsToCorner() once the hero reveals — a glass
+			   pill matching .hero-tooltip's recipe, so the icons read as a
+			   deliberate floating control rather than two bare glyphs. The
+			   background/border start transparent here (overridden back to
+			   these values instantly via inline style the moment the class is
+			   added) so moveButtonsToCorner() can fade them in via GSAP —
+			   backdrop-filter is applied immediately, not faded, since
+			   animating it is comparatively expensive and its own effect is
+			   subtle enough not to need one. */
+			&.pinned {
+				gap: 0.75rem;
+				padding: 0.75rem;
+				border-radius: $radius-md;
+				background: $glass-fill;
+				backdrop-filter: blur($glass-blur);
+				-webkit-backdrop-filter: blur($glass-blur);
+				border: 1px solid $glass-border;
+			}
+
+			a {
+				pointer-events: auto;
+				color: $color-text;
+				font-size: 2.5rem;
+				transition: all 0.2s ease-in-out;
+
+				&:hover {
+					color: $color-hover-accent;
+				}
+			}
+		}
+	}
+
+	.hero-tooltip {
+		position: absolute;
+		right: 2rem;
+		bottom: 3rem;
+		z-index: 3;
+		padding: 0.5rem 1rem;
+		border-radius: $radius-md;
+		background: $glass-fill;
+		backdrop-filter: blur($glass-blur);
+		-webkit-backdrop-filter: blur($glass-blur);
+		border: 1px solid $glass-border;
+		color: $color-text;
+		font-family: $font-sans;
+		font-size: $font-size-caption;
+		opacity: 0;
+		visibility: hidden;
+		pointer-events: none;
+	}
+
+	@keyframes loading-bar-scan {
+		0% {
+			left: -40%;
+		}
+		100% {
+			left: 100%;
+		}
+	}
+
+	@media screen and (max-width: $breakpoint-mobile) {
+		main {
+			height: 100%;
+			margin: 5rem 0;
+
+			#background {
+				height: 100vh;
+			}
+
+			.gradient {
+				display: none;
+			}
+		}
+
+		.landing-wrapper {
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+
+			.landing-content {
+				width: 100%;
+				border-left: none;
+				border-bottom: $color-text 1px solid;
+				padding: 0 2rem;
+				text-align: center;
+
+				h1 {
+					font-size: 2rem;
+				}
+
+				p {
+					font-size: 1.2rem;
+				}
+
+				.hotspot-links ul {
+					justify-content: center;
+				}
+			}
+
+			.button-wrapper {
+				width: 100%;
+				padding: 0;
+				margin-top: 1rem;
+				flex-direction: row;
+				justify-content: center;
+				align-items: center;
+
+				a {
+					margin: 0 1rem;
+				}
+			}
+		}
+	}
+</style>
+
+<script>
+	import { unmount } from 'svelte';
+	import { gsap } from '../lib/motion/gsap-setup';
+	import { shouldUseSimplifiedHero } from '../lib/three/capability-detection';
+
+	// The site uses <ClientRouter />, so this module is evaluated exactly once for
+	// the whole session: Astro marks inline scripts as executed and will not
+	// re-run them after a client-side swap. All per-navigation work therefore has
+	// to hang off the transition lifecycle events, and the mounted app has to
+	// live in module scope so both listeners can see it.
+	let app: Record<string, unknown> | null = null;
+	let mounting = false;
+	// Bumped on every teardown so a late-arriving dynamic import or onready/onerror
+	// callback belonging to a superseded page can't touch the current DOM.
+	let generation = 0;
+	// Tracks whether the visitor has already discovered hotspot interaction (via
+	// hover or click), so the tooltip never shows — or re-shows — after the fact,
+	// even if the reveal's fade completes while a hotspot happens to already be
+	// hovered (oninteract only fires on a hotspot *change*, not continuously).
+	let interacted = false;
+
+	function showLoadingBar() {
+		document.querySelector('[data-loading-bar]')?.removeAttribute('hidden');
+	}
+
+	function hideLoadingBar() {
+		document.querySelector('[data-loading-bar]')?.setAttribute('hidden', '');
+	}
+
+	function hideNavLinksForLoad() {
+		// The hotspot nav (About/Skills/Projects/Portfolio/Contact) duplicates
+		// routes the site header already exposes — while the 3D scene is still
+		// loading there's nothing gained by showing it, so it's suppressed for
+		// that window instead of sitting there unused under the tagline.
+		gsap.set('.hotspot-links', { autoAlpha: 0 });
+	}
+
+	function restoreNavLinksDefault() {
+		gsap.set('.hotspot-links', { autoAlpha: 1 });
+	}
+
+	function moveButtonsToCorner() {
+		const wrapper = document.querySelector<HTMLElement>('.button-wrapper');
+		// `.button-wrapper`'s absolute positioning below resolves against
+		// `.landing-wrapper` (its nearest positioned ancestor), not `main` — but
+		// the target position is meant to sit against `main`'s own box (left
+		// inset matching `.hero-tooltip`'s established 2rem, vertically
+		// centered). Both rects are captured so the target can be expressed in
+		// `main`'s box and then translated into `.landing-wrapper`'s coordinate
+		// space (the offset between the two is constant either way).
+		const positionedParent = document.querySelector<HTMLElement>('.landing-wrapper');
+		const main = document.querySelector<HTMLElement>('main');
+		if (!wrapper || !positionedParent || !main) return;
+
+		const links = wrapper.querySelectorAll<HTMLElement>('a');
+		if (links.length === 0) return;
+
+		// Measure the icons' real on-screen position before any layout change
+		// below. `.button-wrapper`'s own box is NOT where they visually are:
+		// it's a much wider flex item (`align-items: end` right-aligns the
+		// icons deep inside it), and it's also stretched to match
+		// `.landing-content`'s full height (`.landing-wrapper` has no
+		// `align-items` override, so it defaults to `stretch`). Reading the
+		// wrapper's own rect here (an earlier version did) freezes the wrong
+		// starting point — its left edge sits near the wrapper's own left
+		// edge, only a handful of pixels from the target, so the tween below
+		// would move almost nothing and the icons would just snap into place.
+		const linkRects = Array.from(links).map((a) => a.getBoundingClientRect());
+		const iconsLeft = Math.min(...linkRects.map((r) => r.left));
+		const iconsTop = Math.min(...linkRects.map((r) => r.top));
+
+		// Add the glass-pill container — chrome colors start transparent
+		// (overridden below) so they can fade in.
+		wrapper.classList.add('pinned');
+
+		// Dropping the flex width/stretch here lets the box shrink-wrap its
+		// padded content, which the vertical-centering math below needs an
+		// accurate height for. No left/top yet: setting those next, in the
+		// same synchronous block before any paint, means the browser's
+		// intermediate "static position" guess for this element is never
+		// actually rendered.
+		gsap.set(wrapper, { position: 'absolute', width: 'auto', margin: 0 });
+
+		const parentRect = positionedParent.getBoundingClientRect();
+		const mainRect = main.getBoundingClientRect();
+		const pinnedRect = wrapper.getBoundingClientRect();
+		// The pill's padding insets the icons from its own edges — offsetting
+		// the freeze by that amount keeps the icons visually stationary at the
+		// instant the class was added, so only the tween below moves them.
+		const padding = parseFloat(getComputedStyle(wrapper).paddingLeft);
+		const currentLeft = iconsLeft - padding - parentRect.left;
+		const currentTop = iconsTop - padding - parentRect.top;
+		const targetLeft = mainRect.left + 32 - parentRect.left;
+		const targetTop = mainRect.top + mainRect.height / 2 - pinnedRect.height / 2 - parentRect.top;
+
+		// Read the pill's real chrome colors from CSS (now resolved, since
+		// `.pinned` was just added) so the fade-in below animates toward this
+		// project's actual design tokens without duplicating their values
+		// here — the icons themselves stay visible throughout, only this
+		// background/border pair is what fades in.
+		const pinnedStyle = getComputedStyle(wrapper);
+		const targetBackground = pinnedStyle.backgroundColor;
+		const targetBorderColor = pinnedStyle.borderColor;
+
+		gsap.set(wrapper, {
+			left: currentLeft,
+			top: currentTop,
+			backgroundColor: 'rgba(0, 0, 0, 0)',
+			borderColor: 'rgba(0, 0, 0, 0)'
+		});
+		// Two separate tweens on purpose: the slide (movement) reads best with
+		// a decelerating ease, while a fade using that same curve looks like an
+		// instant pop rather than a fade — see the #hero-root fade below for
+		// the same reasoning. `power2.out` (not `expo.out`) for the slide
+		// itself too: expo.out is so front-loaded that a large move reads as
+		// an instant jump followed by a barely-perceptible drift, rather than
+		// a visible glide across the full 0.8s.
+		gsap.to(wrapper, { left: targetLeft, top: targetTop, duration: 0.8, ease: 'power2.out' });
+		gsap.to(wrapper, {
+			backgroundColor: targetBackground,
+			borderColor: targetBorderColor,
+			duration: 0.8,
+			ease: 'sine.inOut'
+		});
+	}
+
+	function revealHero() {
+		hideLoadingBar();
+		moveButtonsToCorner();
+		// Crossfades the 3D scene in as the intro group fades out below, rather
+		// than it simply being present at full opacity the moment the model
+		// finishes loading (which — outside the text block's own footprint —
+		// was visible across most of the hero area). `sine.inOut` (not
+		// `expo.out`) on purpose: expo.out reaches ~90% of its value within
+		// the first third of the duration, which reads as an instant pop
+		// rather than a fade — sine.inOut spreads the change evenly instead.
+		gsap.to('#hero-root', { opacity: 1, duration: 0.8, ease: 'sine.inOut' });
+		const introElements = document.querySelectorAll('[data-hero-intro]');
+		gsap.to(introElements, {
+			autoAlpha: 0,
+			duration: 0.8,
+			ease: 'sine.inOut',
+			onComplete: () => {
+				showTooltip();
+			}
+		});
+	}
+
+	function showTooltip() {
+		if (interacted) return;
+		const tooltip = document.querySelector('[data-hero-tooltip]');
+		if (!tooltip) return;
+		tooltip.removeAttribute('hidden');
+		gsap.to(tooltip, { autoAlpha: 1, duration: 0.8, ease: 'expo.out' });
+	}
+
+	function dismissTooltip() {
+		const tooltip = document.querySelector('[data-hero-tooltip]');
+		if (!tooltip) return;
+		gsap.killTweensOf(tooltip);
+		gsap.to(tooltip, {
+			autoAlpha: 0,
+			duration: 0.3,
+			ease: 'expo.out',
+			onComplete: () => tooltip.setAttribute('hidden', '')
+		});
+	}
+
+	function teardownHero() {
+		generation += 1;
+		mounting = false;
+		interacted = false;
+		// The intro/tooltip fades' onComplete callbacks only ever touch local
+		// DOM state (no cross-page side effect like a navigation call), so a
+		// stale tween ticking against an about-to-be-discarded page is harmless
+		// either way — killed here purely for cleanliness, matching this
+		// project's established practice of not leaving animations running
+		// against departed page state.
+		gsap.killTweensOf('[data-hero-intro]');
+		gsap.killTweensOf('[data-hero-tooltip]');
+		gsap.killTweensOf('.button-wrapper');
+		gsap.killTweensOf('#hero-root');
+		if (!app) return;
+		const mounted = app;
+		app = null;
+		// Without this the WebGL context and the `useTask` render loop keep running
+		// detached, on every page, for the rest of the session.
+		void unmount(mounted);
+	}
+
+	function setupHero() {
+		const root = document.getElementById('hero-root');
+		// Fires on every page, not just the homepage.
+		if (!root) return;
+		// Astro's first-load/transition sequencing can deliver page-load more than
+		// once; never stack two WebGL contexts on the same root.
+		if (app || mounting) return;
+
+		const useSimplified = shouldUseSimplifiedHero({
+			viewportWidth: window.innerWidth,
+			prefersReducedMotion: window.matchMedia('(prefers-reduced-motion: reduce)').matches,
+			hardwareConcurrency: navigator.hardwareConcurrency
+		});
+		if (useSimplified) return;
+
+		// Reveal the loading signal as soon as we've committed to the 3D path —
+		// before the dynamic import (and the much larger model download inside
+		// it) even starts, not just once the download begins.
+		showLoadingBar();
+		hideNavLinksForLoad();
+
+		const mountGeneration = generation;
+		mounting = true;
+
+		import('../components/islands/mount-hero-3d')
+			.then(({ mountHero3D }) => {
+				if (mountGeneration !== generation) return;
+				app = mountHero3D(root, {
+					// Hiding the static fallback is deliberately deferred until the
+					// scene reports ready. mountHero3D() returns synchronously, but the
+					// ~100MB hero.glb is still downloading and parsing inside
+					// HeroScene; hiding the wave background and the link list at mount
+					// time would leave a completely blank hero for the whole download.
+					onready: () => {
+						if (mountGeneration !== generation) return;
+						revealHero();
+					},
+					onerror: (error: unknown) => {
+						if (mountGeneration !== generation) return;
+						console.error('[hero] 3D scene failed to load; keeping static hero', error);
+						teardownHero();
+						hideLoadingBar();
+						restoreNavLinksDefault();
+					},
+					oninteract: () => {
+						if (mountGeneration !== generation) return;
+						interacted = true;
+						dismissTooltip();
+					}
+				});
+			})
+			.catch((error: unknown) => {
+				if (mountGeneration !== generation) return;
+				console.error('[hero] failed to load 3D hero module; keeping static hero', error);
+				hideLoadingBar();
+				restoreNavLinksDefault();
+			})
+			.finally(() => {
+				if (mountGeneration === generation) mounting = false;
+			});
+	}
+
+	// ClientRouter wipes every attribute off <html> on every swap (see
+	// swapRootAttributes in astro/dist/transitions/swap-functions.js), and the
+	// is:inline script that first added `hero-3d-capable` doesn't re-run on a
+	// later navigation back to this page — so without this, a return visit's
+	// `.hotspot-links` would render visible again (no class to hide it) for a
+	// moment before setupHero() catches up. astro:after-swap runs
+	// synchronously right after the swap and before the new page paints, so
+	// re-adding it here closes that gap. Uses the real shouldUseSimplifiedHero()
+	// (not the is:inline guess) since the module is already loaded by now.
+	document.addEventListener('astro:after-swap', () => {
+		if (!document.getElementById('hero-root')) return;
+		const useSimplified = shouldUseSimplifiedHero({
+			viewportWidth: window.innerWidth,
+			prefersReducedMotion: window.matchMedia('(prefers-reduced-motion: reduce)').matches,
+			hardwareConcurrency: navigator.hardwareConcurrency
+		});
+		if (!useSimplified) document.documentElement.classList.add('hero-3d-capable');
+	});
+
+	// astro:page-load fires after the initial load *and* after every client-side
+	// navigation; astro:before-swap fires just before the outgoing DOM (including
+	// the canvas) is discarded.
+	document.addEventListener('astro:page-load', setupHero);
+	document.addEventListener('astro:before-swap', teardownHero);
+</script>

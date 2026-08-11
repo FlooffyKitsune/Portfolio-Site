@@ -1,0 +1,370 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import HeroTitle from '../components/ui/HeroTitle.astro';
+import {icons} from '../components/ui/icons';
+
+const EmailIcon = icons['mdi/email'];
+const GithubIcon = icons['mdi/github'];
+const LinkedinIcon = icons['mdi/linkedin'];
+const CopyIcon = icons['mdi/content-copy'];
+const CheckIcon = icons['mdi/check'];
+
+const email = 'jarrettdominic@proton.me';
+---
+
+<BaseLayout title="Contact — Jarrett Dominic">
+	<section id="contact">
+		<div class="contact-intro" data-reveal>
+			<HeroTitle
+				title="Contact"
+				size="h1"
+				supporting="Have a project, collaboration, or just want to say hi?"
+			/>
+			<p class="intro-body">
+				I’m always open to interesting ideas, creative projects, and conversations about
+				things worth building.
+			</p>
+		</div>
+
+		<div class="primary-contact" data-reveal>
+			<div class="email-code">
+				<a class="email-link" href={`mailto:${email}`}>
+					<EmailIcon /><span>{email}</span>
+				</a>
+				<button
+					type="button"
+					class="copy-button"
+					id="copy-email"
+					data-email={email}
+					aria-label="Copy email address">
+					<span class="copy-icon-swap">
+						<CopyIcon class="icon-copy" />
+						<CheckIcon class="icon-check" />
+					</span>
+					<span class="copy-tooltip" aria-hidden="true">Copied</span>
+				</button>
+			</div>
+			<span class="sr-only" role="status" aria-live="polite" id="copy-status"></span>
+		</div>
+
+		<div class="secondary-contact" data-reveal>
+			<p class="secondary-label">Find me elsewhere</p>
+			<div class="social-links">
+				<a
+					class="social-icon"
+					href="https://github.com/FlooffyKitsune"
+					target="_blank"
+					rel="noopener noreferrer"
+					aria-label="GitHub">
+					<GithubIcon />
+				</a>
+				<a
+					class="social-icon"
+					href="https://www.linkedin.com/in/jarrett-dominic/"
+					target="_blank"
+					rel="noopener noreferrer"
+					aria-label="LinkedIn">
+					<LinkedinIcon />
+				</a>
+			</div>
+		</div>
+	</section>
+</BaseLayout>
+
+<style lang="scss">
+	@use '../styles/tokens' as *;
+
+	#contact {
+		width: 100%;
+		min-height: 70vh;
+		padding: $space-8 $space-5;
+		background-color: $color-bg;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		text-align: center;
+		gap: $space-7;
+
+		:global(.hero-title) {
+			align-items: center;
+		}
+
+		:global(.hero-title h1) {
+			background-image: $gradient-warm;
+			-webkit-text-fill-color: transparent;
+			-webkit-background-clip: text;
+			background-clip: text;
+		}
+
+		.contact-intro {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			gap: $space-3;
+		}
+
+		.intro-body {
+			font-family: $font-sans;
+			font-size: $font-size-body;
+			color: $color-text-muted;
+			max-width: $prose-max-width;
+			line-height: 1.6;
+			margin: 0;
+		}
+
+		.primary-contact {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+		}
+
+		.email-code {
+			display: inline-flex;
+			align-items: stretch;
+			max-width: 100%;
+			border: 1px solid $glass-border;
+			border-radius: $radius-md;
+			background: $color-surface;
+			overflow: hidden;
+			transition: border-color $duration-hover $ease-out-quick;
+
+			&:hover,
+			&:focus-within {
+				border-color: rgba($color-accent, 0.5);
+			}
+		}
+
+		.email-link {
+			display: flex;
+			align-items: center;
+			gap: $space-2;
+			padding: $space-3 $space-4;
+			min-width: 0;
+			color: $color-text;
+			font-family: $font-mono;
+			font-size: $font-size-body;
+			text-decoration: none;
+			transition:
+				color $duration-hover $ease-out-quick,
+				background-color $duration-hover $ease-out-quick;
+
+			span {
+				overflow: hidden;
+				text-overflow: ellipsis;
+				white-space: nowrap;
+			}
+
+			&:hover,
+			&:focus-visible {
+				color: $color-accent;
+				background-color: rgba($color-accent, 0.06);
+			}
+		}
+
+		.copy-button {
+			position: relative;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			flex-shrink: 0;
+			padding: 0 $space-4;
+			border: none;
+			border-left: 1px solid $glass-border;
+			background: transparent;
+			color: $color-text-muted;
+			font-size: 1.1rem;
+			cursor: pointer;
+			transition:
+				color $duration-hover $ease-out-quick,
+				background-color $duration-hover $ease-out-quick;
+
+			&:hover,
+			&:focus-visible {
+				color: $color-accent;
+				background-color: rgba($color-accent, 0.06);
+			}
+
+			.copy-icon-swap {
+				position: relative;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				width: 1em;
+				height: 1em;
+
+				.icon-copy,
+				.icon-check {
+					position: absolute;
+					inset: 0;
+				}
+
+				.icon-copy {
+					transition:
+						opacity 0.15s $ease-out-quick,
+						transform 0.15s $ease-out-quick;
+				}
+
+				.icon-check {
+					opacity: 0;
+					transform: scale(0.5);
+					color: $color-accent;
+					transition:
+						opacity 0.15s $ease-out-quick 0.08s,
+						transform 0.15s $ease-out-quick 0.08s;
+				}
+			}
+
+			.copy-tooltip {
+				position: absolute;
+				bottom: calc(100% + $space-1);
+				left: 50%;
+				transform: translate(-50%, $space-1);
+				padding: $space-1 $space-2;
+				border-radius: $radius-sm;
+				background: $color-surface;
+				border: 1px solid $glass-border;
+				color: $color-text;
+				font-family: $font-sans;
+				font-size: $font-size-caption;
+				white-space: nowrap;
+				opacity: 0;
+				pointer-events: none;
+				transition:
+					opacity $duration-hover $ease-out-quick,
+					transform $duration-hover $ease-out-quick;
+			}
+
+			&.copied {
+				// Nested to match .icon-copy/.icon-check's own selector depth
+				// (.copy-button .copy-icon-swap .icon-check): Astro's per-compound
+				// [data-astro-cid] scoping attribute means a shallower selector here
+				// (e.g. `&.copied .icon-check`) would lose the specificity fight to
+				// the base rule despite coming later in source order, leaving the
+				// checkmark permanently at opacity:0.
+				.copy-icon-swap {
+					.icon-copy {
+						opacity: 0;
+						transform: scale(0.5);
+					}
+
+					.icon-check {
+						opacity: 1;
+						transform: scale(1);
+					}
+				}
+
+				.copy-tooltip {
+					opacity: 1;
+					transform: translate(-50%, 0);
+				}
+			}
+		}
+
+		.secondary-contact {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			gap: $space-2;
+		}
+
+		.secondary-label {
+			font-family: $font-mono;
+			font-size: $font-size-caption;
+			letter-spacing: $letter-spacing-wide;
+			text-transform: uppercase;
+			color: $color-text-muted;
+			margin: 0;
+		}
+
+		.social-links {
+			display: flex;
+			gap: $space-3;
+		}
+
+		.social-icon {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			width: 2.75rem;
+			height: 2.75rem;
+			border-radius: 50%;
+			background: $glass-fill;
+			border: 1px solid $glass-border;
+			backdrop-filter: blur($glass-blur);
+			-webkit-backdrop-filter: blur($glass-blur);
+			color: $color-text;
+			font-size: 1.25rem;
+			transition: border-color $duration-hover $ease-out-quick;
+
+			&:hover,
+			&:focus-visible {
+				border-color: rgba($color-accent, 0.6);
+			}
+		}
+	}
+
+	.sr-only {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		padding: 0;
+		margin: -1px;
+		overflow: hidden;
+		clip: rect(0, 0, 0, 0);
+		white-space: nowrap;
+		border: 0;
+	}
+
+	@media screen and (max-width: $breakpoint-mobile) {
+		#contact {
+			padding: $space-6 $space-4;
+			gap: $space-6;
+
+			.email-link {
+				padding: $space-2 $space-3;
+			}
+
+			.copy-button {
+				padding: 0 $space-3;
+			}
+		}
+	}
+</style>
+
+<script>
+	function setupCopyButton() {
+		const button = document.getElementById('copy-email');
+		const status = document.getElementById('copy-status');
+		if (!(button instanceof HTMLElement)) return;
+
+		let resetTimer: ReturnType<typeof setTimeout> | undefined;
+
+		button.addEventListener('click', async () => {
+			const email = button.dataset.email;
+			if (!email || !navigator.clipboard) return;
+
+			try {
+				await navigator.clipboard.writeText(email);
+			} catch {
+				return;
+			}
+
+			window.clearTimeout(resetTimer);
+			button.classList.add('copied');
+			if (status) status.textContent = 'Email address copied to clipboard';
+
+			resetTimer = window.setTimeout(() => {
+				button.classList.remove('copied');
+				if (status) status.textContent = '';
+			}, 1800);
+		});
+	}
+
+	// Registered once per module load; re-queries the DOM fresh on every
+	// astro:page-load (including client-side navigations back to this page),
+	// same pattern as the hero setup in index.astro. No teardown needed since
+	// the click listener lives on an element ClientRouter discards wholesale
+	// on navigation, unlike a window-level listener.
+	document.addEventListener('astro:page-load', setupCopyButton);
+</script>
