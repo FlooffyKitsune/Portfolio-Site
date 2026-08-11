@@ -1,1 +1,14 @@
-Portfolio site for Jarrett Dominic — built with Astro and Svelte islands. Content lives in `src/content` (Projects, Portfolio) and `src/data` (Skills). The homepage hero is a placeholder pending the Three.js 3D hero (see `docs/superpowers/plans/2026-08-06-threejs-hero-hotspot-nav.md`).
+# Jarrett Dominic
+
+Personal portfolio and project showcase.
+
+Built to showcase my work across software development, game development, 3D, 2D art, and creative technology.
+
+## Built With
+
+- Astro
+- Svelte
+- TypeScript
+- Three.js
+- HTML / CSS
+- Blender
