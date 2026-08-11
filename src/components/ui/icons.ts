@@ -97,6 +97,7 @@ import CloudflareWorkersLogo from 'virtual:icons/logos/cloudflare-workers-icon';
 import TursoSimple from 'virtual:icons/simple-icons/turso';
 import FastapiLogo from 'virtual:icons/logos/fastapi-icon';
 import WebMdi from 'virtual:icons/mdi/web';
+import AdobeXdLogo from 'virtual:icons/logos/adobe-xd';
 
 // unplugin-icons compiles each import to a Svelte component; `any` avoids
 // fighting the generated component types just to store them in a lookup map.
@@ -199,5 +200,6 @@ export const icons: Record<string, any> = {
 	'logos/cloudflare-workers-icon': CloudflareWorkersLogo,
 	'simple-icons/turso': TursoSimple,
 	'logos/fastapi-icon': FastapiLogo,
-	'mdi/web': WebMdi
+	'mdi/web': WebMdi,
+	'logos/adobe-xd': AdobeXdLogo
 };

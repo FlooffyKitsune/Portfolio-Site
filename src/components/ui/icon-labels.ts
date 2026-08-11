@@ -22,5 +22,8 @@ export const iconLabels: Record<string, string> = {
 	'logos/youtube-icon': 'YouTube',
 	'simple-icons/adobecreativecloud': 'Adobe Creative Cloud',
 	'logos/blender': 'Blender',
-	'simple-icons/autodesk': 'Autodesk'
+	'simple-icons/autodesk': 'Autodesk',
+	'logos/adobe-photoshop': 'Photoshop',
+	'logos/adobe-illustrator': 'Illustrator',
+	'logos/adobe-xd': 'Adobe XD'
 };
